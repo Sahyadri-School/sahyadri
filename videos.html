@@ -24,24 +24,19 @@ subtitle: Click on the thumbnail to watch
 
 <div class="videos-page-container">
 
-    <!-- Academic Year Table of Contents (Populated via JS) -->
-    <nav class="sub-nav-options">
-        <ul class="sub-nav-list" id="year-toc"></ul>
-    </nav>
-
-    <!-- Year-scoped search: filters videos within the currently active
-         academic year only. Resets whenever the user switches years (see
-         filterVideos() below). Reuses the same search-and-highlight
-         pattern as posts.md's year-search-input, adapted for this page's
-         combined year+pagination filtering. -->
+    <!-- Global search: filters videos across ALL academic years, not
+         just the currently selected tab. Deselects the active year tab
+         while a search query is present, since results may span years;
+         clicking a tab clears the search and returns to normal
+         year-scoped browsing. -->
     <div class="year-search-container">
         <span class="year-search-icon" aria-hidden="true"><i class="fa fa-search"></i></span>
         <input
             type="text"
             id="video-search-input"
             class="year-search-input"
-            placeholder="Search within this academic year..."
-            aria-label="Search videos within the selected academic year"
+            placeholder="Search all videos..."
+            aria-label="Search videos across all academic years"
             oninput="filterVideoSearch()"
         >
         <button
@@ -53,6 +48,11 @@ subtitle: Click on the thumbnail to watch
             style="display: none;"
         >&times;</button>
     </div>
+
+    <!-- Academic Year Table of Contents (Populated via JS) -->
+    <nav class="sub-nav-options">
+        <ul class="sub-nav-list" id="year-toc"></ul>
+    </nav>
 
     <!-- Grid Container holding all YouTube Video Items -->
     <div class="videos-page-grid" id="videoGrid">
@@ -205,17 +205,22 @@ subtitle: Click on the thumbnail to watch
     }
 
     /**
-     * Combines the currently active year with the current search query
-     * into one filtered set, updates visibility/pagination/highlighting,
-     * and shows a "no results" message when nothing matches.
+     * When a search query is present, matches against ALL videos across
+     * every academic year (ignoring the currently selected tab). When
+     * the query is empty, falls back to normal year-scoped browsing.
+     * Either way, updates visibility/pagination/highlighting, and shows
+     * a "no results" message when nothing matches.
      */
     function applyVideoFilters() {
         const all = Array.from(document.querySelectorAll('.videos-page-item'));
         const query = currentSearchQuery.trim().toLowerCase();
+        const searching = query !== '';
 
-        const yearItems = all.filter(el => el.dataset.academicYear === currentYear);
-        const matched = yearItems.filter(el => {
-            if (query === '') return true;
+        // While searching, no single year tab is "current" -- candidates
+        // are every item site-wide. Otherwise, only the selected year.
+        const candidates = searching ? all : all.filter(el => el.dataset.academicYear === currentYear);
+        const matched = candidates.filter(el => {
+            if (!searching) return true;
             const text = el.querySelector('figcaption').textContent.toLowerCase();
             return text.indexOf(query) !== -1;
         });
@@ -223,9 +228,14 @@ subtitle: Click on the thumbnail to watch
         all.forEach(el => el.classList.add('hidden-item'));
         matched.slice(0, ITEMS_PER_PAGE).forEach(el => el.classList.remove('hidden-item'));
 
-        yearItems.forEach(el => {
+        candidates.forEach(el => {
             videoSearchApplyHighlight(el.querySelector('figcaption'), matched.includes(el) ? query : '');
         });
+
+        // Deselect year tabs while searching, since matches may span years.
+        if (searching) {
+            document.querySelectorAll('.sub-nav-list li').forEach(li => li.classList.remove('active'));
+        }
 
         updateLoadMore(matched);
 
@@ -234,10 +244,12 @@ subtitle: Click on the thumbnail to watch
         if (!noResultsMsg) {
             noResultsMsg = document.createElement('p');
             noResultsMsg.className = 'no-posts-msg year-search-no-results';
-            noResultsMsg.textContent = 'No videos match your search within this academic year.';
             grid.appendChild(noResultsMsg);
         }
-        noResultsMsg.style.display = (matched.length === 0 && query !== '') ? '' : 'none';
+        noResultsMsg.textContent = searching
+            ? 'No videos match your search.'
+            : 'No videos in this academic year.';
+        noResultsMsg.style.display = matched.length === 0 ? '' : 'none';
     }
 
     function filterVideoSearch() {
@@ -253,6 +265,11 @@ subtitle: Click on the thumbnail to watch
         input.value = '';
         currentSearchQuery = '';
         applyVideoFilters();
+        // Restore the active tab's highlighting, since clearing search
+        // falls back to year-scoped browsing again.
+        const activeLi = Array.from(document.querySelectorAll('.sub-nav-list li'))
+            .find(li => li.textContent === currentYear);
+        activeLi?.classList.add('active');
         input.focus();
     }
 
@@ -270,11 +287,13 @@ subtitle: Click on the thumbnail to watch
 
         currentYear = year;
 
-        // Reset the in-year search box when switching tabs, since the
-        // search should only ever apply to whichever year is visible.
+        // Clicking a year tab always clears any active search and
+        // returns to normal year-scoped browsing.
         const searchInput = document.getElementById('video-search-input');
         if (searchInput) searchInput.value = '';
         currentSearchQuery = '';
+        const clearBtn = document.getElementById('video-search-clear');
+        if (clearBtn) clearBtn.style.display = 'none';
 
         applyVideoFilters();
     }
