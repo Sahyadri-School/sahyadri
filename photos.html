@@ -125,7 +125,13 @@ subtitle: Click on thumbnail to open the album
     // filters (year selection, in-year search) can be combined into one
     // set of "matched" items fed to pagination, rather than each filter
     // fighting over the same hidden-item class independently.
+    // currentYear is either a real academic year string (browsing/searching
+    // within that one year) or null (searching across every year at once --
+    // entered automatically the moment a fresh search begins, exited the
+    // moment a year tab is clicked). defaultYear is the most recent year,
+    // restored when search is cleared from the null/global state.
     let currentYear = null;
+    let defaultYear = null;
     let currentSearchQuery = '';
 
     /**
@@ -200,20 +206,19 @@ subtitle: Click on thumbnail to open the album
     }
 
     /**
-     * When a search query is present, matches against ALL albums across
-     * every academic year (ignoring the currently selected tab). When
-     * the query is empty, falls back to normal year-scoped browsing.
-     * Either way, updates visibility/pagination/highlighting, and shows
-     * a "no results" message when nothing matches.
+     * currentYear === null means searching across every year at once;
+     * otherwise, scoped to that one year. In both cases, further narrows
+     * by currentSearchQuery if it's non-empty. Updates visibility/
+     * pagination/highlighting, and shows a "no results" message when
+     * nothing matches.
      */
     function applyPhotoFilters() {
         const all = Array.from(document.querySelectorAll('.photos-album-item'));
         const query = currentSearchQuery.trim().toLowerCase();
         const searching = query !== '';
+        const global = currentYear === null;
 
-        // While searching, no single year tab is "current" -- candidates
-        // are every item site-wide. Otherwise, only the selected year.
-        const candidates = searching ? all : all.filter(el => el.dataset.academicYear === currentYear);
+        const candidates = global ? all : all.filter(el => el.dataset.academicYear === currentYear);
         const matched = candidates.filter(el => {
             if (!searching) return true;
             const text = el.querySelector('figcaption').textContent.toLowerCase();
@@ -227,8 +232,10 @@ subtitle: Click on thumbnail to open the album
             photoSearchApplyHighlight(el.querySelector('figcaption'), matched.includes(el) ? query : '');
         });
 
-        // Deselect year tabs while searching, since matches may span years.
-        if (searching) {
+        // Deselect year tabs only while genuinely searching all years;
+        // a specific year (whether reached by clicking a tab, even
+        // mid-search) always keeps that tab visibly active.
+        if (global) {
             document.querySelectorAll('.sub-nav-list li').forEach(li => li.classList.remove('active'));
         }
 
@@ -242,16 +249,26 @@ subtitle: Click on thumbnail to open the album
             grid.appendChild(noResultsMsg);
         }
         noResultsMsg.textContent = searching
-            ? 'No albums match your search.'
+            ? (global ? 'No albums match your search.' : 'No albums match your search in this academic year.')
             : 'No albums in this academic year.';
         noResultsMsg.style.display = matched.length === 0 ? '' : 'none';
     }
 
     function filterPhotoSearch() {
         const input = document.getElementById('photo-search-input');
+        const wasEmpty = currentSearchQuery.trim() === '';
         currentSearchQuery = input.value;
+        const nowEmpty = currentSearchQuery.trim() === '';
+
+        // A brand-new search (empty -> non-empty) starts across every
+        // year; it doesn't force this on every keystroke, so narrowing
+        // to one year via a tab click sticks for the rest of that search.
+        if (wasEmpty && !nowEmpty) {
+            currentYear = null;
+        }
+
         const clearBtn = document.getElementById('photo-search-clear');
-        if (clearBtn) clearBtn.style.display = currentSearchQuery.trim() === '' ? 'none' : '';
+        if (clearBtn) clearBtn.style.display = nowEmpty ? 'none' : '';
         applyPhotoFilters();
     }
 
@@ -259,9 +276,14 @@ subtitle: Click on thumbnail to open the album
         const input = document.getElementById('photo-search-input');
         input.value = '';
         currentSearchQuery = '';
+
+        // Clearing search from the all-years state falls back to the
+        // default year rather than leaving nothing selected.
+        if (currentYear === null) {
+            currentYear = defaultYear;
+        }
+
         applyPhotoFilters();
-        // Restore the active tab's highlighting, since clearing search
-        // falls back to year-scoped browsing again.
         const activeLi = Array.from(document.querySelectorAll('.sub-nav-list li'))
             .find(li => li.textContent === currentYear);
         activeLi?.classList.add('active');
@@ -270,26 +292,19 @@ subtitle: Click on thumbnail to open the album
 
     /**
      * Filters visible album items based on selected academic year tab.
+     * Clicking a tab while a search is active narrows that search to
+     * this year instead of clearing it -- the search box is
+     * deliberately left untouched.
      * @param {string} year - Selected academic year string (e.g., "2025-26").
      * @param {HTMLElement} activeEl - Tab list element clicked by user.
      */
     function filterByYear(year, activeEl) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // Update active tab highlighting
         document.querySelectorAll('.sub-nav-list li').forEach(li => li.classList.remove('active'));
         activeEl?.classList.add('active');
 
         currentYear = year;
-
-        // Clicking a year tab always clears any active search and
-        // returns to normal year-scoped browsing.
-        const searchInput = document.getElementById('photo-search-input');
-        if (searchInput) searchInput.value = '';
-        currentSearchQuery = '';
-        const clearBtn = document.getElementById('photo-search-clear');
-        if (clearBtn) clearBtn.style.display = 'none';
-
         applyPhotoFilters();
     }
 
@@ -327,6 +342,7 @@ subtitle: Click on thumbnail to open the album
 
         // Default to displaying the most recent academic year
         if (sortedYears.length > 0) {
+            defaultYear = sortedYears[0];
             filterByYear(sortedYears[0], nav.firstChild);
         }
     }
