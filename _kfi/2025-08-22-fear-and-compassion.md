@@ -1,0 +1,9 @@
+---
+title: Fear and Compassion
+year: '2025'
+date: 2025-08-22
+youtube_id: ztlt1GeA_nQ
+links:
+- text: Fear and Compassion
+  url: https://drive.google.com/file/d/1-P5oOWqtufPozRCWN2WsSTo9krNx_QRC/view
+---
