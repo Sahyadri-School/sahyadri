@@ -23,7 +23,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          # Deep enough for generate_recent_changes.py's 30-day git log
+          # window to have real history to read -- fetch-depth: 1 (the
+          # previous value) checks out only the latest commit, meaning
+          # git log would see nothing at all.
+          fetch-depth: 300
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -31,6 +35,11 @@ jobs:
           bundler-cache: true
 
       - uses: actions/configure-pages@v5
+
+      - name: Generate recent-changes data
+        run: |
+          pip install --quiet pyyaml
+          python3 generate_recent_changes.py
 
       - name: Build with Jekyll
         run: |
