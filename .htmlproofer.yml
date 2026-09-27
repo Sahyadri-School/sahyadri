@@ -23,24 +23,29 @@ ignore_urls:
 # Ignore these files from all checks:
 # - feed.xml: not HTML
 # - maintenance-status.json: not HTML
-# - photos/index.html: <img src=""> are JS-populated via data-img attribute
-# - profiles/index.html: <img src="${p.image}"> is a JS template literal
+# - photos.html: <img src=""> are JS-populated via data-img attribute
+# - profiles.html: <img src="${p.image}"> is a JS template literal
+# Both photos.html and profiles.html have no explicit permalink, so
+# Jekyll generates them as flat files (./_site/photos.html), not nested
+# index.html files under a directory -- the earlier ".../photos/
+# index.html" / ".../profiles/index.html" paths here never actually
+# matched anything, confirmed by the Images check below failing on
+# exactly ./_site/photos.html once actually enabled and run.
 ignore_files:
   - "./_site/feed.xml"
   - "./_site/maintenance-status.json"
-  - "./_site/photos/index.html"
-  - "./_site/profiles/index.html"
+  - "./_site/photos.html"
+  - "./_site/profiles.html"
 
-# Only check Links and Scripts — not Images.
-# Images was briefly enabled and immediately failed for a reason that
-# couldn't be diagnosed: GitHub Actions caps error annotations at 10 per
-# step, and the actual failure detail (which file, which image) fell
-# past that cap every time. html-proofer itself can't be installed
-# locally to reproduce the failure directly either (rubygems.org isn't
-# reachable from the environment that was debugging this). Reverted
-# rather than leave the build broken -- re-enabling this would need
-# either a way to see the untruncated CI output, or a local Ruby/
-# html-proofer setup to test against first.
+# Links, Scripts, and Images. Images was briefly enabled once before,
+# immediately failed, and had to be reverted because GitHub Actions caps
+# error annotations at 10 per step -- the actual failure detail (which
+# file) fell past that cap and couldn't be diagnosed from here. The
+# person running this saw the real, untruncated log directly and it
+# turned out to be exactly the photos.html false positive predicted
+# above (the ignore_files path just didn't match the real output path).
+# Re-enabled with that path corrected.
 checks:
   - Links
   - Scripts
+  - Images
