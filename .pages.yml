@@ -46,7 +46,7 @@ content:
       - name: date
         type: date
         required: true
-        description: "The date this was actually posted/happened — also used to build the filename and to group it under the right month on the Newsletter page."
+        description: "The date this was actually posted/happened, e.g. 2026-09-27 — also used to build the filename and to group it under the right month on the Newsletter page."
 
       - name: subtitle
         label: Byline (author)
@@ -61,12 +61,12 @@ content:
       - name: profile-link
         label: Profile link override (optional)
         type: string
-        description: "Only needed if the byline above has a middle name or unusual format that won't auto-match a profile. Paste the full profile URL here instead."
+        description: "Only needed if the byline above has a middle name or unusual format that won't auto-match a profile. Paste the full profile URL here instead, e.g. \"https://connect.sahyadrischool.org/profiles/aadya-tyagi/\"."
 
       - name: profile-link2
         label: Profile link override for second author (optional)
         type: string
-        description: "Same as the profile link override above, for the second author instead."
+        description: "Same as the profile link override above, for the second author instead, e.g. \"https://connect.sahyadrischool.org/profiles/swati-gautam/\"."
 
       - name: category
         type: string
@@ -79,40 +79,40 @@ content:
       - name: image
         label: Thumbnail image (Google Drive file ID)
         type: string
-        description: "Paste just the file ID from the Drive sharing link (the long string between /d/ and /view), not the full URL. The file must be shared as \"Anyone with the link can view.\""
+        description: "Paste just the file ID from the Drive sharing link (the long string between /d/ and /view), e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\" -- not the full URL. The file must be shared as \"Anyone with the link can view.\""
 
       - name: image2
         label: Gallery image 2 (Google Drive file ID, optional)
         type: string
-        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
+        description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
       - name: image3
         label: Gallery image 3 (Google Drive file ID, optional)
         type: string
-        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
+        description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
       - name: image4
         label: Gallery image 4 (Google Drive file ID, optional)
         type: string
-        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
+        description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
       - name: image5
         label: Gallery image 5 (Google Drive file ID, optional)
         type: string
-        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
+        description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
 
       - name: tags
         type: select
         list: true
-        description: "Pick from the existing tags rather than typing new ones, to keep /tags/ tidy. Only affects Newsletter posts — tagging an Activity has no visible effect (a Jekyll limitation, see README.md)."
+        description: "Pick from the existing tags rather than typing new ones, e.g. sports or workshop, to keep /tags/ tidy. Only affects Newsletter posts — tagging an Activity has no visible effect (a Jekyll limitation, see README.md)."
         options:
           values: [academic, assembly, community-service, festival, interview, literature, performing-arts, sports, student-life, workshop]
 
       - name: pinned
         type: boolean
         default: false
-        description: "If true, pins this post above the others in its category on the Newsletter page."
+        description: "e.g. true to pin this post above the others in its category on the Newsletter page; false (the default) for normal ordering."
 
       - name: body
         label: Article text
-        description: "The article itself. Write it the same way you'd write in a document — headings, bold text, and links all work."
+        description: "The article itself, e.g. starting with a short introductory paragraph and using headings for sections. Write it the same way you'd write in a document — headings, bold text, and links all work."
         type: rich-text
         options:
           format: markdown
@@ -142,7 +142,7 @@ content:
       - name: date
         type: date
         required: true
-        description: "The date this activity actually happened — also used to build the filename and to sort it on the Activities page."
+        description: "The date this activity actually happened, e.g. 2026-09-27 — also used to build the filename and to sort it on the Activities page."
       - name: subtitle
         label: Byline (author)
         type: string
@@ -150,46 +150,46 @@ content:
       - name: subtitle2
         label: Byline (second author, optional)
         type: string
-        description: "Same format as the byline above — only fill this in if there's a second author."
+        description: "Same format as the byline above, e.g. \"Sayantan Sen (Founder, Digital Safety India)\" — only fill this in if there's a second author."
       - name: profile-link
         label: Profile link override (optional)
         type: string
-        description: "Only needed if the byline above has a middle name or unusual format that won't auto-match a profile. Paste the full profile URL here instead."
+        description: "Only needed if the byline above has a middle name or unusual format that won't auto-match a profile. Paste the full profile URL here instead, e.g. \"https://connect.sahyadrischool.org/profiles/aadya-tyagi/\"."
       - name: profile-link2
         label: Profile link override for second author (optional)
         type: string
-        description: "Same as the profile link override above, for the second author instead."
+        description: "Same as the profile link override above, for the second author instead, e.g. \"https://connect.sahyadrischool.org/profiles/swati-gautam/\"."
       - name: category
         type: string
         required: true
-        description: "Groups this write-up on the Activities page — usually just the activity's own name."
+        description: "Groups this write-up on the Activities page, e.g. \"Digital Safety Workshop\" — usually just the activity's own name."
       - name: image
         label: Thumbnail image (Google Drive file ID)
         type: string
-        description: "Paste just the file ID from the Drive sharing link (the long string between /d/ and /view), not the full URL. The file must be shared as \"Anyone with the link can view.\""
+        description: "Paste just the file ID from the Drive sharing link (the long string between /d/ and /view), e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\" -- not the full URL. The file must be shared as \"Anyone with the link can view.\""
       - name: image2
         type: string
         label: Gallery image 2 (Google Drive file ID, optional)
-        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
+        description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
       - name: image3
         type: string
         label: Gallery image 3 (Google Drive file ID, optional)
-        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
+        description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
       - name: image4
         type: string
         label: Gallery image 4 (Google Drive file ID, optional)
-        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
+        description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
       - name: image5
         type: string
         label: Gallery image 5 (Google Drive file ID, optional)
-        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
+        description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
       - name: pinned
         type: boolean
         default: false
-        description: "If true, pins this write-up above the others in its category on the Activities page."
+        description: "e.g. true to pin this write-up above the others in its category on the Activities page; false (the default) for normal ordering."
       - name: body
         label: Write-up text
-        description: "The write-up itself. Write it the same way you'd write in a document — headings, bold text, and links all work."
+        description: "The write-up itself, e.g. starting with a short introductory paragraph and using headings for sections. Write it the same way you'd write in a document — headings, bold text, and links all work."
         type: rich-text
         options:
           format: markdown
@@ -230,7 +230,7 @@ content:
       - name: date
         type: date
         required: true
-        description: "When this profile was created or last significantly updated — shown on the page as \"Last updated on\"."
+        description: "When this profile was created or last significantly updated, e.g. 2026-09-27 — shown on the page as \"Last updated on\"."
 
       - name: academic-year
         type: string
@@ -243,11 +243,11 @@ content:
       - name: profile-image
         label: Profile photo (Google Drive file ID, optional)
         type: string
-        description: "Leave blank to use the default placeholder photo."
+        description: "Same Drive file ID format as other image fields, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\". Leave blank to use the default placeholder photo."
 
       - name: body
         label: Bio
-        description: "A short write-up about this person — a few paragraphs is typical."
+        description: "A short write-up about this person, e.g. \"I joined Sahyadri School in Class 7...\" — a few paragraphs is typical."
         type: rich-text
         options:
           format: markdown
@@ -274,7 +274,7 @@ content:
       - name: title
         type: string
         required: true
-        description: "Also used as the video's alt text and part of its caption on the Videos page."
+        description: "e.g. \"Freshers Eve\" -- also used as the video's alt text and part of its caption on the Videos page."
       - name: youtube_id
         label: YouTube video ID
         type: string
@@ -283,7 +283,7 @@ content:
       - name: date
         type: date
         required: true
-        description: "Used to sort the video newest-first and to build its caption date automatically."
+        description: "e.g. 2026-09-27 -- used to sort the video newest-first and to build its caption date automatically."
 
   - name: photos
     label: Photos
@@ -309,16 +309,16 @@ content:
         label: Thumbnail image (Google Drive file ID)
         type: string
         required: true
-        description: "Paste just the file ID from the Drive sharing link (the long string between /d/ and /view), not the full URL. The file must be shared as \"Anyone with the link can view.\""
+        description: "Paste just the file ID from the Drive sharing link (the long string between /d/ and /view), e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\" -- not the full URL. The file must be shared as \"Anyone with the link can view.\""
       - name: album_link
         label: Google Photos album link
         type: string
         required: true
-        description: "The actual album URL visitors land on when they click the thumbnail."
+        description: "The actual album URL visitors land on when they click the thumbnail, e.g. \"https://photos.app.goo.gl/R1iVwfWivNoQ9E268\"."
       - name: date
         type: date
         required: true
-        description: "The album's start date. Only used to sort albums newest-first -- not shown on the site."
+        description: "The album's start date, e.g. 2026-09-27. Only used to sort albums newest-first -- not shown on the site."
       - name: date_display
         label: Date shown on the site
         type: string
@@ -353,11 +353,11 @@ content:
       - name: year
         type: string
         required: true
-        description: "Must exactly match one of the year tabs already defined near the top of kfi.html (the year_blocks Liquid variable). Adding a brand-new academic year still needs a one-line manual edit there first -- this is not auto-computed the way Videos/Photos are."
+        description: "e.g. \"2025\" -- must exactly match one of the year tabs already defined near the top of kfi.html (the year_blocks Liquid variable). Adding a brand-new academic year still needs a one-line manual edit there first -- this is not auto-computed the way Videos/Photos are."
       - name: date
         type: date
         required: true
-        description: "Used to sort entries newest-first within their year, and to build the \"Published on\" caption text automatically."
+        description: "e.g. 2026-01-15 -- used to sort entries newest-first within their year, and to build the \"Published on\" caption text automatically."
       - name: youtube_id
         label: YouTube video ID (optional)
         type: string
@@ -365,17 +365,17 @@ content:
       - name: links
         type: object
         list: true
-        description: "One or more linked items shown in the caption -- most entries have just one (the excerpt's title/link), but some link both a video's related document and a separate playlist, for example."
+        description: "One or more linked items shown in the caption, e.g. one entry with text \"On Education\" and a YouTube URL -- most entries have just one (the excerpt's title/link), but some link both a video's related document and a separate playlist, for example."
         fields:
           - name: text
             label: Link text
             type: string
             required: true
-            description: "The excerpt's title, shown as the clickable link text."
+            description: "The excerpt's title, e.g. \"On Education\" -- shown as the clickable link text."
           - name: url
             type: string
             required: true
-            description: "A Google Drive/Docs link, a YouTube link, or any other URL relevant to this excerpt."
+            description: "A Google Drive/Docs link, a YouTube link, or any other URL relevant to this excerpt, e.g. \"https://www.youtube.com/watch?v=abc123XYZ4\"."
 
 settings:
   commit:
