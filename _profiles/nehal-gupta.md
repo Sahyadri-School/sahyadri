@@ -4,7 +4,7 @@ title: "Nehal Gupta"
 subtitle: "Student (Class 11)"
 date: 2026-07-19
 academic-year: "2026-27"
-profile-image: "1RWMV__IlmQIt6S3yxvjDjVvT2m2u6gZN"
+profile-image: "1z4dJNZ_HU_fOqyzrOVZYLYYezKPtvs02"
 ---
 
 I joined Sahyadri School in 7th grade.
