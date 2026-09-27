@@ -41,6 +41,7 @@ content:
       - name: title
         type: string
         required: true
+        description: "The article's headline, e.g. \"Freshers' Eve 2026\"."
 
       - name: date
         type: date
@@ -55,6 +56,7 @@ content:
       - name: subtitle2
         label: Byline (second author, optional)
         type: string
+        description: "Same format as the byline above, e.g. \"Swati Gautam (Teacher)\" — only fill this in if there's a second author."
 
       - name: profile-link
         label: Profile link override (optional)
@@ -64,6 +66,7 @@ content:
       - name: profile-link2
         label: Profile link override for second author (optional)
         type: string
+        description: "Same as the profile link override above, for the second author instead."
 
       - name: category
         type: string
@@ -81,15 +84,19 @@ content:
       - name: image2
         label: Gallery image 2 (Google Drive file ID, optional)
         type: string
+        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
       - name: image3
         label: Gallery image 3 (Google Drive file ID, optional)
         type: string
+        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
       - name: image4
         label: Gallery image 4 (Google Drive file ID, optional)
         type: string
+        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
       - name: image5
         label: Gallery image 5 (Google Drive file ID, optional)
         type: string
+        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
 
       - name: tags
         type: select
@@ -105,6 +112,7 @@ content:
 
       - name: body
         label: Article text
+        description: "The article itself. Write it the same way you'd write in a document — headings, bold text, and links all work."
         type: rich-text
         options:
           format: markdown
@@ -130,9 +138,11 @@ content:
       - name: title
         type: string
         required: true
+        description: "The write-up's headline, e.g. \"Digital Safety Workshop\"."
       - name: date
         type: date
         required: true
+        description: "The date this activity actually happened — also used to build the filename and to sort it on the Activities page."
       - name: subtitle
         label: Byline (author)
         type: string
@@ -140,12 +150,15 @@ content:
       - name: subtitle2
         label: Byline (second author, optional)
         type: string
+        description: "Same format as the byline above — only fill this in if there's a second author."
       - name: profile-link
         label: Profile link override (optional)
         type: string
+        description: "Only needed if the byline above has a middle name or unusual format that won't auto-match a profile. Paste the full profile URL here instead."
       - name: profile-link2
         label: Profile link override for second author (optional)
         type: string
+        description: "Same as the profile link override above, for the second author instead."
       - name: category
         type: string
         required: true
@@ -153,23 +166,30 @@ content:
       - name: image
         label: Thumbnail image (Google Drive file ID)
         type: string
+        description: "Paste just the file ID from the Drive sharing link (the long string between /d/ and /view), not the full URL. The file must be shared as \"Anyone with the link can view.\""
       - name: image2
         type: string
         label: Gallery image 2 (Google Drive file ID, optional)
+        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
       - name: image3
         type: string
         label: Gallery image 3 (Google Drive file ID, optional)
+        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
       - name: image4
         type: string
         label: Gallery image 4 (Google Drive file ID, optional)
+        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
       - name: image5
         type: string
         label: Gallery image 5 (Google Drive file ID, optional)
+        description: "Same as the thumbnail field above — an additional gallery image, same Drive file ID format and sharing requirement."
       - name: pinned
         type: boolean
         default: false
+        description: "If true, pins this write-up above the others in its category on the Activities page."
       - name: body
         label: Write-up text
+        description: "The write-up itself. Write it the same way you'd write in a document — headings, bold text, and links all work."
         type: rich-text
         options:
           format: markdown
@@ -202,6 +222,7 @@ content:
         label: Role
         type: string
         required: true
+        description: 'Must be exactly "Student (Class N)" for N = 6 through 12, "Teacher", or "Pre-School" — e.g. "Student (Class 11)".'
         pattern:
           regex: '^(Student \(Class (6|7|8|9|10|11|12)\)|Teacher|Pre-School)$'
           message: 'Must be exactly "Student (Class N)" (N = 6-12), "Teacher", or "Pre-School" -- the Profiles directory page sorts and groups by this exact text.'
@@ -209,10 +230,12 @@ content:
       - name: date
         type: date
         required: true
+        description: "When this profile was created or last significantly updated — shown on the page as \"Last updated on\"."
 
       - name: academic-year
         type: string
         required: true
+        description: 'e.g. "2026-27" for the 2026–2027 school year.'
         pattern:
           regex: '^\d{4}-\d{2}$'
           message: 'Must be in "YYYY-YY" format, e.g. "2026-27".'
@@ -224,6 +247,7 @@ content:
 
       - name: body
         label: Bio
+        description: "A short write-up about this person — a few paragraphs is typical."
         type: rich-text
         options:
           format: markdown
