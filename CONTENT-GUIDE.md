@@ -127,24 +127,28 @@ date: 2026-09-04
 
 ## Krishnamurti / Weekly Excerpts (`kfi.html`)
 
-**Easiest way:** use Pages CMS (see `CMS-GUIDE.md`) — the KFI collection there gives a proper "Add entry" form, including for entries with more than one link.
+**Easiest way:** use Pages CMS (see `CMS-GUIDE.md`) — the KFI collection there gives a proper "Add entry" form, identical to adding a Newsletter post, including for entries with more than one link.
 
-**By hand:** add an entry to `_data/kfi.yml`:
+**By hand:** add a new file to `_kfi/`, named `YYYY-MM-DD-a-short-slug.md`:
 
 ```yaml
-- year: "2025"
-  date: 2026-01-15
-  youtube_id: "YOUTUBE_VIDEO_ID"   # omit this line entirely for a document-only entry
-  links:
-  - text: "Excerpt Title"
-    url: "https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID"
+---
+title: "Excerpt Title"
+year: "2025"
+date: 2026-01-15
+youtube_id: "YOUTUBE_VIDEO_ID"   # omit this line entirely for a document-only entry
+links:
+- text: "Excerpt Title"
+  url: "https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID"
+---
 ```
 
+- `title` only matters for the CMS (filenames, its list view) — the live page always builds its caption from `links`, not from this field, but it's still required.
 - `year` must exactly match one of the tabs already defined near the top of `kfi.html` (the `year_blocks` Liquid variable) — unlike Videos/Photos, this is **not** computed automatically from the date.
 - `youtube_id` is only for entries with an embedded video. Leave it out entirely for a document-only entry (e.g. a linked PDF transcript with no video).
 - `links` is a list — most entries have just one (the excerpt's own title/link), but some entries link a video's related document or a separate playlist as a second item.
 - `date` builds the "Published on" caption automatically and sorts entries newest-first within their year.
-- Order in the file doesn't matter — sorted automatically at build time.
+- The filename doesn't need to be exact — sorted automatically at build time regardless of file naming.
 
 ### Adding a new academic year tab
 
