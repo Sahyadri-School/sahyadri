@@ -129,7 +129,7 @@ date: 2026-09-04
 
 **Easiest way:** use Pages CMS (see `CMS-GUIDE.md`) — the KFI collection there gives a proper "Add entry" form, identical to adding a Newsletter post, including for entries with more than one link.
 
-**By hand:** add a new file to `_kfi/`, named `YYYY-MM-DD.md` (just the date — if two excerpts ever land on the same date, disambiguate manually, e.g. `2025-08-22.md` and `2025-08-22-2.md`):
+**By hand:** add a new file to `_kfi/`, named `YYYY-MM-DD.md` (just the date — if two excerpts ever land on the same date, the simplest fix is shifting one entry's date by a few days rather than fighting with a filename suffix; that's what was done the one time this actually came up):
 
 ```yaml
 ---
