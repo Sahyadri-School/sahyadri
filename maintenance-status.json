@@ -1,0 +1,11 @@
+---
+# FILE: maintenance-status.json
+# PURPOSE: Tiny file reporting the site's current maintenance-mode state,
+# fetched fresh (cache: 'no-store' + a timestamp query string) by the
+# script in _includes/head.html on every page load. Exists specifically
+# so that check is immune to a visitor's browser (or GitHub's CDN)
+# serving a stale cached copy of the surrounding page's own HTML -- see
+# head.html's comment for the full explanation.
+layout: null
+---
+{"maintenance": {{ site.maintenance-mode | jsonify }}}
