@@ -144,7 +144,7 @@ links:
 
 - `year` must exactly match one of the tabs already defined near the top of `kfi.html` (the `year_blocks` Liquid variable) — unlike Videos/Photos, this is **not** computed automatically from the date.
 - `youtube_id` is only for entries with an embedded video. Leave it out entirely for a document-only entry (e.g. a linked PDF transcript with no video).
-- `links` is a list — most entries have just one (the excerpt's own title/link), but some entries link a video's related document or a separate playlist as a second item.
+- `links` is a list — most entries have just one (the excerpt's own title/link), but some entries link a video's related document or a separate playlist as a second item. `url` is optional on each: omit it to show that entry's `text` as a plain label instead of a clickable link.
 - `date` builds the "Published on" caption automatically and sorts entries newest-first within their year.
 - The filename doesn't need to be exact — sorted automatically at build time regardless of file naming.
 
