@@ -309,11 +309,13 @@ content:
     filename:
       # Date-only filename, e.g. 2026-01-15.md -- no title field exists
       # to build a slug from. If a school ever has two excerpts on the
-      # same date (has happened once so far: 22 Aug 2025), this template
-      # alone would generate the same filename for both. Whether Pages
-      # CMS itself detects and avoids that collision automatically is
-      # not confirmed -- if you ever hit this, check the existing entries
-      # for that date before saving a new one on the same day.
+      # same date (happened once so far -- resolved by shifting one
+      # entry's date by a week rather than adding a filename suffix),
+      # this template alone would generate the same filename for both.
+      # Whether Pages CMS itself detects and avoids that collision
+      # automatically is not confirmed -- if you ever hit this, check
+      # the existing entries for that date before saving a new one on
+      # the same day.
       template: "{fields.date}.md"
       field: false
     view:
