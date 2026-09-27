@@ -108,7 +108,7 @@ pinned: false                                # true pins this post above its cat
 Article text in Markdown.
 ```
 
-**How the byline link works:** `subtitle`/`subtitle2` is split into first and last word, lowercased and hyphenated (`"Bhagyashree Patil"` → `bhagyashree-patil`), and checked against `_profiles/` filenames. If a match exists, the name links to that profile page. If not, it links to `/not_done_yet` (served by `profiles-directory.html`) instead of a broken link. Names with a middle name/initial or an unusual format won't match automatically — use `profile-link`/`profile-link2` to point at the right page directly in that case.
+**How the byline link works:** `subtitle`/`subtitle2` is split into first and last word, lowercased and hyphenated (`"Bhagyashree Patil"` → `bhagyashree-patil`), and checked against `_profiles/` filenames. If a match exists, the name links to that profile page. If not, it links to `/not_done_yet` (served by `profiles-directory.html`) instead of a broken link. This mostly affects teacher bylines, whose name or title (a middle name, an honorific) more often won't match automatically — use `profile-link`/`profile-link2` to point at the right page directly in that case.
 
 ### Activity
 
