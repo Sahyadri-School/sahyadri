@@ -1,16 +1,16 @@
 <!-- FILE: _includes/head.html — Builds the full <head> tag: meta tags, Open Graph/Twitter cards, favicons, stylesheets, and JSON-LD. -->
 <head>
   <!-- Maintenance Mode Redirect — runs on every page load, unconditionally
-       (not gated by a Liquid {% if site.maintenance-mode %} the way this
+       (not gated by a build-time Liquid conditional the way this
        used to be). That old approach baked the redirect decision into
        each page's static HTML at build time, which meant a visitor whose
        browser served them a stale cached copy of a page built while
        maintenance-mode was true would keep getting redirected even after
-       the site owner turned it back off (or vice versa) -- GitHub Pages
+       the site owner turned it back off (or vice versa), and GitHub Pages
        doesn't allow setting custom Cache-Control headers to fix this at
        the HTTP level. Instead, this script always fetches
        maintenance-status.json fresh (cache: 'no-store' plus a timestamp
-       query string, so no cache layer -- browser or GitHub's CDN -- can
+       query string, so no cache layer, browser or GitHub's CDN, can
        serve a stale copy of THIS small file) and redirects only if that
        live check says maintenance is still genuinely on right now.
        Skips the redirect if a valid ?bypass= key is present in the URL or was previously
