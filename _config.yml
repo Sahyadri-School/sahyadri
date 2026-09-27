@@ -29,7 +29,7 @@ description: "A window into life at Sahyadri School — newsletters, activities,
 # prevents casual visitors from stumbling onto the bypass, not a
 # determined person reading the source.
 # -----------------------------------------------------------------------------
-maintenance-mode: false
+maintenance-mode: true
 maintenance-bypass-key: "timepass"
 
 # -----------------------------------------------------------------------------
