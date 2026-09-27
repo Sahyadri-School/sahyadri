@@ -1,0 +1,11 @@
+---
+title: Freedom & Authority
+year: '2025'
+date: 2025-09-12
+youtube_id: wm0lN9K8GNc
+links:
+- text: Freedom & Authority
+  url: https://www.youtube.com/watch?v=nS_YJ9m4XGg
+- text: Playlist on Authority
+  url: https://www.youtube.com/watch?v=hdjl3fkeEfA&list=PLz6qDr1232zSl1tdmcKZ62aJR7kJvkEIO
+---
