@@ -2,16 +2,14 @@
 # FILE: kfi.html
 # PURPOSE: 'Weekly Excerpts' page — Krishnamurti Foundation India video/excerpt listings,
 # tabbed by academic year. Custom inline JS handles tab switching (see switchAcademicYear()).
-# Entries come from the _kfi/ collection (one file per entry, front
-# matter: title/year/date/youtube_id (optional)/links; output: false in
-# _config.yml so no individual page gets generated per entry), looped
-# and sorted newest-first within each year here via Liquid. One file
-# per entry (rather than a single shared _data/kfi.yml list) matches
-# how Posts/Activities/Profiles/Videos/Photos work, so Pages CMS (see
-# .pages.yml) gives the exact same "Add entry" experience here too.
-# The `title` field only exists for the CMS's benefit (filenames,
-# identifying entries in its list view) -- nothing below actually reads
-# it, since the caption is always built from `links`.
+# Entries come from the _kfi/ collection (one file per entry, named by
+# date, e.g. 2026-01-15.md; front matter: year/date/youtube_id
+# (optional)/links; output: false in _config.yml so no individual page
+# gets generated per entry), looped and sorted newest-first within each
+# year here via Liquid. One file per entry (rather than a single shared
+# _data/kfi.yml list) matches how Posts/Activities/Profiles/Videos/
+# Photos work, so Pages CMS (see .pages.yml) gives the exact same "Add
+# entry" experience here too.
 # The year tabs themselves (year_blocks/default_active_year just below)
 # are NOT auto-computed from the data -- unlike Videos/Photos, adding a
 # new academic year's worth of content still needs a one-line manual
