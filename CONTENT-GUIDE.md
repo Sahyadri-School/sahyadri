@@ -29,7 +29,7 @@ image: ""
 Article text in Markdown goes here.
 ```
 
-- **`subtitle`** is the byline. It's split into first/last word and checked against `_profiles/` filenames to auto-link to that person's profile page — if there's no match, it links to a generic "profile not set up yet" page instead of breaking. A middle name, initial, or hyphenated surname will usually not match automatically; add `profile-link: "https://..."` to point it at the right page directly.
+- **`subtitle`** is the byline. It's split into first/last word and checked against `_profiles/` filenames to auto-link to that person's profile page — if there's no match, it links to a generic "profile not set up yet" page instead of breaking. This mostly comes up with teacher bylines: a middle name, initial, or honorific will usually not match automatically; add `profile-link: "https://..."` to point it at the right page directly.
 - **`category`** groups the post under a month heading on the Newsletter page (`/posts/`) — use `"Month YYYY"`, matching the existing convention.
 - **`image`** (optional) is a Google Drive file ID for the post's thumbnail. There's also `image2`–`image5` for a small gallery, and `pinned: true` to pin the post above others in its category.
 - Two authors: add `subtitle2` (and `profile-link2` if needed) the same way.
