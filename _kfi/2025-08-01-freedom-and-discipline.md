@@ -1,9 +1,0 @@
----
-title: Freedom and Discipline
-year: '2025'
-date: 2025-08-01
-youtube_id: f-3wSP0Au8o
-links:
-- text: Freedom and Discipline
-  url: https://docs.google.com/document/d/1doNEuiwZzAHul9JZGApYg9zOadnFaGqdq062YBBDsvY/view
----
