@@ -39,7 +39,7 @@ That's it — the site rebuilds automatically within a couple of minutes.
 
 ### A few things worth knowing
 
-- **The byline auto-links to a profile.** If you write "Aadya Tyagi (Class 12)" and a profile for Aadya Tyagi already exists, her name becomes a clickable link automatically — you don't need to do anything extra. If the auto-link doesn't work (usually because of a middle name or unusual name format), use the "Profile link override" field to paste the profile's URL directly instead.
+- **The byline auto-links to a profile.** If you write "Aadya Tyagi (Class 12)" and a profile for Aadya Tyagi already exists, her name becomes a clickable link automatically — you don't need to do anything extra. This mostly comes up with teacher bylines, whose name or title (a middle name, an honorific) more often won't auto-match a profile — if that happens, use the "Profile link override" field to paste the profile's URL directly instead.
 - **Two authors?** Use the second byline field, not a comma in the first one.
 - **"Pinned"** puts this post above the others in its category on the Newsletter page — use this sparingly, for something you specifically want to stay at the top.
 
