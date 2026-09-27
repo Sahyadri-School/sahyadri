@@ -33,6 +33,32 @@ subtitle: Click on thumbnail to open the album
         <ul class="sub-nav-list" id="year-toc"></ul>
     </nav>
 
+    <!-- Year-scoped search: filters albums within the currently active
+         academic year only. Resets whenever the user switches years (see
+         filterByYear() below). Reuses the same search-and-highlight
+         pattern as posts.md's year-search-input / videos.html's
+         video-search-input, adapted for this page's combined
+         year+pagination filtering. -->
+    <div class="year-search-container">
+        <span class="year-search-icon" aria-hidden="true"><i class="fa fa-search"></i></span>
+        <input
+            type="text"
+            id="photo-search-input"
+            class="year-search-input"
+            placeholder="Search within this academic year..."
+            aria-label="Search photo albums within the selected academic year"
+            oninput="filterPhotoSearch()"
+        >
+        <button
+            type="button"
+            id="photo-search-clear"
+            class="year-search-clear"
+            aria-label="Clear search"
+            onclick="clearPhotoSearch()"
+            style="display: none;"
+        >&times;</button>
+    </div>
+
     <!-- Main Album Grid Container -->
     <div class="photos-album-grid" id="main-grid">
 
@@ -96,6 +122,13 @@ subtitle: Click on thumbnail to open the album
             : `${year - 1}-${year.toString().slice(-2)}`;
     }
 
+    // Currently active academic year and search query, tracked so the two
+    // filters (year selection, in-year search) can be combined into one
+    // set of "matched" items fed to pagination, rather than each filter
+    // fighting over the same hidden-item class independently.
+    let currentYear = null;
+    let currentSearchQuery = '';
+
     /**
      * Manages 'Load More' button state and pagination chunking.
      * @param {Array<HTMLElement>} matchedItems - List of album items belonging to active academic year.
@@ -114,6 +147,111 @@ subtitle: Click on thumbnail to open the album
         };
     }
 
+    // Caches each figcaption's un-highlighted HTML so re-running the
+    // highlight on a new keystroke always starts clean, instead of
+    // nesting highlights inside previous highlights.
+    const photoSearchOriginalHtml = new WeakMap();
+
+    function photoSearchEscapeRegExp(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Walks a figcaption's DOM and wraps matches of `regex` inside text
+    // nodes only (never inside tags/attributes).
+    function photoSearchHighlightNode(node, regex) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            const text = node.nodeValue;
+            regex.lastIndex = 0;
+            if (!regex.test(text)) return;
+            regex.lastIndex = 0;
+            const frag = document.createDocumentFragment();
+            let lastIndex = 0;
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+                if (match.index > lastIndex) {
+                    frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+                }
+                const mark = document.createElement('mark');
+                mark.className = 'year-search-highlight';
+                mark.textContent = match[0];
+                frag.appendChild(mark);
+                lastIndex = match.index + match[0].length;
+                if (match[0].length === 0) regex.lastIndex++;
+            }
+            if (lastIndex < text.length) {
+                frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+            }
+            node.parentNode.replaceChild(frag, node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+            Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+                photoSearchHighlightNode(child, regex);
+            });
+        }
+    }
+
+    function photoSearchApplyHighlight(caption, query) {
+        if (!photoSearchOriginalHtml.has(caption)) {
+            photoSearchOriginalHtml.set(caption, caption.innerHTML);
+        }
+        caption.innerHTML = photoSearchOriginalHtml.get(caption);
+        if (!query) return;
+        const regex = new RegExp(photoSearchEscapeRegExp(query), 'gi');
+        photoSearchHighlightNode(caption, regex);
+    }
+
+    /**
+     * Combines the currently active year with the current search query
+     * into one filtered set, updates visibility/pagination/highlighting,
+     * and shows a "no results" message when nothing matches.
+     */
+    function applyPhotoFilters() {
+        const all = Array.from(document.querySelectorAll('.photos-album-item'));
+        const query = currentSearchQuery.trim().toLowerCase();
+
+        const yearItems = all.filter(el => el.dataset.academicYear === currentYear);
+        const matched = yearItems.filter(el => {
+            if (query === '') return true;
+            const text = el.querySelector('figcaption').textContent.toLowerCase();
+            return text.indexOf(query) !== -1;
+        });
+
+        all.forEach(el => el.classList.add('hidden-item'));
+        matched.slice(0, ITEMS_PER_PAGE).forEach(el => el.classList.remove('hidden-item'));
+
+        yearItems.forEach(el => {
+            photoSearchApplyHighlight(el.querySelector('figcaption'), matched.includes(el) ? query : '');
+        });
+
+        updateLoadMore(matched);
+
+        const grid = document.getElementById('main-grid');
+        let noResultsMsg = grid.querySelector('.year-search-no-results');
+        if (!noResultsMsg) {
+            noResultsMsg = document.createElement('p');
+            noResultsMsg.className = 'no-posts-msg year-search-no-results';
+            noResultsMsg.textContent = 'No albums match your search within this academic year.';
+            grid.appendChild(noResultsMsg);
+        }
+        noResultsMsg.style.display = (matched.length === 0 && query !== '') ? '' : 'none';
+    }
+
+    function filterPhotoSearch() {
+        const input = document.getElementById('photo-search-input');
+        currentSearchQuery = input.value;
+        const clearBtn = document.getElementById('photo-search-clear');
+        if (clearBtn) clearBtn.style.display = currentSearchQuery.trim() === '' ? 'none' : '';
+        applyPhotoFilters();
+    }
+
+    function clearPhotoSearch() {
+        const input = document.getElementById('photo-search-input');
+        input.value = '';
+        currentSearchQuery = '';
+        applyPhotoFilters();
+        input.focus();
+    }
+
     /**
      * Filters visible album items based on selected academic year tab.
      * @param {string} year - Selected academic year string (e.g., "2025-26").
@@ -126,16 +264,15 @@ subtitle: Click on thumbnail to open the album
         document.querySelectorAll('.sub-nav-list li').forEach(li => li.classList.remove('active'));
         activeEl?.classList.add('active');
 
-        // Filter album items matching target academic year
-        const all = Array.from(document.querySelectorAll('.photos-album-item'));
-        const matched = all.filter(el => el.dataset.academicYear === year);
+        currentYear = year;
 
-        // Hide all items, then reveal only the first chunk of matched items
-        all.forEach(el => el.classList.add('hidden-item'));
-        matched.slice(0, ITEMS_PER_PAGE).forEach(el => el.classList.remove('hidden-item'));
+        // Reset the in-year search box when switching tabs, since the
+        // search should only ever apply to whichever year is visible.
+        const searchInput = document.getElementById('photo-search-input');
+        if (searchInput) searchInput.value = '';
+        currentSearchQuery = '';
 
-        // Re-evaluate pagination button state
-        updateLoadMore(matched);
+        applyPhotoFilters();
     }
 
     /**
