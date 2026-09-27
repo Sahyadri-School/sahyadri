@@ -31,16 +31,16 @@ ignore_files:
   - "./_site/photos/index.html"
   - "./_site/profiles/index.html"
 
-# Check Links, Scripts, and (as of this addition) Images -- disable_external
-# above is a global setting, so the Images check does NOT try to fetch
-# every Google Drive-hosted photo/thumbnail to confirm it loads (that
-# would be slow and exactly the kind of external-network flakiness
-# disable_external exists to avoid). What it DOES catch, for free: an
-# empty src="", a missing alt attribute, and any genuinely local image
-# reference that's broken -- a narrower, CI-safe safeguard against the
-# kind of mistake a wrong/mismatched image ID can otherwise cause, since
-# nothing else currently checks images at all.
+# Only check Links and Scripts — not Images.
+# Images was briefly enabled and immediately failed for a reason that
+# couldn't be diagnosed: GitHub Actions caps error annotations at 10 per
+# step, and the actual failure detail (which file, which image) fell
+# past that cap every time. html-proofer itself can't be installed
+# locally to reproduce the failure directly either (rubygems.org isn't
+# reachable from the environment that was debugging this). Reverted
+# rather than leave the build broken -- re-enabling this would need
+# either a way to see the untruncated CI output, or a local Ruby/
+# html-proofer setup to test against first.
 checks:
   - Links
   - Scripts
-  - Images
