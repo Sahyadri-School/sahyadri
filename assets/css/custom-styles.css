@@ -1526,6 +1526,47 @@ html { scroll-behavior: smooth; }
     box-shadow: 0 0 0 3px rgba(122, 150, 112, 0.2);
 }
 
+/* .global-search-container: a slightly more prominent variant of the
+   search box above, used on Videos/Photos where search now sits at the
+   top of the page (searching across all academic years) rather than
+   tucked inside a single year panel like Newsletter's. Same base
+   behavior/classes, just given more visual weight for that position. */
+.global-search-container {
+    max-width: 480px;
+    margin: 0.5rem auto 1.75rem auto;
+}
+
+.global-search-container .year-search-input {
+    padding: 13px 42px 13px 44px;
+    font-size: 1rem;
+    border-radius: 26px;
+    border-color: #c3cec3;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.global-search-container .year-search-input:focus {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08), 0 0 0 3px rgba(95, 116, 95, 0.15);
+}
+
+.global-search-container .year-search-icon {
+    left: 18px;
+    font-size: 1rem;
+}
+
+.global-search-container .year-search-clear {
+    right: 14px;
+    font-size: 1.4rem;
+}
+
+.dark-mode .global-search-container .year-search-input {
+    border-color: #3a3a3a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.dark-mode .global-search-container .year-search-input:focus {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(122, 150, 112, 0.2);
+}
+
 /* Highlights the matched search term inside visible post-preview cards,
    applied by yearSearchApplyHighlight() in the JS above. */
 mark.year-search-highlight {
