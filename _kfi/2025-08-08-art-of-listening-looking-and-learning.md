@@ -1,0 +1,9 @@
+---
+title: Art of Listening, Looking and Learning
+year: '2025'
+date: 2025-08-08
+youtube_id: Ke32Z2KkS6w
+links:
+- text: Art of Listening, Looking and Learning
+  url: https://journal.kfionline.org/issue-4/the-arts-of-listening-looking-and-learning
+---
