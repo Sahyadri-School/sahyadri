@@ -29,6 +29,31 @@ subtitle: Click on the thumbnail to watch
         <ul class="sub-nav-list" id="year-toc"></ul>
     </nav>
 
+    <!-- Year-scoped search: filters videos within the currently active
+         academic year only. Resets whenever the user switches years (see
+         filterVideos() below). Reuses the same search-and-highlight
+         pattern as posts.md's year-search-input, adapted for this page's
+         combined year+pagination filtering. -->
+    <div class="year-search-container">
+        <span class="year-search-icon" aria-hidden="true"><i class="fa fa-search"></i></span>
+        <input
+            type="text"
+            id="video-search-input"
+            class="year-search-input"
+            placeholder="Search within this academic year..."
+            aria-label="Search videos within the selected academic year"
+            oninput="filterVideoSearch()"
+        >
+        <button
+            type="button"
+            id="video-search-clear"
+            class="year-search-clear"
+            aria-label="Clear search"
+            onclick="clearVideoSearch()"
+            style="display: none;"
+        >&times;</button>
+    </div>
+
     <!-- Grid Container holding all YouTube Video Items -->
     <div class="videos-page-grid" id="videoGrid">
 
@@ -101,6 +126,13 @@ subtitle: Click on the thumbnail to watch
             : `${year - 1}-${year.toString().slice(-2)}`;
     }
 
+    // Currently active academic year and search query, tracked so the two
+    // filters (year selection, in-year search) can be combined into one
+    // set of "matched" items fed to pagination, rather than each filter
+    // fighting over the same hidden-item class independently.
+    let currentYear = null;
+    let currentSearchQuery = '';
+
     /**
      * Controls visibility of the "Load More" button and handles pagination batches
      * @param {Array<HTMLElement>} matchedItems - Array of video element nodes matching active year
@@ -119,6 +151,111 @@ subtitle: Click on the thumbnail to watch
         };
     }
 
+    // Caches each figcaption's un-highlighted HTML so re-running the
+    // highlight on a new keystroke always starts clean, instead of
+    // nesting highlights inside previous highlights.
+    const videoSearchOriginalHtml = new WeakMap();
+
+    function videoSearchEscapeRegExp(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Walks a figcaption's DOM and wraps matches of `regex` inside text
+    // nodes only (never inside tags/attributes).
+    function videoSearchHighlightNode(node, regex) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            const text = node.nodeValue;
+            regex.lastIndex = 0;
+            if (!regex.test(text)) return;
+            regex.lastIndex = 0;
+            const frag = document.createDocumentFragment();
+            let lastIndex = 0;
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+                if (match.index > lastIndex) {
+                    frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+                }
+                const mark = document.createElement('mark');
+                mark.className = 'year-search-highlight';
+                mark.textContent = match[0];
+                frag.appendChild(mark);
+                lastIndex = match.index + match[0].length;
+                if (match[0].length === 0) regex.lastIndex++;
+            }
+            if (lastIndex < text.length) {
+                frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+            }
+            node.parentNode.replaceChild(frag, node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
+            Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+                videoSearchHighlightNode(child, regex);
+            });
+        }
+    }
+
+    function videoSearchApplyHighlight(caption, query) {
+        if (!videoSearchOriginalHtml.has(caption)) {
+            videoSearchOriginalHtml.set(caption, caption.innerHTML);
+        }
+        caption.innerHTML = videoSearchOriginalHtml.get(caption);
+        if (!query) return;
+        const regex = new RegExp(videoSearchEscapeRegExp(query), 'gi');
+        videoSearchHighlightNode(caption, regex);
+    }
+
+    /**
+     * Combines the currently active year with the current search query
+     * into one filtered set, updates visibility/pagination/highlighting,
+     * and shows a "no results" message when nothing matches.
+     */
+    function applyVideoFilters() {
+        const all = Array.from(document.querySelectorAll('.videos-page-item'));
+        const query = currentSearchQuery.trim().toLowerCase();
+
+        const yearItems = all.filter(el => el.dataset.academicYear === currentYear);
+        const matched = yearItems.filter(el => {
+            if (query === '') return true;
+            const text = el.querySelector('figcaption').textContent.toLowerCase();
+            return text.indexOf(query) !== -1;
+        });
+
+        all.forEach(el => el.classList.add('hidden-item'));
+        matched.slice(0, ITEMS_PER_PAGE).forEach(el => el.classList.remove('hidden-item'));
+
+        yearItems.forEach(el => {
+            videoSearchApplyHighlight(el.querySelector('figcaption'), matched.includes(el) ? query : '');
+        });
+
+        updateLoadMore(matched);
+
+        const grid = document.getElementById('videoGrid');
+        let noResultsMsg = grid.querySelector('.year-search-no-results');
+        if (!noResultsMsg) {
+            noResultsMsg = document.createElement('p');
+            noResultsMsg.className = 'no-posts-msg year-search-no-results';
+            noResultsMsg.textContent = 'No videos match your search within this academic year.';
+            grid.appendChild(noResultsMsg);
+        }
+        noResultsMsg.style.display = (matched.length === 0 && query !== '') ? '' : 'none';
+    }
+
+    function filterVideoSearch() {
+        const input = document.getElementById('video-search-input');
+        currentSearchQuery = input.value;
+        const clearBtn = document.getElementById('video-search-clear');
+        if (clearBtn) clearBtn.style.display = currentSearchQuery.trim() === '' ? 'none' : '';
+        applyVideoFilters();
+    }
+
+    function clearVideoSearch() {
+        const input = document.getElementById('video-search-input');
+        input.value = '';
+        currentSearchQuery = '';
+        applyVideoFilters();
+        input.focus();
+    }
+
     /**
      * Filters grid items based on selected Academic Year
      * @param {string} year - Selected academic year string
@@ -131,14 +268,15 @@ subtitle: Click on the thumbnail to watch
         document.querySelectorAll('.sub-nav-list li').forEach(li => li.classList.remove('active'));
         activeEl?.classList.add('active');
 
-        const all = Array.from(document.querySelectorAll('.videos-page-item'));
-        const matched = all.filter(el => el.dataset.academicYear === year);
+        currentYear = year;
 
-        // Hide all items, then unhide the first page chunk of matched items
-        all.forEach(el => el.classList.add('hidden-item'));
-        matched.slice(0, ITEMS_PER_PAGE).forEach(el => el.classList.remove('hidden-item'));
+        // Reset the in-year search box when switching tabs, since the
+        // search should only ever apply to whichever year is visible.
+        const searchInput = document.getElementById('video-search-input');
+        if (searchInput) searchInput.value = '';
+        currentSearchQuery = '';
 
-        updateLoadMore(matched);
+        applyVideoFilters();
     }
 
     /**
