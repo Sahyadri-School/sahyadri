@@ -1,8 +1,0 @@
----
-title: Light Unto Oneself
-year: '2025'
-date: 2025-12-13
-links:
-- text: Light Unto Oneself
-  url: https://drive.google.com/file/d/1CRp8Jbd8_oGXVa951jxcnQKQAcePBPxd/view?usp=sharing
----
