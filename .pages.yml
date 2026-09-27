@@ -61,12 +61,12 @@ content:
       - name: profile-link
         label: Profile link override (optional)
         type: string
-        description: "Only needed if the byline above has a middle name or unusual format that won't auto-match a profile. Paste the full profile URL here instead, e.g. \"https://connect.sahyadrischool.org/profiles/aadya-tyagi/\"."
+        description: "Only for teacher bylines whose name/title doesn't auto-match a profile (e.g. a title or middle name). Paste the full profile URL here instead, e.g. \"https://connect.sahyadrischool.org/profiles/swati-gautam/\"."
 
       - name: profile-link2
         label: Profile link override for second author (optional)
         type: string
-        description: "Same as the profile link override above, for the second author instead, e.g. \"https://connect.sahyadrischool.org/profiles/swati-gautam/\"."
+        description: "Same as the profile link override above, for a second teacher author instead."
 
       - name: category
         type: string
@@ -154,11 +154,11 @@ content:
       - name: profile-link
         label: Profile link override (optional)
         type: string
-        description: "Only needed if the byline above has a middle name or unusual format that won't auto-match a profile. Paste the full profile URL here instead, e.g. \"https://connect.sahyadrischool.org/profiles/aadya-tyagi/\"."
+        description: "Only for teacher bylines whose name/title doesn't auto-match a profile (e.g. a title or middle name). Paste the full profile URL here instead, e.g. \"https://connect.sahyadrischool.org/profiles/swati-gautam/\"."
       - name: profile-link2
         label: Profile link override for second author (optional)
         type: string
-        description: "Same as the profile link override above, for the second author instead, e.g. \"https://connect.sahyadrischool.org/profiles/swati-gautam/\"."
+        description: "Same as the profile link override above, for a second teacher author instead."
       - name: category
         type: string
         required: true
