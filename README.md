@@ -30,11 +30,9 @@ The site hosts:
 │                                site.videos for videos.html to loop over)
 ├── _photos/                   # One file per photo album (output: false,
 │                                same reasoning as _videos/)
-├── _data/
-│   └── kfi.yml                # All Krishnamurti/Weekly Excerpts entries
-│                                in one file (unlike Videos/Photos, this
-│                                one wasn't split into individual files —
-│                                see .pages.yml's own top comment for why)
+├── _kfi/                      # One file per Krishnamurti/Weekly Excerpt
+│                                entry (output: false, same reasoning as
+│                                _videos/_photos)
 ├── _layouts/
 │   ├── base.html             # <html>/<head>/<body> shell every page extends
 │   ├── page.html              # Standard content page (extends base)
@@ -65,7 +63,7 @@ The site hosts:
 │                                yet (permalink: /not_done_yet)
 ├── videos.html                 # Loops over _videos/ (site.videos)
 ├── photos.html                 # Loops over _photos/ (site.photos)
-├── kfi.html                    # Loops over _data/kfi.yml (site.data.kfi)
+├── kfi.html                    # Loops over _kfi/ (site.kfi)
 ├── ninad.md, geeth-gunjan.md   # PDF archive pages
 ├── tags.html                  # Tag index, grouped by tag with a sticky
 │                                TOC sidebar (same pattern as Newsletter/
@@ -212,7 +210,7 @@ This unlocks browsing for the rest of that browser tab's session (via `sessionSt
 | `firebase-*` (six keys) | Firebase project config for the custom comments widget |
 | `emailjs-*`, `comments-moderator-email` | Optional moderation email notifications |
 | `defaults` | Per-collection layout/front-matter defaults (posts/activities get `layout: post`; profiles get `layout: profile`; everything else gets `layout: page`) |
-| `collections` | Registers `posts`, `activities`, `profiles` with `output: true` (each gets individual pages) and `videos`, `photos` with `output: false` (enumerable via `site.videos`/`site.photos`, but no individual pages — they only ever appear as grid items) |
+| `collections` | Registers `posts`, `activities`, `profiles` with `output: true` (each gets individual pages) and `videos`, `photos`, `kfi` with `output: false` (enumerable via `site.videos`/`site.photos`/`site.kfi`, but no individual pages — they only ever appear as grid/list items) |
 
 ## Local development
 
