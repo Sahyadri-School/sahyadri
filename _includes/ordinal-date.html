@@ -4,7 +4,7 @@
 # (Videos, Photos, KFI). Jekyll/Liquid has no built-in ordinal-suffix
 # filter, so this computes it by hand from the day-of-month.
 # USAGE: {% include ordinal-date.html date=some_date_value %}
-# WARNING: do NOT call this from inside a {% for %} loop -- on this
+# WARNING: do NOT call this from inside a for loop -- on this
 # site's Liquid version, repeatedly including the same file inside a
 # loop trips a Liquid::StackLevelError ("Nesting too deep"), even
 # though nothing is actually recursive. videos.html hit exactly this
