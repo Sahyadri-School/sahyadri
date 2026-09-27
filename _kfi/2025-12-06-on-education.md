@@ -1,8 +1,0 @@
----
-title: On Education
-year: '2025'
-date: 2025-12-06
-links:
-- text: On Education
-  url: https://drive.google.com/file/d/1k9yyx9aGJ-aGxygMPTJ1tfpP2D4wWVds/view?usp=sharing
----
