@@ -378,6 +378,17 @@ content:
             description: "A Google Drive/Docs link, a YouTube link, or any other URL relevant to this excerpt, e.g. \"https://www.youtube.com/watch?v=abc123XYZ4\"."
 
 settings:
+  # merge: true preserves front-matter keys not listed in a collection's
+  # fields (e.g. layout: post/activity/profile) when Pages CMS saves an
+  # edit, instead of the default behavior of rewriting the file from the
+  # schema alone and dropping anything else. Not currently an active
+  # bug -- _config.yml's own `defaults:` sets the right layout per
+  # collection regardless, as a Jekyll-level fallback -- but relying on
+  # that coincidence isn't robust: if those defaults ever change, files
+  # that already lost their explicit layout: via a CMS edit would
+  # silently pick up the new value while untouched files wouldn't.
+  content:
+    merge: true
   commit:
     templates:
       create: "Add {name} entry via Pages CMS: {path}"
