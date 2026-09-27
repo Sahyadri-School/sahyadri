@@ -28,25 +28,19 @@ subtitle: Click on thumbnail to open the album
 <!-- Main Page HTML Markup Structure -->
 <div class="photos-page-container">
 
-    <!-- Top Navigation Bar (Dynamically populated with Academic Years via JavaScript) -->
-    <nav class="sub-nav-options">
-        <ul class="sub-nav-list" id="year-toc"></ul>
-    </nav>
-
-    <!-- Year-scoped search: filters albums within the currently active
-         academic year only. Resets whenever the user switches years (see
-         filterByYear() below). Reuses the same search-and-highlight
-         pattern as posts.md's year-search-input / videos.html's
-         video-search-input, adapted for this page's combined
-         year+pagination filtering. -->
+    <!-- Global search: filters albums across ALL academic years, not
+         just the currently selected tab. Deselects the active year tab
+         while a search query is present, since results may span years;
+         clicking a tab clears the search and returns to normal
+         year-scoped browsing. -->
     <div class="year-search-container">
         <span class="year-search-icon" aria-hidden="true"><i class="fa fa-search"></i></span>
         <input
             type="text"
             id="photo-search-input"
             class="year-search-input"
-            placeholder="Search within this academic year..."
-            aria-label="Search photo albums within the selected academic year"
+            placeholder="Search all albums..."
+            aria-label="Search photo albums across all academic years"
             oninput="filterPhotoSearch()"
         >
         <button
@@ -58,6 +52,11 @@ subtitle: Click on thumbnail to open the album
             style="display: none;"
         >&times;</button>
     </div>
+
+    <!-- Top Navigation Bar (Dynamically populated with Academic Years via JavaScript) -->
+    <nav class="sub-nav-options">
+        <ul class="sub-nav-list" id="year-toc"></ul>
+    </nav>
 
     <!-- Main Album Grid Container -->
     <div class="photos-album-grid" id="main-grid">
@@ -201,17 +200,22 @@ subtitle: Click on thumbnail to open the album
     }
 
     /**
-     * Combines the currently active year with the current search query
-     * into one filtered set, updates visibility/pagination/highlighting,
-     * and shows a "no results" message when nothing matches.
+     * When a search query is present, matches against ALL albums across
+     * every academic year (ignoring the currently selected tab). When
+     * the query is empty, falls back to normal year-scoped browsing.
+     * Either way, updates visibility/pagination/highlighting, and shows
+     * a "no results" message when nothing matches.
      */
     function applyPhotoFilters() {
         const all = Array.from(document.querySelectorAll('.photos-album-item'));
         const query = currentSearchQuery.trim().toLowerCase();
+        const searching = query !== '';
 
-        const yearItems = all.filter(el => el.dataset.academicYear === currentYear);
-        const matched = yearItems.filter(el => {
-            if (query === '') return true;
+        // While searching, no single year tab is "current" -- candidates
+        // are every item site-wide. Otherwise, only the selected year.
+        const candidates = searching ? all : all.filter(el => el.dataset.academicYear === currentYear);
+        const matched = candidates.filter(el => {
+            if (!searching) return true;
             const text = el.querySelector('figcaption').textContent.toLowerCase();
             return text.indexOf(query) !== -1;
         });
@@ -219,9 +223,14 @@ subtitle: Click on thumbnail to open the album
         all.forEach(el => el.classList.add('hidden-item'));
         matched.slice(0, ITEMS_PER_PAGE).forEach(el => el.classList.remove('hidden-item'));
 
-        yearItems.forEach(el => {
+        candidates.forEach(el => {
             photoSearchApplyHighlight(el.querySelector('figcaption'), matched.includes(el) ? query : '');
         });
+
+        // Deselect year tabs while searching, since matches may span years.
+        if (searching) {
+            document.querySelectorAll('.sub-nav-list li').forEach(li => li.classList.remove('active'));
+        }
 
         updateLoadMore(matched);
 
@@ -230,10 +239,12 @@ subtitle: Click on thumbnail to open the album
         if (!noResultsMsg) {
             noResultsMsg = document.createElement('p');
             noResultsMsg.className = 'no-posts-msg year-search-no-results';
-            noResultsMsg.textContent = 'No albums match your search within this academic year.';
             grid.appendChild(noResultsMsg);
         }
-        noResultsMsg.style.display = (matched.length === 0 && query !== '') ? '' : 'none';
+        noResultsMsg.textContent = searching
+            ? 'No albums match your search.'
+            : 'No albums in this academic year.';
+        noResultsMsg.style.display = matched.length === 0 ? '' : 'none';
     }
 
     function filterPhotoSearch() {
@@ -249,6 +260,11 @@ subtitle: Click on thumbnail to open the album
         input.value = '';
         currentSearchQuery = '';
         applyPhotoFilters();
+        // Restore the active tab's highlighting, since clearing search
+        // falls back to year-scoped browsing again.
+        const activeLi = Array.from(document.querySelectorAll('.sub-nav-list li'))
+            .find(li => li.textContent === currentYear);
+        activeLi?.classList.add('active');
         input.focus();
     }
 
@@ -266,11 +282,13 @@ subtitle: Click on thumbnail to open the album
 
         currentYear = year;
 
-        // Reset the in-year search box when switching tabs, since the
-        // search should only ever apply to whichever year is visible.
+        // Clicking a year tab always clears any active search and
+        // returns to normal year-scoped browsing.
         const searchInput = document.getElementById('photo-search-input');
         if (searchInput) searchInput.value = '';
         currentSearchQuery = '';
+        const clearBtn = document.getElementById('photo-search-clear');
+        if (clearBtn) clearBtn.style.display = 'none';
 
         applyPhotoFilters();
     }
