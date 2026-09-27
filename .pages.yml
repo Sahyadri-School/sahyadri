@@ -368,14 +368,14 @@ content:
         description: "One or more linked items shown in the caption, e.g. one entry with text \"On Education\" and a YouTube URL -- most entries have just one (the excerpt's title/link), but some link both a video's related document and a separate playlist, for example."
         fields:
           - name: text
-            label: Link text
+            label: Text
             type: string
             required: true
-            description: "The excerpt's title, e.g. \"On Education\" -- shown as the clickable link text."
+            description: "The excerpt's title, e.g. \"On Education\" -- shown as clickable link text if the URL below is filled in, or as a plain label if it's left blank."
           - name: url
+            label: URL (optional)
             type: string
-            required: true
-            description: "A Google Drive/Docs link, a YouTube link, or any other URL relevant to this excerpt, e.g. \"https://www.youtube.com/watch?v=abc123XYZ4\"."
+            description: "A Google Drive/Docs link, a YouTube link, or any other URL relevant to this excerpt, e.g. \"https://www.youtube.com/watch?v=abc123XYZ4\". Leave blank to show the text above as a plain label instead of a clickable link."
 
 settings:
   # merge: true preserves front-matter keys not listed in a collection's
