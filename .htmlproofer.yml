@@ -22,10 +22,12 @@ ignore_urls:
 
 # Ignore these files from all checks:
 # - feed.xml: not HTML
+# - maintenance-status.json: not HTML
 # - photos/index.html: <img src=""> are JS-populated via data-img attribute
 # - profiles/index.html: <img src="${p.image}"> is a JS template literal
 ignore_files:
   - "./_site/feed.xml"
+  - "./_site/maintenance-status.json"
   - "./_site/photos/index.html"
   - "./_site/profiles/index.html"
 
