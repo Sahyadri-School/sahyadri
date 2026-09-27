@@ -307,20 +307,23 @@ content:
     path: _kfi
     format: yaml-frontmatter
     filename:
-      template: "{fields.date}-{primary}.md"
+      # Date-only filename, e.g. 2026-01-15.md -- no title field exists
+      # to build a slug from. If a school ever has two excerpts on the
+      # same date (has happened once so far: 22 Aug 2025), this template
+      # alone would generate the same filename for both. Whether Pages
+      # CMS itself detects and avoids that collision automatically is
+      # not confirmed -- if you ever hit this, check the existing entries
+      # for that date before saving a new one on the same day.
+      template: "{fields.date}.md"
       field: false
     view:
-      fields: [title, year, date, youtube_id]
-      primary: title
+      fields: [year, date, youtube_id]
+      primary: date
       sort: [date, year]
       default:
         sort: date
         order: desc
     fields:
-      - name: title
-        type: string
-        required: true
-        description: "The excerpt's own name, e.g. \"On Education\". Only used here in the CMS (for the filename and this list view) -- the live page always builds its caption from the links below, not from this field."
       - name: year
         type: string
         required: true
