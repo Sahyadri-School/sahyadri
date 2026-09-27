@@ -84,6 +84,12 @@ Click **Krishnamurti / Weekly Excerpts** in the sidebar → **Add entry**.
 - **Links** — usually just one (the excerpt's own title and link), but you can add a second if this excerpt has, say, both a video and a separate related document or playlist.
 - **Date** builds the "Published on" text automatically and sorts the entry into the right place.
 
+## If a collection looks broken or asks to "create a file" that shouldn't exist
+
+The CMS occasionally holds onto an old cached copy of its own configuration in your browser, especially if it's been a while since you last used it. If a collection shows an unexpected error (e.g. offering to create a file at a path that doesn't match how that content actually works, or a section that used to work suddenly doesn't), the most likely fix is a hard refresh of the page — or closing the tab and opening [app.pagescms.org](https://app.pagescms.org) fresh. That forces it to re-fetch the current setup instead of an outdated one.
+
+If a hard refresh doesn't clear it, flag it rather than trying to work around it — an outdated config can occasionally cause a save to go to the wrong place.
+
 ## If something looks wrong after publishing
 
 Changes usually appear on the live site within a couple of minutes. If a page looks broken or something didn't save right, don't try to fix it by guessing — flag it to whoever manages the site's GitHub repository.
