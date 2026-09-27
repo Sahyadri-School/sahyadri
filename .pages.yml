@@ -1,18 +1,15 @@
 # .pages.yml — Pages CMS configuration for Sahyadri Connect
 #
-# Covers Newsletter Posts, Activities, Profiles, Videos, and Photos --
-# all five as type: collection (one file per entry, exactly like Posts),
-# so every one of them gives the identical "Add entry" experience: click
-# in, fill the form, save. Videos/Photos used to be a single shared
-# _data/*.yml file each; both were split into their own _videos/_photos
-# collections specifically so the CMS could treat them the same as
-# everything else instead of a special-cased list-in-one-file editor.
-#
-# KFI (Krishnamurti/Weekly Excerpts) is still type: file/list: true,
-# reading _data/kfi.yml -- it mixes two different entry shapes (embedded
-# videos and plain document links, some entries with more than one
-# link), which doesn't map cleanly onto a single flat front-matter
-# schema the way Videos/Photos now do.
+# Covers Newsletter Posts, Activities, Profiles, Videos, Photos, and KFI
+# (Krishnamurti/Weekly Excerpts) -- all six as type: collection (one
+# file per entry, exactly like Posts), so every one of them gives the
+# identical "Add entry" experience: click in, fill the form, save.
+# Videos/Photos/KFI each used to be a single shared _data/*.yml file;
+# all three were split into their own _videos/_photos/_kfi collections
+# specifically so the CMS could treat them the same as everything else
+# instead of a special-cased list-in-one-file editor (which also turned
+# out to hit a validator bug in this Pages CMS deployment around the
+# min/max object form of list: on a repeated object field).
 #
 # No `media:` key is defined on purpose — every image on this site is a
 # Google Drive file ID pasted as plain text (see each field's description
@@ -306,18 +303,24 @@ content:
 
   - name: kfi
     label: Krishnamurti / Weekly Excerpts
-    type: file
-    path: _data/kfi.yml
-    format: yaml
-    list: true
+    type: collection
+    path: _kfi
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.date}-{primary}.md"
+      field: false
     view:
-      fields: [year, date, youtube_id]
-      primary: date
+      fields: [title, year, date, youtube_id]
+      primary: title
       sort: [date, year]
       default:
         sort: date
         order: desc
     fields:
+      - name: title
+        type: string
+        required: true
+        description: "The excerpt's own name, e.g. \"On Education\". Only used here in the CMS (for the filename and this list view) -- the live page always builds its caption from the links below, not from this field."
       - name: year
         type: string
         required: true
@@ -332,8 +335,7 @@ content:
         description: "The 11-character ID from the video's URL. Leave blank for a document-only entry with no embedded video (e.g. a linked PDF transcript)."
       - name: links
         type: object
-        list:
-          min: 1
+        list: true
         description: "One or more linked items shown in the caption -- most entries have just one (the excerpt's title/link), but some link both a video's related document and a separate playlist, for example."
         fields:
           - name: text
