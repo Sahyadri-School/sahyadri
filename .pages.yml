@@ -66,7 +66,7 @@ content:
       - name: profile-link2
         label: Profile link override for second author (optional)
         type: string
-        description: "Same as the profile link override above, for a second teacher author instead."
+        description: "Same as the profile link override above, for a second teacher author instead, e.g. \"https://connect.sahyadrischool.org/profiles/swati-gautam/\"."
 
       - name: category
         type: string
@@ -158,7 +158,7 @@ content:
       - name: profile-link2
         label: Profile link override for second author (optional)
         type: string
-        description: "Same as the profile link override above, for a second teacher author instead."
+        description: "Same as the profile link override above, for a second teacher author instead, e.g. \"https://connect.sahyadrischool.org/profiles/swati-gautam/\"."
       - name: category
         type: string
         required: true
