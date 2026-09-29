@@ -1,29 +1,28 @@
 ---
 ---
+{% comment %}
+  FILE: site.webmanifest
+  PURPOSE: Web app manifest -- lets phones/desktops "install" the site with a proper
+  name and icon (Add to Home Screen). Linked from _includes/head.html.
+  Icons live in assets/img/ (editable vector master: icon.svg). Three files, each for
+  a different job:
+    - icon-192.png / icon-512.png : normal icons ("any")
+    - icon-maskable-512.png       : full-bleed version Android can crop to a circle or
+                                    rounded square without cutting anything important
+  The icon is a redrawn version of the school logo's mountain-and-birds mark.
+  theme_color falls back to the navbar colour if mobile-theme-col isn't set in _config.yml.
+{% endcomment %}
 {
-  "//": "==========================================================================",
-  "//": "WEB APP MANIFEST TEMPLATE (manifest.json)",
-  "//": "Provides metadata to allow the web app to be installed on modern mobile/desktop",
-  "//": "==========================================================================",
-
-  "//": "Full name of the web application used on application splash screens & launcher prompts",
   "name": "{{ site.title }}",
-
-  "//": "Short application name displayed on home screens or limited space UI elements",
   "short_name": "{{ site.title }}",
-
-  "//": "List of app icons across various resolutions for device home screens and OS tasks",
+  "start_url": "{{ '/' | relative_url }}",
+  "scope": "{{ '/' | relative_url }}",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "{{ site.mobile-theme-col | default: site.navbar-col }}",
   "icons": [
-    {
-      "//": "Fallback default favicon icon target",
-      "src": "/favicon.ico"
-    },
-    {
-      "//": "Second icon entry -- previously pointed at a 512x512 PNG that was never actually added to assets/img/, which left this broken. Pointing at favicon.ico too until a real high-res icon exists.",
-      "src": "/favicon.ico"
-    }
-  ],
-
-  "//": "Defines the preferred UI display mode ('standalone' hides standard browser UI/URL bar)",
-  "display": "standalone"
+    { "src": "{{ '/assets/img/icon-192.png' | relative_url }}", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "{{ '/assets/img/icon-512.png' | relative_url }}", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "{{ '/assets/img/icon-maskable-512.png' | relative_url }}", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
 }
