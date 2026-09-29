@@ -33,6 +33,9 @@ The site hosts:
 ├── _kfi/                      # One file per Krishnamurti/Weekly Excerpt
 │                                entry (output: false, same reasoning as
 │                                _videos/_photos)
+├── _data/
+│   └── maintenance.yml        # The maintenance-mode on/off switch (`enabled`),
+│                                editable in the CMS as "Site status"
 ├── _layouts/
 │   ├── base.html             # <html>/<head>/<body> shell every page extends
 │   ├── page.html              # Standard content page (extends base)
@@ -183,13 +186,15 @@ To review and approve a pending comment: **`approve.html`** (at the repo root, `
 
 ## Maintenance mode
 
-Setting `maintenance-mode: true` in `_config.yml` redirects every page to `/maintenance/`. To preview the site while it's on, visit:
+Maintenance mode is a single on/off value, `enabled`, in `_data/maintenance.yml`. When it's `true`, every page redirects to `/maintenance/`. Staff can flip it from the CMS (the **Site status** entry), or you can edit that file directly. Either way it takes effect after the site rebuilds, usually 1–2 minutes after saving. It lives in its own file rather than in `_config.yml` because a CMS save rewrites the whole file it edits, which would have stripped `_config.yml`'s explanatory comments. If that file is ever missing or empty the site simply stays open.
+
+To preview the site while maintenance mode is on, visit:
 
 ```
 https://connect.sahyadrischool.org/?bypass=<maintenance-bypass-key>
 ```
 
-This unlocks browsing for the rest of that browser tab's session (via `sessionStorage`) — it resets when the tab closes. Change `maintenance-bypass-key` any time to invalidate old bypass links. Note this repo is public, so the key isn't a real secret; it just keeps casual visitors from stumbling onto the bypass.
+This unlocks browsing for the rest of that browser tab's session (via `sessionStorage`) — it resets when the tab closes. The key itself, `maintenance-bypass-key`, stays in `_config.yml`. Change it any time to invalidate old bypass links. Note this repo is public, so the key isn't a real secret; it just keeps casual visitors from stumbling onto the bypass.
 
 `maintenance.html` itself also reverse-redirects to the homepage if someone lands on it while maintenance mode is actually off (e.g. from a stale cached page) — see its own comments for details.
 
@@ -200,7 +205,7 @@ This unlocks browsing for the rest of that browser tab's session (via `sessionSt
 | Key | Purpose |
 |---|---|
 | `url`, `baseurl`, `title`, `author`, `description` | Basic site identity |
-| `maintenance-mode`, `maintenance-bypass-key` | See above |
+| `maintenance-bypass-key` | See above. (The on/off switch itself is `enabled` in `_data/maintenance.yml`, not in this file.) |
 | `navbar-links` | Nav bar structure — top-level and dropdown items |
 | `post_search` | Enables the year-scoped search box on the Newsletter/Activities pages |
 | `page-col`, `text-col`, `link-col`, `hover-col`, `navbar-*`, `footer-*` | Color palette, consumed as CSS custom properties |
