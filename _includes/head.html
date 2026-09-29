@@ -238,8 +238,13 @@
   {% endif %}
 
   <!-- Favicon Icons -->
-  <link rel="icon" type="image/png" href="{{ '/assets/img/favicon.png' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="48x48" href="{{ '/assets/img/favicon.png' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/img/favicon-32.png' | relative_url }}">
   <link rel="shortcut icon" type="image/x-icon" href="{{ '/assets/img/favicon.ico' | relative_url }}">
+  <!-- iPhone/iPad "Add to Home Screen" icon, and the web app manifest that
+       gives Android/desktop installs their name and icons (see site.webmanifest) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/img/apple-touch-icon.png' | relative_url }}">
+  <link rel="manifest" href="{{ '/site.webmanifest' | relative_url }}">
 
   <!-- Custom Page-Specific Head Extensions -->
   {% if page.head-extra -%}
