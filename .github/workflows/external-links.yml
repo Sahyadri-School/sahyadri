@@ -39,7 +39,15 @@ jobs:
 
       - name: Report results
         run: |
+          set +e
           pip install --quiet requests
-          python3 report_external_links.py
+          python3 report_external_links.py 2>&1 | tee /tmp/report_output.txt
+          status=${PIPESTATUS[1]}
+          if [ "$status" -ne 0 ]; then
+            while IFS= read -r line; do
+              echo "::error::$line"
+            done < /tmp/report_output.txt
+          fi
+          exit $status
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
