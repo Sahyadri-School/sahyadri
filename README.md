@@ -225,6 +225,15 @@ Then visit `http://localhost:4000`. Note: `jekyll-paginate` is **not** installed
 
 Deployment runs via a GitHub Actions workflow (`.github/workflows/ci.yml`) on every push to `master` — it builds the Jekyll site and publishes it to GitHub Pages. There's no separate manual deploy step; pushing to `master` is the deploy.
 
+## Automated checks
+
+Two separate checks run, deliberately kept apart from each other:
+
+- **On every push** (part of `ci.yml`, blocks the deploy if it fails): `check_links.rb` runs [html-proofer](https://github.com/gjtorikian/html-proofer) against the built site using `.htmlproofer.yml` — internal links, scripts, and images. External links are explicitly excluded here (`disable_external: true`) since external sites are flaky in CI, and a broken deploy over someone else's site having a bad moment is worse than not catching link rot instantly.
+- **Weekly** (`.github/workflows/external-links.yml`, Mondays): `check_external_links.rb` runs the same tool against `.htmlproofer-external.yml` instead — the config with external links actually enabled. This never blocks a deploy. Results are reported via `report_external_links.py`, which manages a single persistent GitHub Issue titled "External Link Check": it creates/reopens/comments on that issue only when something is actually broken, and closes it with an all-clear note once things are fixed. Silent on success — no news is good news. (This requires GitHub Issues to be enabled for the repo; a repo admin can toggle this under Settings → Features if it's ever off.)
+
+Both scripts exist because the plain `htmlproofer` CLI doesn't auto-discover a config file just because it's named `.htmlproofer.yml`/`.htmlproofer-external.yml` — confirmed by testing, not assumption. Each script loads its YAML config by hand before invoking `HTMLProofer.check_directory`.
+
 ## Design notes
 
 - Fonts: **Amatic SC** (display headings), **Poiret One** (theme body/nav text), and **Montserrat** (post/article body text) — all loaded via Google Fonts in `_includes/head.html`.
