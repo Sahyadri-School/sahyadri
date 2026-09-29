@@ -377,6 +377,17 @@ content:
             type: string
             description: "A Google Drive/Docs link, a YouTube link, or any other URL relevant to this excerpt, e.g. \"https://www.youtube.com/watch?v=abc123XYZ4\". Leave blank to show the text above as a plain label instead of a clickable link."
 
+  - name: site-status
+    label: Site status
+    type: file
+    path: _data/maintenance.yml
+    format: yaml
+    fields:
+      - name: enabled
+        label: Maintenance mode
+        type: boolean
+        description: "Switch ON to send every visitor to the maintenance page, e.g. while making big changes; switch OFF to reopen the site. Takes effect after the site rebuilds, usually 1-2 minutes after saving. This takes the whole public site offline, so only switch it on deliberately."
+
 settings:
   # merge: true preserves front-matter keys not listed in a collection's
   # fields (e.g. layout: post/activity/profile) when Pages CMS saves an
