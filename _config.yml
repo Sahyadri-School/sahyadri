@@ -16,9 +16,12 @@ description: "A window into life at Sahyadri School — newsletters, activities,
 
 # -----------------------------------------------------------------------------
 # Maintenance Mode
-# When true, every page on the site immediately redirects to /maintenance/
-# (see maintenance.html at the repo root). Set back to false to restore
-# normal site access.
+# The on/off switch itself lives in _data/maintenance.yml (the `enabled`
+# value, editable from the CMS under "Site status") -- NOT in this file.
+# It was moved out because any CMS save rewrites the file it edits, which
+# would have stripped every explanatory comment from this one.
+# When on, every page immediately redirects to /maintenance/ (see
+# maintenance.html at the repo root).
 #
 # To preview the live site while maintenance mode is on, visit:
 #   https://connect.sahyadrischool.org/?bypass=<maintenance-bypass-key below>
@@ -29,7 +32,6 @@ description: "A window into life at Sahyadri School — newsletters, activities,
 # prevents casual visitors from stumbling onto the bypass, not a
 # determined person reading the source.
 # -----------------------------------------------------------------------------
-maintenance-mode: false
 maintenance-bypass-key: "timepass"
 
 # -----------------------------------------------------------------------------
