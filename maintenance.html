@@ -4,9 +4,9 @@ title: "Site Maintenance"
 permalink: /maintenance/
 ---
 <!-- FILE: maintenance.html — Standalone maintenance-mode landing page.
-     PURPOSE: Shown to every visitor when site.maintenance-mode is true
-     in _config.yml (see the "Maintenance Mode" section near the top of
-     that file). layout: null since this is a self-contained document
+     PURPOSE: Shown to every visitor when maintenance mode is on (the
+     `enabled` value in _data/maintenance.yml, which staff can flip from
+     the CMS under "Site status"). layout: null since this is a self-contained document
      with its own <head>/<style>, since it does NOT go through base.html, so
      it has no nav/footer chrome and loads its own fonts independently
      (see the font <link> below).
@@ -20,7 +20,7 @@ permalink: /maintenance/
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  {%- unless site.maintenance-mode -%}
+  {%- unless site.data.maintenance.enabled -%}
   <!-- Reverse redirect: if maintenance mode is OFF but someone still lands on
        /maintenance/ (e.g. an old bookmark, a shared link, or a search engine
        result), send them straight to the homepage instead of showing a stale
