@@ -1,0 +1,32 @@
+# html-proofer configuration for the WEEKLY EXTERNAL LINK CHECK ONLY.
+# https://github.com/gjtorikian/html-proofer
+#
+# This is a deliberately separate config from .htmlproofer.yml (the one
+# that runs on every push and blocks deploys). That one keeps
+# disable_external: true on purpose -- external sites are genuinely
+# flaky in CI (rate-limiting, transient outages, bot-blocking), and a
+# broken deploy pipeline over someone else's site having a bad five
+# minutes is a worse outcome than not catching link rot instantly. This
+# config exists so external links get checked too, just on a schedule
+# (see .github/workflows/external-links.yml) and reported via a GitHub
+# Issue rather than ever blocking a real content change from going live.
+disable_external: false
+allow_hash_href: true
+
+# Same URL/file exclusions as the main config, for the same reasons —
+# see .htmlproofer.yml's own comments.
+ignore_urls:
+  - /^#/
+  - /^mailto:/
+  - /^tel:/
+  - /\/profiles\//
+  - /\/tags/
+
+ignore_files:
+  - "./_site/feed.xml"
+  - "./_site/maintenance-status.json"
+
+# Only Links -- this check exists specifically for external link rot,
+# not images/scripts (already covered by the main per-push check).
+checks:
+  - Links
