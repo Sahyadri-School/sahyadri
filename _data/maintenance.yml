@@ -1,0 +1,3 @@
+# Site maintenance switch. true = every visitor is redirected to /maintenance/.
+# Editable from the CMS ("Site status"). Takes effect after the site rebuilds.
+enabled: false
