@@ -15,7 +15,7 @@ If you don't have a GitHub account yet, you'll need to create one first (free, a
 1. Go to [app.pagescms.org](https://app.pagescms.org)
 2. Sign in with your GitHub account
 3. Select the **sahyadri** repository
-4. You'll see six sections in the sidebar: **Newsletter Posts**, **Activities**, **Profiles**, **Videos**, **Photos**, and **Krishnamurti / Weekly Excerpts**
+4. You'll see six sections in the sidebar: **Newsletter Posts**, **Activities**, **Profiles**, **Videos**, **Photos**, and **Krishnamurti / Weekly Excerpts** — plus a seventh, **Site status**, which only holds the maintenance switch (see below)
 
 ## Adding a Newsletter post or Activity
 
@@ -83,6 +83,16 @@ Click **Krishnamurti / Weekly Excerpts** in the sidebar → **Add entry**.
 - **YouTube video ID** — leave blank for a document-only entry (e.g. just a linked PDF), no video needed.
 - **Links** — usually just one (the excerpt's own title and link), but you can add a second if this excerpt has, say, both a video and a separate related document or playlist. Leave a link's URL blank if you just want to show its text as a plain label with nothing clickable.
 - **Date** builds the "Published on" text automatically and sorts the entry into the right place.
+
+## Turning maintenance mode on or off
+
+Use this when the site needs to be closed to visitors for a while, e.g. during big changes.
+
+1. Click **Site status** in the sidebar
+2. Switch **Maintenance mode** on (site closes) or off (site reopens)
+3. Click **Save**
+
+The change goes live after the site rebuilds, usually 1–2 minutes. While it's on, every visitor sees a maintenance page instead of the site, so switch it on deliberately and remember to switch it off afterwards. This is the only thing on that screen; nothing else about the site changes.
 
 ## If a collection looks broken or asks to "create a file" that shouldn't exist
 
