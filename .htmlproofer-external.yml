@@ -14,13 +14,20 @@ disable_external: false
 allow_hash_href: true
 
 # Same URL/file exclusions as the main config, for the same reasons —
-# see .htmlproofer.yml's own comments.
+# see .htmlproofer.yml's own comments. Plus one specific to this
+# external check: the bare https://fonts.googleapis.com domain used in
+# <link rel="preconnect"> tags (head.html, approve.html, maintenance.html)
+# is never meant to be visited as a real page -- browsers use it purely
+# for early DNS/TLS setup -- and Google's own server 404s that exact
+# bare URL, while the real font-loading URLs (with a /css2?family=...
+# path) work fine and are still checked normally.
 ignore_urls:
   - /^#/
   - /^mailto:/
   - /^tel:/
   - /\/profiles\//
   - /\/tags/
+  - /^https:\/\/fonts\.googleapis\.com\/?$/
 
 ignore_files:
   - "./_site/feed.xml"
