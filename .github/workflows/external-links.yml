@@ -1,0 +1,45 @@
+name: External Link Check
+
+# Runs weekly (Mondays 06:00 UTC), plus can be triggered manually from
+# the Actions tab (workflow_dispatch) for testing. Deliberately separate
+# from ci.yml -- this never blocks a deploy, since external link checks
+# are inherently flaky in CI (rate-limiting, transient outages, a site
+# blocking bot traffic even though it's fine for a real visitor).
+# Reports via a persistent GitHub Issue (see report_external_links.py)
+# rather than failing the workflow in any way a person would notice
+# unless something is actually broken.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  check-external-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Build with Jekyll
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
+
+      - name: Check external links
+        run: bundle exec ruby check_external_links.rb > /tmp/external_link_output.txt 2>&1 || true
+
+      - name: Report results
+        run: |
+          pip install --quiet requests
+          python3 report_external_links.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
