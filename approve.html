@@ -1,18 +1,22 @@
 ---
 layout: null
+sitemap: false
 ---
 <!-- FILE: approve.html — single-purpose comment moderation page, placed
      at the repo root (same level as index.md). Reviews one comment (via
-     ?id=) and lets a signed-in moderator approve or reject it. Not a
-     dashboard, it only ever shows the one comment named in the link,
-     which is what firebase-comments.html's notifyModerator() emails out.
+     ?id=) and lets the signed-in moderator approve, approve-and-trust, or
+     reject it (with an optional note the commenter sees). Not a dashboard:
+     it only ever shows the one comment named in the link, which is what
+     firebase-comments.html's notifyModerator() emails out. The queue of
+     everything waiting for review is review.html.
+     All the actual logic (sign-in gate, approve/reject, trusted list,
+     emails to commenters) lives in assets/js/comment-moderation.js, shared
+     with review.html.
      layout: null (like maintenance.html) since this is a standalone
      utility page, not part of the site's normal nav/header/footer chrome,
      and intentionally bypasses the maintenance-mode redirect (a moderator
      needs to be able to approve comments even while the site itself is
-     in maintenance mode). Firebase config and the moderator email are
-     pulled from _config.yml, same as firebase-comments.html, rather than
-     duplicated here. -->
+     in maintenance mode). sitemap: false keeps it out of sitemap.xml. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,6 +95,15 @@ layout: null
   .sc-status { font-style: italic; color: var(--sc-muted); }
   .sc-error { color: #a33; }
   a { color: var(--sc-tan); }
+  .sc-note-label { display: block; margin-top: 1.2em; font-size: 0.85em; color: var(--sc-muted); }
+  .sc-note {
+    display: block; width: 100%; box-sizing: border-box; margin-top: 0.4em; padding: 0.6em 0.8em;
+    font-family: inherit; font-size: 0.95em; border: 1px solid var(--sc-line); border-radius: 4px; resize: vertical;
+  }
+  .sc-hint { font-size: 0.8em; color: var(--sc-muted); margin: 0.4em 0 0; }
+  .sc-result li { margin: 0.3em 0; }
+  .sc-warn { color: #8a5a00; }
+  .sc-links { margin-top: 1.4em; font-size: 0.9em; }
 </style>
 </head>
 <body>
@@ -102,61 +115,34 @@ layout: null
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
     import {
-      getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-    import {
-      getFirestore, doc, getDoc, updateDoc
-    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
-
-    // Pulled from _config.yml, same as _includes/firebase-comments.html.
-    const firebaseConfig = {
-      apiKey: "{{ site.firebase-api-key }}",
-      authDomain: "{{ site.firebase-auth-domain }}",
-      projectId: "{{ site.firebase-project-id }}",
-      storageBucket: "{{ site.firebase-storage-bucket }}",
-      messagingSenderId: "{{ site.firebase-messaging-sender-id }}",
-      appId: "{{ site.firebase-app-id }}"
-    };
-
-    const MODERATOR_EMAIL = "{{ site.comments-moderator-email }}";
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: "select_account" });
+      MODERATOR_EMAIL, watchModerator, signInWithGoogle, signOutUser, escapeHtml,
+      getComment, loadPrivate, approveComment, rejectComment
+    } from "{{ '/assets/js/comment-moderation.js' | relative_url }}";
 
     const appEl = document.getElementById("sc-app");
-    const params = new URLSearchParams(window.location.search);
-    const commentId = params.get("id");
+    const commentId = new URLSearchParams(window.location.search).get("id");
+    const queueLink = '<p class="sc-links"><a href="{{ '/review.html' | relative_url }}">See everything waiting for review</a></p>';
 
     if (!commentId) {
-      appEl.innerHTML = '<p class="sc-error">No comment specified. Open this page from the link in the notification email.</p>';
+      appEl.innerHTML = '<p class="sc-error">No comment specified. Open this page from the link in the notification email.</p>' + queueLink;
     } else {
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          renderSignIn();
-        } else if (user.email !== MODERATOR_EMAIL) {
+      watchModerator({
+        signedOut: renderSignIn,
+        notModerator: (user) => {
           appEl.innerHTML = `
             <p class="sc-error">Signed in as ${escapeHtml(user.email)}, which isn't authorized to review comments.</p>
-            <button class="sc-btn" id="sc-switch">Sign out &amp; try another account</button>
-          `;
-          document.getElementById("sc-switch").addEventListener("click", async () => {
-            await signOut(auth);
-            renderSignIn();
-          });
-        } else {
-          loadComment();
-        }
+            <button class="sc-btn" id="sc-switch">Sign out &amp; try another account</button>`;
+          document.getElementById("sc-switch").addEventListener("click", async () => { await signOutUser(); renderSignIn(); });
+        },
+        moderator: loadComment
       });
     }
 
     function renderSignIn() {
       appEl.innerHTML = '<button class="sc-btn" id="sc-signin">Sign in with Google to review</button>';
       document.getElementById("sc-signin").addEventListener("click", () => {
-        signInWithPopup(auth, provider).catch((err) => {
+        signInWithGoogle().catch((err) => {
           console.error(err);
           appEl.innerHTML = '<p class="sc-error">Sign-in failed. Please try again.</p>';
         });
@@ -166,70 +152,71 @@ layout: null
     async function loadComment() {
       appEl.innerHTML = '<p class="sc-status">Loading comment…</p>';
       try {
-        const snap = await getDoc(doc(db, "comments", commentId));
-        if (!snap.exists()) {
-          appEl.innerHTML = '<p class="sc-error">This comment no longer exists.</p>';
-          return;
-        }
-        const data = snap.data();
-        if (data.deleted) {
-          appEl.innerHTML = '<p class="sc-status">This comment has already been rejected/deleted.</p>';
-          return;
-        }
-        if (data.approved) {
-          appEl.innerHTML = '<p class="sc-status">This comment is already approved and live.</p>';
-          return;
-        }
-        renderReview(data);
+        const data = await getComment(commentId);
+        if (!data) { appEl.innerHTML = '<p class="sc-error">This comment no longer exists.</p>' + queueLink; return; }
+        if (data.deleted) { appEl.innerHTML = '<p class="sc-status">This comment has already been rejected/deleted.</p>' + queueLink; return; }
+        if (data.approved) { appEl.innerHTML = '<p class="sc-status">This comment is already approved and live.</p>' + queueLink; return; }
+        const priv = await loadPrivate(commentId);
+        renderReview(data, priv);
       } catch (err) {
         console.error(err);
-        appEl.innerHTML = '<p class="sc-error">Could not load this comment.</p>';
+        appEl.innerHTML = '<p class="sc-error">Could not load this comment.</p>' + queueLink;
       }
     }
 
-    function renderReview(data) {
+    function renderReview(data, priv) {
       const safeName = escapeHtml(data.name || "Anonymous");
       const safeText = escapeHtml(data.text || "");
       const safeUrl = escapeHtml(data.pageUrl || "");
+      const who = priv && priv.email ? ` &lt;${escapeHtml(priv.email)}&gt;` : "";
+      const trustBtn = priv && priv.email
+        ? '<button class="sc-btn sc-btn-approve" id="sc-trust" title="Their future comments and replies will be published immediately">✅ Approve &amp; always trust</button>'
+        : "";
       appEl.innerHTML = `
         <div class="sc-preview">
-          <div class="sc-meta"><strong>${safeName}</strong> on <a href="${safeUrl}" target="_blank" rel="noopener">${safeUrl}</a></div>
+          <div class="sc-meta"><strong>${safeName}</strong>${who} ${data.parentId ? "(a reply) " : ""}on <a href="${safeUrl}" target="_blank" rel="noopener">${safeUrl}</a></div>
           <div>${safeText}</div>
         </div>
+        <label class="sc-note-label" for="sc-note">Optional note to the commenter, used only if you reject (they will see it on the page)</label>
+        <textarea class="sc-note" id="sc-note" rows="2" maxlength="500" placeholder="e.g. Please keep comments about the article itself."></textarea>
         <div class="sc-actions">
           <button class="sc-btn sc-btn-approve" id="sc-approve">✅ Approve</button>
+          ${trustBtn}
           <button class="sc-btn sc-btn-reject" id="sc-reject">🗑 Reject</button>
         </div>
         <p style="margin-top:1em;"><button class="sc-btn" id="sc-switch" style="font-size:0.8em;padding:0.5em 1em;">Switch account</button></p>
+        ${queueLink}
       `;
-      document.getElementById("sc-approve").addEventListener("click", () => decide(true));
-      document.getElementById("sc-reject").addEventListener("click", () => decide(false));
-      document.getElementById("sc-switch").addEventListener("click", async () => {
-        await signOut(auth);
-        renderSignIn();
-      });
+      document.getElementById("sc-approve").addEventListener("click", () => decide("approve", data));
+      const t = document.getElementById("sc-trust");
+      if (t) t.addEventListener("click", () => decide("trust", data));
+      document.getElementById("sc-reject").addEventListener("click", () => decide("reject", data));
+      document.getElementById("sc-switch").addEventListener("click", async () => { await signOutUser(); renderSignIn(); });
     }
 
-    async function decide(approve) {
+    async function decide(kind, data) {
+      const note = (document.getElementById("sc-note") || {}).value || "";
       appEl.querySelectorAll("button").forEach((b) => (b.disabled = true));
       try {
-        if (approve) {
-          await updateDoc(doc(db, "comments", commentId), { approved: true });
-          appEl.innerHTML = '<p class="sc-status">✅ Approved — it\'s now live on the site.</p>';
+        let headline, result;
+        if (kind === "reject") {
+          result = await rejectComment(commentId, data, note);
+          headline = "🗑 Rejected — it will not be shown.";
         } else {
-          await updateDoc(doc(db, "comments", commentId), { deleted: true });
-          appEl.innerHTML = '<p class="sc-status">🗑 Rejected — it will not be shown.</p>';
+          result = await approveComment(commentId, data, { trust: kind === "trust" });
+          headline = result.trusted
+            ? "✅ Approved — it's now live, and this person's future comments will be published right away."
+            : "✅ Approved — it's now live on the site.";
         }
+        const lines = [];
+        (result.emailed || []).forEach((e) => lines.push("✉️ Sent the " + escapeHtml(e) + "."));
+        (result.warnings || []).forEach((w) => lines.push('<span class="sc-warn">⚠️ ' + escapeHtml(w) + "</span>"));
+        appEl.innerHTML = '<p class="sc-status">' + headline + "</p>" +
+          (lines.length ? '<ul class="sc-result">' + lines.map((l) => "<li>" + l + "</li>").join("") + "</ul>" : "") + queueLink;
       } catch (err) {
         console.error(err);
-        appEl.innerHTML = '<p class="sc-error">Could not save your decision. Please try again.</p>';
+        appEl.innerHTML = '<p class="sc-error">Could not save your decision. Please try again.</p>' + queueLink;
       }
-    }
-
-    function escapeHtml(str) {
-      const div = document.createElement("div");
-      div.textContent = str;
-      return div.innerHTML;
     }
   </script>
 </body>

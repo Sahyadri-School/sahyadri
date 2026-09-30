@@ -1,0 +1,268 @@
+---
+layout: null
+sitemap: false
+---
+<!-- FILE: review.html — the moderator's review queue: every comment and
+     reply currently waiting for approval, in one live list, so a whole
+     batch can be dealt with in one sitting instead of one email at a
+     time. Also holds the "trusted people" list (those people's comments
+     and replies are published immediately, with no review).
+     Moderator-only: signs in with Google and refuses anyone who isn't
+     comments-moderator-email in _config.yml. All the actual logic
+     (approve / reject / trust / emails to commenters) lives in
+     assets/js/comment-moderation.js, shared with approve.html (the
+     single-comment page the notification email links to).
+     layout: null (like approve.html and maintenance.html): a standalone
+     utility page, not part of the normal nav/header/footer, and it
+     deliberately bypasses the maintenance-mode redirect so comments can
+     still be reviewed while the site is closed. sitemap: false keeps it
+     out of sitemap.xml. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Comments waiting for review — Sahyadri Connect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&amp;family=Poiret+One&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sc-ink: {{ site.text-col | default: "#3E3830" }};
+    --sc-muted: #6b675e;
+    --sc-line: {{ site.navbar-border-col | default: "#BBC4B4" }};
+    --sc-sage: {{ site.navbar-col | default: "#668571" }};
+    --sc-sage-dark: {{ site.hover-col | default: "#8FA186" }};
+    --sc-tan: {{ site.link-col | default: "#A67C52" }};
+  }
+  body {
+    font-family: 'Poiret One', -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #fafaf7; color: var(--sc-ink); margin: 0; padding: 2em 1em;
+    display: flex; justify-content: center;
+  }
+  .rv-wrap { max-width: 780px; width: 100%; }
+  .rv-panel { background: #fff; border: 1px solid var(--sc-line); border-top: 4px solid var(--sc-sage); padding: 1.6em 2em; margin-bottom: 1.5em; }
+  h1 { font-family: 'Amatic SC', cursive, sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; font-size: 2.1em; margin: 0 0 0.4em; }
+  h2 { font-family: 'Amatic SC', cursive, sans-serif; font-weight: 700; text-transform: uppercase; font-size: 1.6em; margin: 0 0 0.4em; }
+  .sc-btn {
+    display: inline-block; font-family: inherit; font-size: 0.9em; background-color: var(--sc-sage); color: #fff;
+    border: none; border-radius: 20px; padding: 0.55em 1.3em; cursor: pointer; transition: background-color 0.15s ease;
+  }
+  .sc-btn:hover { background-color: var(--sc-sage-dark); }
+  .sc-btn:disabled { opacity: 0.5; cursor: default; }
+  .sc-btn-approve { background-color: var(--sc-sage-dark); }
+  .sc-btn-approve:hover { background-color: var(--sc-sage); }
+  .sc-btn-reject { background-color: #a33; }
+  .sc-btn-reject:hover { background-color: #832626; }
+  .sc-btn-quiet { background: transparent; color: var(--sc-muted); border: 1px solid var(--sc-line); }
+  .sc-btn-quiet:hover { background: #f0efe9; color: var(--sc-ink); }
+  .sc-status { font-style: italic; color: var(--sc-muted); }
+  .sc-error { color: #a33; }
+  .sc-warn { color: #8a5a00; }
+  a { color: var(--sc-tan); }
+  .rv-hint { font-size: 0.85em; color: var(--sc-muted); margin: 0.2em 0 0.9em; }
+  .rv-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6em; font-size: 0.85em; color: var(--sc-muted); margin-bottom: 1em; }
+  .rv-log { list-style: none; padding: 0; margin: 0 0 1em; font-size: 0.9em; }
+  .rv-log li { padding: 0.3em 0; border-bottom: 1px dashed var(--sc-line); }
+  .rv-card { border: 1px solid var(--sc-line); border-radius: 4px; padding: 1em; margin: 0.9em 0; }
+  .rv-meta { color: var(--sc-muted); font-size: 0.85em; margin-bottom: 0.5em; word-break: break-word; }
+  .rv-text { font-size: 0.95em; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+  .rv-actions { display: flex; flex-wrap: wrap; gap: 0.6em; margin-top: 0.9em; }
+  .rv-reject-row { display: none; margin-top: 0.8em; }
+  .rv-reject-row.rv-open { display: block; }
+  .rv-note { display: block; width: 100%; box-sizing: border-box; padding: 0.55em 0.8em; font-family: inherit; font-size: 0.95em; border: 1px solid var(--sc-line); border-radius: 4px; margin-bottom: 0.6em; }
+  .rv-trusted { list-style: none; padding: 0; margin: 0 0 1em; }
+  .rv-trusted li { display: flex; justify-content: space-between; align-items: center; gap: 1em; padding: 0.45em 0; border-bottom: 1px dashed var(--sc-line); font-size: 0.95em; word-break: break-word; }
+  .rv-add { display: flex; flex-wrap: wrap; gap: 0.6em; }
+  .rv-add input { flex: 1 1 200px; padding: 0.55em 0.8em; font-family: inherit; font-size: 0.95em; border: 1px solid var(--sc-line); border-radius: 4px; }
+</style>
+</head>
+<body>
+  <div class="rv-wrap">
+    <div class="rv-panel">
+      <h1>Comments waiting for review</h1>
+      <div id="rv-gate"><p class="sc-status">Loading…</p></div>
+    </div>
+    <div id="rv-main" style="display:none;">
+      <div class="rv-panel">
+        <div class="rv-bar"><span id="rv-user"></span><button class="sc-btn sc-btn-quiet" id="rv-switch" type="button">Switch account</button></div>
+        <h2>Waiting <span id="rv-count"></span></h2>
+        <ul id="rv-log" class="rv-log" aria-live="polite"></ul>
+        <div id="rv-list"><p class="sc-status">Loading…</p></div>
+      </div>
+      <div class="rv-panel">
+        <h2>Trusted people</h2>
+        <p class="rv-hint">Comments and replies from these people are published immediately, without waiting for review. Use it for teachers and staff you know. You can also trust someone with the &ldquo;Approve &amp; always trust&rdquo; button above. Remove a person here at any time.</p>
+        <div id="rv-trusted"><p class="sc-status">Loading…</p></div>
+        <form class="rv-add" id="rv-add-form">
+          <input type="email" id="rv-add-email" placeholder="teacher@sahyadrischool.org" required aria-label="Email address to trust">
+          <input type="text" id="rv-add-name" placeholder="Name (optional)" aria-label="Name (optional)">
+          <button class="sc-btn" type="submit">Add</button>
+        </form>
+        <p class="sc-error" id="rv-add-error" role="alert"></p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import {
+      MODERATOR_EMAIL, watchModerator, signInWithGoogle, signOutUser, escapeHtml, isPermissionDenied, millis,
+      subscribePending, loadPrivate, approveComment, rejectComment, listTrusted, addTrusted, removeTrusted
+    } from "{{ '/assets/js/comment-moderation.js' | relative_url }}";
+
+    const gate = document.getElementById("rv-gate");
+    const main = document.getElementById("rv-main");
+    const listEl = document.getElementById("rv-list");
+    const logEl = document.getElementById("rv-log");
+    const countEl = document.getElementById("rv-count");
+    const cards = new Map();          // comment id -> its card element
+    let unsubscribe = null;
+
+    watchModerator({
+      signedOut: () => { stop(); showGate('<button class="sc-btn" id="rv-signin" type="button">Sign in with Google to review</button>'); 
+        document.getElementById("rv-signin").addEventListener("click", () => {
+          signInWithGoogle().catch((err) => { console.error(err); showGate('<p class="sc-error">Sign-in failed. Please try again.</p>'); });
+        }); },
+      notModerator: (user) => { stop(); showGate(
+        '<p class="sc-error">Signed in as ' + escapeHtml(user.email) + ", which isn't authorized to review comments.</p>" +
+        '<button class="sc-btn" id="rv-out" type="button">Sign out &amp; try another account</button>');
+        document.getElementById("rv-out").addEventListener("click", () => signOutUser()); },
+      moderator: (user) => { gate.parentElement.style.display = "none"; main.style.display = "block";
+        document.getElementById("rv-user").textContent = "Signed in as " + user.email; start(); }
+    });
+    document.getElementById("rv-switch").addEventListener("click", () => signOutUser());
+
+    function showGate(html) { main.style.display = "none"; gate.parentElement.style.display = "block"; gate.innerHTML = html; }
+    function stop() { if (unsubscribe) { unsubscribe(); unsubscribe = null; } cards.clear(); listEl.innerHTML = ""; }
+
+    function start() {
+      stop();
+      listEl.innerHTML = '<p class="sc-status">Loading…</p>';
+      unsubscribe = subscribePending(sync, (err) => {
+        console.error(err);
+        listEl.innerHTML = '<p class="sc-error">Could not load the waiting comments.</p>';
+      });
+      refreshTrusted();
+    }
+
+    // Adds cards for new comments and removes cards that are no longer
+    // waiting -- without re-rendering the ones already on screen, so a
+    // half-typed rejection note isn't lost when another comment arrives.
+    function sync(items) {
+      const ids = new Set(items.map((i) => i.id));
+      for (const [id, el] of cards) { if (!ids.has(id)) { el.remove(); cards.delete(id); } }
+      const placeholder = listEl.querySelector(".sc-status");
+      if (placeholder) placeholder.remove();
+      for (const item of items) { if (!cards.has(item.id)) { const el = makeCard(item); cards.set(item.id, el); listEl.appendChild(el); } }
+      countEl.textContent = items.length ? "(" + items.length + ")" : "";
+      if (!items.length) listEl.innerHTML = '<p class="sc-status">Nothing is waiting for review. 🎉</p>';
+    }
+
+    function makeCard({ id, data }) {
+      const el = document.createElement("div");
+      el.className = "rv-card";
+      const when = millis(data.createdAt) ? new Date(millis(data.createdAt)).toLocaleString() : "just now";
+      const url = escapeHtml(data.pageUrl || "");
+      el.innerHTML = `
+        <div class="rv-meta"><strong>${escapeHtml(data.name || "Anonymous")}</strong> <span class="rv-who"></span> · ${when} · ${data.parentId ? "a reply" : "a comment"} on <a href="${url}" target="_blank" rel="noopener">${url}</a></div>
+        <div class="rv-text">${escapeHtml(data.text || "")}</div>
+        <div class="rv-actions">
+          <button class="sc-btn sc-btn-approve" data-do="approve" type="button">✅ Approve</button>
+          <button class="sc-btn sc-btn-approve rv-trust-btn" data-do="trust" type="button" style="display:none;" title="Their future comments and replies will be published immediately">✅ Approve &amp; always trust</button>
+          <button class="sc-btn sc-btn-reject" data-do="reject-open" type="button">🗑 Reject…</button>
+        </div>
+        <div class="rv-reject-row">
+          <input class="rv-note" type="text" maxlength="500" placeholder="Optional note the commenter will see, e.g. Please keep comments about the article itself." aria-label="Optional note to the commenter">
+          <button class="sc-btn sc-btn-reject" data-do="reject" type="button">Confirm reject</button>
+          <button class="sc-btn sc-btn-quiet" data-do="reject-cancel" type="button">Cancel</button>
+        </div>
+        <div class="rv-msg sc-error" role="alert"></div>`;
+      loadPrivate(id).then((priv) => {
+        if (!priv || !priv.email) return;
+        el.querySelector(".rv-who").textContent = "<" + priv.email + ">";
+        el.querySelector(".rv-trust-btn").style.display = "";
+      });
+      el.addEventListener("click", (e) => {
+        const b = e.target.closest("button[data-do]"); if (!b) return;
+        const act = b.dataset.do, row = el.querySelector(".rv-reject-row");
+        if (act === "reject-open") { row.classList.add("rv-open"); row.querySelector("input").focus(); return; }
+        if (act === "reject-cancel") { row.classList.remove("rv-open"); return; }
+        decide(el, id, data, act);
+      });
+      return el;
+    }
+
+    async function decide(el, id, data, act) {
+      const buttons = el.querySelectorAll("button"); buttons.forEach((b) => (b.disabled = true));
+      el.querySelector(".rv-msg").textContent = "";
+      try {
+        let result, headline;
+        if (act === "reject") {
+          result = await rejectComment(id, data, el.querySelector(".rv-note").value);
+          headline = "🗑 Rejected " + (data.name || "Anonymous") + "'s comment.";
+        } else {
+          result = await approveComment(id, data, { trust: act === "trust" });
+          headline = "✅ Approved " + (data.name || "Anonymous") + "'s comment" + (result.trusted ? " and added them to Trusted people" : "") + ".";
+        }
+        log(headline, result);
+        if (act === "trust") refreshTrusted();
+        el.remove(); cards.delete(id);
+        if (!cards.size) { countEl.textContent = ""; listEl.innerHTML = '<p class="sc-status">Nothing is waiting for review. 🎉</p>'; }
+      } catch (err) {
+        console.error(err);
+        el.querySelector(".rv-msg").textContent = "Could not save that decision. Please try again.";
+        buttons.forEach((b) => (b.disabled = false));
+      }
+    }
+
+    function log(headline, result) {
+      const li = document.createElement("li");
+      let html = escapeHtml(headline);
+      (result.emailed || []).forEach((e) => { html += "<br>✉️ Sent the " + escapeHtml(e) + "."; });
+      (result.warnings || []).forEach((w) => { html += '<br><span class="sc-warn">⚠️ ' + escapeHtml(w) + "</span>"; });
+      li.innerHTML = html;
+      logEl.prepend(li);
+    }
+
+    // ---------------- trusted people ----------------
+    const trustedEl = document.getElementById("rv-trusted");
+    async function refreshTrusted() {
+      try {
+        const people = await listTrusted();
+        if (!people.length) { trustedEl.innerHTML = '<p class="sc-status">No one is trusted yet.</p>'; return; }
+        trustedEl.innerHTML = '<ul class="rv-trusted">' + people.map((p) =>
+          '<li><span>' + escapeHtml(p.email) + (p.name ? " — " + escapeHtml(p.name) : "") + '</span>' +
+          '<button class="sc-btn sc-btn-quiet" type="button" data-remove="' + escapeHtml(p.email) + '">Remove</button></li>').join("") + "</ul>";
+      } catch (err) {
+        console.error(err);
+        trustedEl.innerHTML = isPermissionDenied(err)
+          ? '<p class="sc-warn">The trusted list needs the updated Firebase rules, which haven\'t been published yet (see docs/comments-setup.md in the repository).</p>'
+          : '<p class="sc-error">Could not load the trusted list.</p>';
+      }
+    }
+    trustedEl.addEventListener("click", async (e) => {
+      const b = e.target.closest("button[data-remove]"); if (!b) return;
+      if (!confirm("Remove " + b.dataset.remove + " from the trusted list? Their next comments will wait for review again.")) return;
+      b.disabled = true;
+      try { await removeTrusted(b.dataset.remove); } catch (err) { console.error(err); alert("Could not remove that person."); }
+      refreshTrusted();
+    });
+    document.getElementById("rv-add-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("rv-add-error"); err.textContent = "";
+      const email = document.getElementById("rv-add-email"), name = document.getElementById("rv-add-name");
+      try {
+        await addTrusted(email.value, name.value);
+        email.value = ""; name.value = "";
+        refreshTrusted();
+      } catch (ex) {
+        console.error(ex);
+        err.textContent = isPermissionDenied(ex)
+          ? "The updated Firebase rules haven't been published yet, so the list can't be changed."
+          : (ex.message || "Could not add that person.");
+      }
+    });
+  </script>
+</body>
+</html>

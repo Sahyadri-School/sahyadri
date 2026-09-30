@@ -2828,3 +2828,46 @@ html {
     color: #e0e0e0;
 }
 
+/* ============================================================
+   36. COMMENTS WIDGET: POSTING FEEDBACK, "EMAIL ME", REJECTED NOTE
+   Small additions to section 35, used by _includes/firebase-comments.html:
+   the message shown under the compose box (posted / please wait / too
+   many waiting), the optional "email me" tick box, the short note about
+   moderation under it, and the italic "Not published" block a commenter
+   sees for a comment the moderator rejected.
+   ============================================================ */
+.sc-form-status {
+    margin: 0.7em 0 0;
+    font-size: 0.9rem;
+    color: var(--sc-muted);
+}
+
+.sc-form-status.sc-form-status-error {
+    color: #a33;
+}
+
+.sc-notify {
+    display: block;
+    margin: 0.8em 0 0;
+    font-size: 0.85rem;
+    color: var(--sc-muted);
+    cursor: pointer;
+}
+
+.sc-notify input {
+    margin-right: 0.5em;
+}
+
+.sc-form-note {
+    margin: 0.5em 0 0;
+    font-size: 0.8rem;
+    color: var(--sc-muted);
+}
+
+.sc-comment-rejected .sc-comment-text {
+    font-style: italic;
+}
+
+.dark-mode .sc-form-status.sc-form-status-error {
+    color: #e39a9a;
+}

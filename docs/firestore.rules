@@ -1,0 +1,87 @@
+// Firestore security rules for Sahyadri Connect's comments.
+//
+// This file is a COPY kept in the repository so the rules aren't lost. It is
+// NOT deployed from here: to change what Firebase enforces, open
+// Firebase console -> your project -> Firestore Database -> Rules, paste this
+// whole file over what is there, and press Publish. Steps and screenshots-
+// free walkthrough: docs/comments-setup.md.
+//
+// What changed compared with the previous rules (everything else is the same):
+//  1. New /trusted collection: the moderator's list of people whose comments are
+//     published immediately. A person can only check their own entry.
+//  2. New /commentPrivate collection: each commenter's email, readable ONLY by
+//     the moderator, used to email them and to offer "Approve & always trust".
+//  3. The moderator may now also write "rejected" and "moderationNote" on a
+//     comment, so a rejected commenter can be shown why (previously only
+//     "approved" and "deleted").
+//  4. A comment may be created already approved, but only by a trusted person.
+//  5. Length fix: the page allows up to 2000 characters but the old rule said
+//     "less than 2000", so a comment of exactly 2000 characters was refused.
+//
+// If you change the moderator's address in _config.yml (comments-moderator-email),
+// change it in isModerator() below too.
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isModerator() {
+      return request.auth != null
+          && request.auth.token.email == 'archives@sahyadrischool.org';
+    }
+
+    // A document in /trusted whose ID is the person's email, in lower case.
+    function isTrusted() {
+      return request.auth != null
+          && request.auth.token.email_verified == true
+          && exists(/databases/$(database)/documents/trusted/$(request.auth.token.email.lower()));
+    }
+
+    match /comments/{commentId} {
+      allow read: if resource.data.approved == true
+                  || (request.auth != null && request.auth.uid == resource.data.uid)
+                  || isModerator();
+
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() > 0
+                    && request.resource.data.text.size() <= 2000
+                    && (request.resource.data.approved == false
+                        || (request.resource.data.approved == true && isTrusted()));
+
+      allow update: if request.auth != null && (
+        // anyone signed in: likes and emoji reactions
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likeCount', 'reactions']) ||
+        // the author: edit or delete their own comment
+        (request.auth.uid == resource.data.uid &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt', 'deleted'])) ||
+        // the moderator: approve, or reject (optionally with a note for the commenter)
+        (isModerator() &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['approved', 'deleted', 'rejected', 'moderationNote']))
+      );
+
+      allow delete: if false;
+    }
+
+    // The moderator's list of trusted people. Document ID = lower-case email.
+    match /trusted/{email} {
+      allow get: if isModerator()
+                 || (request.auth != null && request.auth.token.email.lower() == email);
+      allow list: if isModerator();
+      allow create, update, delete: if isModerator();
+    }
+
+    // One private record per comment: who wrote it (email) and whether they
+    // want emails. Only the moderator can read it; nobody can change it.
+    match /commentPrivate/{commentId} {
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.email == request.auth.token.email
+                    && request.resource.data.keys().hasOnly(['uid', 'email', 'name', 'notify', 'parentId', 'createdAt'])
+                    && get(/databases/$(database)/documents/comments/$(commentId)).data.uid == request.auth.uid;
+      allow read: if isModerator();
+      allow update, delete: if false;
+    }
+  }
+}

@@ -190,10 +190,10 @@ firebase-app-id: "1:339085223290:web:3b3fb009e2a6796ca522c3"
 # -----------------------------------------------------------------------------
 # Comments moderation notifications (optional)
 # When a new comment is posted, it's saved with approved:false and hidden
-# from everyone but its author until a moderator approves it (in the
-# Firestore console). If the four values below are all set, an email is
-# also sent via EmailJS to comments-moderator-email with a link to
-# approve it. Leave any of them blank to skip the email -- comments still
+# from everyone but its author until a moderator approves it (from the
+# link in the email, or from review.html, the queue of everything waiting).
+# If the four values below are all set, an email is also sent via EmailJS
+# to comments-moderator-email with a link to approve it. Leave any of them blank to skip the email -- comments still
 # queue for approval either way, you'd just need to check Firestore
 # manually instead of getting notified.
 # NOTE: these values (including the moderator email) end up in the
@@ -205,6 +205,24 @@ emailjs-service-id: "service_bm8k6oi"
 emailjs-template-id: "template_4ajielr"
 emailjs-public-key: "_m8oNTLJbEdd0W7kc"
 comments-moderator-email: "archives@sahyadrischool.org"
+
+# -----------------------------------------------------------------------------
+# Comments: posting limits, and emails to commenters (both optional)
+# The limits are enforced in the page itself: they stop accidents and
+# ordinary misuse, not someone determined to bypass the page. 0 turns a
+# limit off.
+#   comments-cooldown-seconds: shortest wait between one person's posts.
+#   comments-max-pending: most comments one person can have waiting for
+#     review at the same time (people on the trusted list are exempt).
+# emailjs-notify-template-id: a SECOND EmailJS template, used to email
+# commenters ("your comment is live", "not published", "someone replied").
+# Leave it blank and nothing is ever emailed to commenters and the
+# "email me" tick box stays hidden. Setup steps and the template text are
+# in docs/comments-setup.md.
+# -----------------------------------------------------------------------------
+comments-cooldown-seconds: 45
+comments-max-pending: 3
+emailjs-notify-template-id: ""
 
 
 # -----------------------------------------------------------------------------
