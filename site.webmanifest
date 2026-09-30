@@ -4,12 +4,11 @@
   FILE: site.webmanifest
   PURPOSE: Web app manifest -- lets phones/desktops "install" the site with a proper
   name and icon (Add to Home Screen). Linked from _includes/head.html.
-  Icons live in assets/img/ (editable vector master: icon.svg). Three files, each for
+  Icons live in assets/img/, made from the school logo (school-logo-original.png). Three files, each for
   a different job:
     - icon-192.png / icon-512.png : normal icons ("any")
     - icon-maskable-512.png       : full-bleed version Android can crop to a circle or
                                     rounded square without cutting anything important
-  The icon is a redrawn version of the school logo's mountain-and-birds mark.
   theme_color falls back to the navbar colour if mobile-theme-col isn't set in _config.yml.
 {% endcomment %}
 {
