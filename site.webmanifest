@@ -4,7 +4,7 @@
   FILE: site.webmanifest
   PURPOSE: Web app manifest -- lets phones/desktops "install" the site with a proper
   name and icon (Add to Home Screen). Linked from _includes/head.html.
-  Icons live in assets/img/, made from the school logo (school-logo-original.png). Three files, each for
+  Icons live in assets/img/, made from the school logo (school-logo-hires.png, an enhanced version of school-logo-original.png). Three files, each for
   a different job:
     - icon-192.png / icon-512.png : normal icons ("any")
     - icon-maskable-512.png       : full-bleed version Android can crop to a circle or
