@@ -297,3 +297,8 @@ collections:
 
 # Favicon
 favicon: /favicon.ico
+
+# Default preview image for shared links (WhatsApp, etc.) on pages with no photo of their
+# own: home, Profiles, Videos, Photos... (1200x630, the school logo on white). A post's own
+# photo still wins where it has one -- see the og:image order in _includes/head.html.
+default-share-img: /assets/img/share-card.png

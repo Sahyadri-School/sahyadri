@@ -183,7 +183,9 @@
     {%- if page.share-img -%}
       {{ page.share-img }}
     {%- elsif page.image -%}
-      https://lh3.googleusercontent.com/d/{{ page.image }}?sz=9999
+      {%- comment -%} 1200px wide, not the full-size original (sz=9999): WhatsApp and similar apps skip
+           previews whose image is very large, so shared post links showed no picture. {%- endcomment -%}
+      https://lh3.googleusercontent.com/d/{{ page.image }}?sz=1200
     {%- elsif page.cover-img -%}
       {%- if page.cover-img.first -%}
         {{ page.cover-img[0].first.first }}
@@ -192,6 +194,8 @@
       {%- endif -%}
     {%- elsif page.thumbnail-img -%}
       {{ page.thumbnail-img }}
+    {%- elsif site.default-share-img -%}
+      {{ site.default-share-img }}
     {%- elsif site.avatar -%}
       {{ site.avatar }}
     {%- endif -%}
