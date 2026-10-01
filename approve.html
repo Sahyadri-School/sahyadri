@@ -117,7 +117,7 @@ sitemap: false
   <script type="module">
     import {
       MODERATOR_EMAIL, watchModerator, signInWithGoogle, signOutUser, escapeHtml,
-      getComment, loadPrivate, approveComment, rejectComment
+      getComment, loadPrivate, approveComment, rejectComment, describeAutoReview
     } from "{{ '/assets/js/comment-moderation.js' | relative_url }}";
 
     const appEl = document.getElementById("sc-app");
@@ -155,7 +155,6 @@ sitemap: false
         const data = await getComment(commentId);
         if (!data) { appEl.innerHTML = '<p class="sc-error">This comment no longer exists.</p>' + queueLink; return; }
         if (data.deleted) { appEl.innerHTML = '<p class="sc-status">This comment has already been rejected/deleted.</p>' + queueLink; return; }
-        if (data.approved) { appEl.innerHTML = '<p class="sc-status">This comment is already approved and live.</p>' + queueLink; return; }
         const priv = await loadPrivate(commentId);
         renderReview(data, priv);
       } catch (err) {
@@ -165,11 +164,16 @@ sitemap: false
     }
 
     function renderReview(data, priv) {
+      // Three states this page has to handle: waiting (including held / check failed),
+      // automatically rejected, and already live (which can still be taken down).
+      const state = data.approved ? "live" : data.rejected ? "auto" : "waiting";
+      const statusLine = { live: "This comment is live on the site.", auto: "This comment was rejected by the automatic check and is not published.", waiting: "This comment is waiting for a decision." }[state];
+      const review = describeAutoReview(data);
       const safeName = escapeHtml(data.name || "Anonymous");
       const safeText = escapeHtml(data.text || "");
       const safeUrl = escapeHtml(data.pageUrl || "");
       const who = priv && priv.email ? ` &lt;${escapeHtml(priv.email)}&gt;` : "";
-      const trustBtn = priv && priv.email
+      const trustBtn = state !== "live" && priv && priv.email
         ? '<button class="sc-btn sc-btn-approve" id="sc-trust" title="Their future comments and replies will be published immediately">✅ Approve &amp; always trust</button>'
         : "";
       appEl.innerHTML = `
@@ -177,17 +181,19 @@ sitemap: false
           <div class="sc-meta"><strong>${safeName}</strong>${who} ${data.parentId ? "(a reply) " : ""}on <a href="${safeUrl}" target="_blank" rel="noopener">${safeUrl}</a></div>
           <div>${safeText}</div>
         </div>
+        <p class="sc-hint"><strong>${statusLine}</strong>${review ? " " + escapeHtml(review) : ""}</p>
         <label class="sc-note-label" for="sc-note">Optional note to the commenter, used only if you reject (they will see it on the page)</label>
         <textarea class="sc-note" id="sc-note" rows="2" maxlength="500" placeholder="e.g. Please keep comments about the article itself."></textarea>
         <div class="sc-actions">
-          <button class="sc-btn sc-btn-approve" id="sc-approve">✅ Approve</button>
+          ${state === "live" ? "" : `<button class="sc-btn sc-btn-approve" id="sc-approve">${state === "auto" ? "✅ Approve anyway" : "✅ Approve"}</button>`}
           ${trustBtn}
-          <button class="sc-btn sc-btn-reject" id="sc-reject">🗑 Reject</button>
+          <button class="sc-btn sc-btn-reject" id="sc-reject">${state === "live" ? "🗑 Remove this comment" : state === "auto" ? "🗑 Confirm reject" : "🗑 Reject"}</button>
         </div>
         <p style="margin-top:1em;"><button class="sc-btn" id="sc-switch" style="font-size:0.8em;padding:0.5em 1em;">Switch account</button></p>
         ${queueLink}
       `;
-      document.getElementById("sc-approve").addEventListener("click", () => decide("approve", data));
+      const a = document.getElementById("sc-approve");
+      if (a) a.addEventListener("click", () => decide("approve", data));
       const t = document.getElementById("sc-trust");
       if (t) t.addEventListener("click", () => decide("trust", data));
       document.getElementById("sc-reject").addEventListener("click", () => decide("reject", data));
@@ -201,7 +207,7 @@ sitemap: false
         let headline, result;
         if (kind === "reject") {
           result = await rejectComment(commentId, data, note);
-          headline = "🗑 Rejected — it will not be shown.";
+          headline = data.approved ? "🗑 Removed — it is no longer shown on the site." : "🗑 Rejected — it will not be shown.";
         } else {
           result = await approveComment(commentId, data, { trust: kind === "trust" });
           headline = result.trusted

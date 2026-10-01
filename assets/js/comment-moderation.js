@@ -24,6 +24,12 @@
  *    rules too; if denied, those features simply report that they need
  *    the rules update.
  *  - Emails to commenters are off unless emailjs-notify-template-id is set.
+ * Automatic screening (the Cloud Function in functions/) marks a comment it
+ * rejected with rejected = true and approved = false, and leaves one it could
+ * not decide (held for a person, or the check failed) unapproved with an
+ * autoReview note. This file treats those as the moderator's to reverse:
+ * approving one clears the rejected flag, and rejecting always sets
+ * approved = false so the text is no longer public.
  * See docs/comments-setup.md for the setup steps and docs/firestore.rules
  * for the rules this file expects.
  */
@@ -177,7 +183,11 @@ export async function approveComment(id, data, { trust = false } = {}) {
   const result = { emailed: [], trusted: false, warnings: [] };
   const priv = (trust || COMMENTER_EMAILS_ENABLED) ? await loadPrivate(id) : null;
 
-  await updateDoc(doc(db, "comments", id), { approved: true });
+  // Reversing a rejection also clears the rejected flag and its note.
+  const changes = data.rejected === true
+    ? { approved: true, rejected: false, moderationNote: "" }
+    : { approved: true };
+  await updateDoc(doc(db, "comments", id), changes);
 
   if (trust) {
     if (priv && priv.email) {
@@ -231,15 +241,16 @@ export async function rejectComment(id, data, note = "") {
   const result = { noteSaved: true, emailed: [], warnings: [] };
   const ref = doc(db, "comments", id);
   try {
-    await updateDoc(ref, { deleted: true, rejected: true, moderationNote: cleanNote });
+    await updateDoc(ref, { approved: false, deleted: true, rejected: true, moderationNote: cleanNote });
   } catch (err) {
     if (!isPermissionDenied(err)) throw err;
     // The older rules only let the moderator touch approved/deleted.
-    await updateDoc(ref, { deleted: true });
+    await updateDoc(ref, { approved: false, deleted: true });
     result.noteSaved = false;
     result.warnings.push("Rejected, but the note couldn't be shown to the commenter: the updated Firebase rules haven't been published yet.");
   }
-  if (COMMENTER_EMAILS_ENABLED) {
+  // (No "not published" email if it had already been live: that would be misleading.)
+  if (COMMENTER_EMAILS_ENABLED && data.approved !== true) {
     const priv = await loadPrivate(id);
     if (priv && priv.notify && priv.email) {
       await tryEmail(result, "\u201Cnot published\u201D email", {
@@ -254,18 +265,40 @@ export async function rejectComment(id, data, note = "") {
 // ----------------------------------------------------------- pending queue
 
 /**
- * Live list of every comment waiting for review, oldest first. Calls
- * onData([{ id, data }]) now and on every change.
+ * Live view of what needs the moderator's eyes. Calls
+ * onData({ waiting: [...], autoRejected: [...] }) now and on every change,
+ * each list oldest first, each item { id, data }:
+ *  - waiting: not yet approved and not rejected (with automatic screening
+ *    these are the ones it could not decide: held, or the check failed)
+ *  - autoRejected: rejected by the automatic screening and not yet confirmed
+ *    or reversed by the moderator
+ * Comments the moderator or author has deleted are left out.
  */
 export function subscribePending(onData, onError) {
   const q = query(collection(db, "comments"), where("approved", "==", false));
   return onSnapshot(q, (snap) => {
-    const items = snap.docs
-      .filter((d) => !d.data().deleted)
-      .map((d) => ({ id: d.id, data: d.data() }))
-      .sort((a, b) => millis(a.data.createdAt) - millis(b.data.createdAt));
-    onData(items);
+    const waiting = [];
+    const autoRejected = [];
+    for (const d of snap.docs) {
+      const data = d.data();
+      if (data.deleted) continue;
+      (data.rejected ? autoRejected : waiting).push({ id: d.id, data });
+    }
+    const byAge = (a, b) => millis(a.data.createdAt) - millis(b.data.createdAt);
+    onData({ waiting: waiting.sort(byAge), autoRejected: autoRejected.sort(byAge) });
   }, onError);
+}
+
+/** One plain-English line about what the automatic check found ("" if it has not looked). */
+export function describeAutoReview(data) {
+  const r = data && data.autoReview;
+  if (!r) return "";
+  const score = typeof r.confidence === "number" ? r.confidence.toFixed(2) : "?";
+  if (r.decision === "rejected") return "Automatically rejected: \u201C" + r.category + "\u201D scored " + score + " (rejects above " + (r.threshold ?? 0.5) + ").";
+  if (r.decision === "held" && r.reason === "link") return "Held for you: it contains a web link. The automatic check can\u2019t tell a useful link from spam, so a person decides.";
+  if (r.decision === "held") return "Held for you: \u201C" + r.category + "\u201D scored " + score + ". This kind of topic is never published or rejected automatically.";
+  if (r.decision === "error") return "The automatic check could not run (" + (r.error || "unknown error") + "), so it is waiting for you.";
+  return "";
 }
 
 export function millis(ts) {

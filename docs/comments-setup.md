@@ -5,6 +5,10 @@ must be done **outside this repository** (in the Firebase and EmailJS websites)
 before they switch on. Nothing here can break commenting: until a step is done,
 the feature that needs it simply stays off and everything works as before.
 
+**Switching on automatic screening** (a program that checks outside comments for harmful
+language and publishes the ordinary ones within seconds) is a separate, larger job covered in
+`auto-moderation-setup.md`. Do Step 1 below first, or deploy both together as that guide describes.
+
 ## What's new
 
 | Feature | Needs |
@@ -14,7 +18,10 @@ the feature that needs it simply stays off and everything works as before.
 | **Trusted people**: their comments and replies appear immediately | Step 1 (Firebase rules) |
 | **A note when you reject a comment**, shown to the person who wrote it | Step 1 |
 | **"Approve & always trust"** button, and the commenter's email shown to you | Step 1 |
-| **Emails to commenters**: "your comment is live", "not published", "someone replied" | Steps 1 and 2 |
+| **Emails to commenters**: "your comment is live", "not published", "someone replied" | Steps 1 and 2 (for decisions you make by hand), or `auto-moderation-setup.md` (for automatic ones) |
+| **School accounts** (`@sahyadrischool.org`) publish immediately | Step 1 |
+| **Editing is limited** to school accounts and trusted people (everyone else can delete and re-post) | Step 1 |
+| **Automatic screening** of outside comments | `auto-moderation-setup.md` |
 
 ## Step 1: publish the updated Firebase rules
 
@@ -29,6 +36,10 @@ change them.
 4. Open `docs/firestore.rules` in this repository, copy the whole file, and paste it in.
 5. Press **Publish**.
 
+(If you use the Firebase command-line tools you can instead run
+`firebase deploy --only firestore:rules` from the repository root; `firebase.json` points at
+`docs/firestore.rules`.)
+
 That's all. To check it worked, post a test comment from a normal (non-moderator)
 account, then open the review queue: the comment should be listed, with the
 commenter's email next to their name.
@@ -39,9 +50,10 @@ rules as well, and publish again.
 
 ### What changed in the rules
 
-The top of `docs/firestore.rules` lists the five changes. In short: two new
+The top of `docs/firestore.rules` lists the changes. In short: two new
 collections (`trusted`, `commentPrivate`), the moderator may also record a rejection
-note, trusted people may create already-approved comments, and a small fix so a
+note, trusted people and school accounts may create already-approved comments, only those
+same people may edit a comment's text (anyone may delete their own), and a small fix so a
 comment of exactly 2000 characters is accepted.
 
 ## Step 2 (optional): emails to commenters
@@ -109,6 +121,9 @@ template you can add, for example,
   teacher, before they've commented), or remove someone. A removed person's next
   comments wait for review again.
 - Trust people you know. A trusted account's comments go live with no review at all.
+- With automatic screening on, the page also shows **Automatically rejected** comments, so
+  a wrong call can be reversed (**Approve anyway**) or made final (**Confirm reject**). A live
+  comment can be taken down from its own email link (`approve.html`).
 
 ## Posting limits
 
@@ -123,8 +138,9 @@ page, so they stop accidents, double-clicks and casual flooding. Someone who del
 bypasses the page (calling Firebase directly) is not stopped by them. Two things worth
 doing in the EmailJS dashboard to limit the damage of that: restrict the **allowed
 domains** to `connect.sahyadrischool.org`, and keep an eye on the monthly email count.
-Enforcing limits fully on the server needs Firebase Cloud Functions, which require a paid
-Firebase plan, so it hasn't been set up.
+Enforcing limits fully on the server needs a Cloud Function that counts each person's
+comments; the screening function in `auto-moderation-setup.md` does not do that yet, so
+these limits remain page-level.
 
 ## What is stored, and privacy
 

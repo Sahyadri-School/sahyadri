@@ -7,6 +7,10 @@ sitemap: false
      batch can be dealt with in one sitting instead of one email at a
      time. Also holds the "trusted people" list (those people's comments
      and replies are published immediately, with no review).
+     With automatic screening on (comments-auto-moderation) it also lists what
+     the screening rejected, so a wrong call can be reversed, and what it held
+     back or could not check. Nothing is published or hidden without appearing
+     here or in an email.
      Moderator-only: signs in with Google and refuses anyone who isn't
      comments-moderator-email in _config.yml. All the actual logic
      (approve / reject / trust / emails to commenters) lives in
@@ -72,6 +76,7 @@ sitemap: false
   .rv-reject-row { display: none; margin-top: 0.8em; }
   .rv-reject-row.rv-open { display: block; }
   .rv-note { display: block; width: 100%; box-sizing: border-box; padding: 0.55em 0.8em; font-family: inherit; font-size: 0.95em; border: 1px solid var(--sc-line); border-radius: 4px; margin-bottom: 0.6em; }
+  .rv-review-note { font-size: 0.85em; color: #8a5a00; margin: 0 0 0.5em; }
   .rv-trusted { list-style: none; padding: 0; margin: 0 0 1em; }
   .rv-trusted li { display: flex; justify-content: space-between; align-items: center; gap: 1em; padding: 0.45em 0; border-bottom: 1px dashed var(--sc-line); font-size: 0.95em; word-break: break-word; }
   .rv-add { display: flex; flex-wrap: wrap; gap: 0.6em; }
@@ -92,6 +97,11 @@ sitemap: false
         <div id="rv-list"><p class="sc-status">Loading…</p></div>
       </div>
       <div class="rv-panel">
+        <h2>Automatically rejected <span id="rv-auto-count"></span></h2>
+        <p class="rv-hint">Comments the automatic check refused to publish. The commenter can see that theirs wasn't published. <strong>Approve anyway</strong> publishes it after all; <strong>Confirm reject</strong> makes the rejection final (and lets you add a note the commenter will see).</p>
+        <div id="rv-auto-list"><p class="sc-status">Loading…</p></div>
+      </div>
+      <div class="rv-panel">
         <h2>Trusted people</h2>
         <p class="rv-hint">Comments and replies from these people are published immediately, without waiting for review. Use it for teachers and staff you know. You can also trust someone with the &ldquo;Approve &amp; always trust&rdquo; button above. Remove a person here at any time.</p>
         <div id="rv-trusted"><p class="sc-status">Loading…</p></div>
@@ -108,19 +118,21 @@ sitemap: false
   <script type="module">
     import {
       MODERATOR_EMAIL, watchModerator, signInWithGoogle, signOutUser, escapeHtml, isPermissionDenied, millis,
-      subscribePending, loadPrivate, approveComment, rejectComment, listTrusted, addTrusted, removeTrusted
+      subscribePending, describeAutoReview, loadPrivate, approveComment, rejectComment, listTrusted, addTrusted, removeTrusted
     } from "{{ '/assets/js/comment-moderation.js' | relative_url }}";
 
     const gate = document.getElementById("rv-gate");
     const main = document.getElementById("rv-main");
-    const listEl = document.getElementById("rv-list");
     const logEl = document.getElementById("rv-log");
-    const countEl = document.getElementById("rv-count");
-    const cards = new Map();          // comment id -> its card element
+    // Two lists of cards: comments waiting for a decision, and automatic rejections.
+    const lists = {
+      waiting: { el: document.getElementById("rv-list"), count: document.getElementById("rv-count"), cards: new Map(), empty: "Nothing is waiting for review. 🎉" },
+      auto: { el: document.getElementById("rv-auto-list"), count: document.getElementById("rv-auto-count"), cards: new Map(), empty: "Nothing has been automatically rejected." }
+    };
     let unsubscribe = null;
 
     watchModerator({
-      signedOut: () => { stop(); showGate('<button class="sc-btn" id="rv-signin" type="button">Sign in with Google to review</button>'); 
+      signedOut: () => { stop(); showGate('<button class="sc-btn" id="rv-signin" type="button">Sign in with Google to review</button>');
         document.getElementById("rv-signin").addEventListener("click", () => {
           signInWithGoogle().catch((err) => { console.error(err); showGate('<p class="sc-error">Sign-in failed. Please try again.</p>'); });
         }); },
@@ -134,43 +146,53 @@ sitemap: false
     document.getElementById("rv-switch").addEventListener("click", () => signOutUser());
 
     function showGate(html) { main.style.display = "none"; gate.parentElement.style.display = "block"; gate.innerHTML = html; }
-    function stop() { if (unsubscribe) { unsubscribe(); unsubscribe = null; } cards.clear(); listEl.innerHTML = ""; }
+    function stop() {
+      if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+      for (const l of Object.values(lists)) { l.cards.clear(); l.el.innerHTML = ""; }
+    }
 
     function start() {
       stop();
-      listEl.innerHTML = '<p class="sc-status">Loading…</p>';
-      unsubscribe = subscribePending(sync, (err) => {
+      for (const l of Object.values(lists)) l.el.innerHTML = '<p class="sc-status">Loading…</p>';
+      unsubscribe = subscribePending(({ waiting, autoRejected }) => { sync("waiting", waiting); sync("auto", autoRejected); }, (err) => {
         console.error(err);
-        listEl.innerHTML = '<p class="sc-error">Could not load the waiting comments.</p>';
+        for (const l of Object.values(lists)) l.el.innerHTML = '<p class="sc-error">Could not load the comments.</p>';
       });
       refreshTrusted();
     }
 
-    // Adds cards for new comments and removes cards that are no longer
-    // waiting -- without re-rendering the ones already on screen, so a
-    // half-typed rejection note isn't lost when another comment arrives.
-    function sync(items) {
+    // Adds cards for new comments and removes cards that are no longer in the
+    // list, WITHOUT re-rendering the ones already on screen, so a half-typed
+    // rejection note isn't lost when another comment arrives.
+    function sync(kind, items) {
+      const l = lists[kind];
       const ids = new Set(items.map((i) => i.id));
-      for (const [id, el] of cards) { if (!ids.has(id)) { el.remove(); cards.delete(id); } }
-      const placeholder = listEl.querySelector(".sc-status");
-      if (placeholder) placeholder.remove();
-      for (const item of items) { if (!cards.has(item.id)) { const el = makeCard(item); cards.set(item.id, el); listEl.appendChild(el); } }
-      countEl.textContent = items.length ? "(" + items.length + ")" : "";
-      if (!items.length) listEl.innerHTML = '<p class="sc-status">Nothing is waiting for review. 🎉</p>';
+      for (const [id, el] of l.cards) { if (!ids.has(id)) { el.remove(); l.cards.delete(id); } }
+      const placeholder = l.el.querySelector(".sc-status"); if (placeholder) placeholder.remove();
+      for (const item of items) { if (!l.cards.has(item.id)) { const el = makeCard(item, kind); l.cards.set(item.id, el); l.el.appendChild(el); } }
+      showCount(kind);
+    }
+    function showCount(kind) {
+      const l = lists[kind];
+      l.count.textContent = l.cards.size ? "(" + l.cards.size + ")" : "";
+      if (!l.cards.size) l.el.innerHTML = '<p class="sc-status">' + l.empty + "</p>";
     }
 
-    function makeCard({ id, data }) {
+    function makeCard({ id, data }, kind) {
       const el = document.createElement("div");
       el.className = "rv-card";
       const when = millis(data.createdAt) ? new Date(millis(data.createdAt)).toLocaleString() : "just now";
       const url = escapeHtml(data.pageUrl || "");
+      const review = describeAutoReview(data);
+      const auto = kind === "auto";
       el.innerHTML = `
         <div class="rv-meta"><strong>${escapeHtml(data.name || "Anonymous")}</strong> <span class="rv-who"></span> · ${when} · ${data.parentId ? "a reply" : "a comment"} on <a href="${url}" target="_blank" rel="noopener">${url}</a></div>
+        ${review ? `<p class="rv-review-note">${escapeHtml(review)}</p>` : ""}
         <div class="rv-text">${escapeHtml(data.text || "")}</div>
         <div class="rv-actions">
-          <button class="sc-btn sc-btn-approve" data-do="approve" type="button">✅ Approve</button>
+          <button class="sc-btn sc-btn-approve" data-do="approve" type="button">${auto ? "✅ Approve anyway" : "✅ Approve"}</button>
           <button class="sc-btn sc-btn-approve rv-trust-btn" data-do="trust" type="button" style="display:none;" title="Their future comments and replies will be published immediately">✅ Approve &amp; always trust</button>
-          <button class="sc-btn sc-btn-reject" data-do="reject-open" type="button">🗑 Reject…</button>
+          <button class="sc-btn sc-btn-reject" data-do="reject-open" type="button">${auto ? "🗑 Confirm reject…" : "🗑 Reject…"}</button>
         </div>
         <div class="rv-reject-row">
           <input class="rv-note" type="text" maxlength="500" placeholder="Optional note the commenter will see, e.g. Please keep comments about the article itself." aria-label="Optional note to the commenter">
@@ -188,27 +210,27 @@ sitemap: false
         const act = b.dataset.do, row = el.querySelector(".rv-reject-row");
         if (act === "reject-open") { row.classList.add("rv-open"); row.querySelector("input").focus(); return; }
         if (act === "reject-cancel") { row.classList.remove("rv-open"); return; }
-        decide(el, id, data, act);
+        decide(el, kind, id, data, act);
       });
       return el;
     }
 
-    async function decide(el, id, data, act) {
+    async function decide(el, kind, id, data, act) {
       const buttons = el.querySelectorAll("button"); buttons.forEach((b) => (b.disabled = true));
       el.querySelector(".rv-msg").textContent = "";
       try {
         let result, headline;
+        const who = (data.name || "Anonymous");
         if (act === "reject") {
           result = await rejectComment(id, data, el.querySelector(".rv-note").value);
-          headline = "🗑 Rejected " + (data.name || "Anonymous") + "'s comment.";
+          headline = "🗑 Rejected " + who + "'s comment" + (kind === "auto" ? " (confirmed)" : "") + ".";
         } else {
           result = await approveComment(id, data, { trust: act === "trust" });
-          headline = "✅ Approved " + (data.name || "Anonymous") + "'s comment" + (result.trusted ? " and added them to Trusted people" : "") + ".";
+          headline = "✅ Approved " + who + "'s comment" + (kind === "auto" ? " (reversing the automatic rejection)" : "") + (result.trusted ? " and added them to Trusted people" : "") + ".";
         }
         log(headline, result);
         if (act === "trust") refreshTrusted();
-        el.remove(); cards.delete(id);
-        if (!cards.size) { countEl.textContent = ""; listEl.innerHTML = '<p class="sc-status">Nothing is waiting for review. 🎉</p>'; }
+        el.remove(); lists[kind].cards.delete(id); showCount(kind);
       } catch (err) {
         console.error(err);
         el.querySelector(".rv-msg").textContent = "Could not save that decision. Please try again.";

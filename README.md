@@ -85,8 +85,13 @@ The site hosts:
 ├── maintenance.html            # Maintenance-mode landing page (see below)
 ├── approve.html                # Reviews ONE comment (the link in the moderation email)
 ├── review.html                 # Review queue: everything waiting for approval + trusted people
-├── docs/                       # Not published. firestore.rules (copy of the comment rules
-│                                to paste into Firebase) + comments-setup.md
+├── docs/                       # Not published. firestore.rules (the comment rules; paste into
+│                                Firebase or deploy with the CLI) + comments-setup.md
+│                                + auto-moderation-setup.md
+├── functions/                  # Not published. The Firebase Cloud Function that screens
+│                                comments automatically (src/index.js, tests in test/)
+├── firebase.json, .firebaserc  # Not published. Tell the Firebase CLI where the function,
+│                                the rules and the project are
 └── 404.html                    # Custom not-found page
 ```
 
@@ -192,7 +197,9 @@ New comments save with `approved: false` and are visible only to their author un
 
 **Telling commenters.** A rejected comment stays visible to its author as "Not published", with the moderator's note if there is one. Each comment also gets a private record (`commentPrivate`, moderator-readable only) with the commenter's email and whether they asked to be emailed; if a second EmailJS template is configured (`emailjs-notify-template-id`), the moderator's browser uses it to email them when a comment is approved or rejected or someone replies.
 
-**Two things live outside this repo** and must be done by hand: the Firestore rules (a copy is in `docs/firestore.rules`) and the second EmailJS template. Step-by-step instructions, what each new feature needs, and troubleshooting are in **`docs/comments-setup.md`**. Until they're done, the features that need them stay off and commenting works as before.
+**Automatic screening (off by default).** The Cloud Function in `functions/src/index.js` runs whenever a comment is created. Comments from school-domain accounts (`comments-auto-approve-domain`) and trusted people are created already approved and are not screened. For everyone else it asks Google's Cloud Natural Language `moderateText` API for scores: a harm category (Toxic, Insult, Profanity, Derogatory, Violent, Sexual) above 0.5 rejects the comment; a sensitive-safety category (death or harm, public safety, drugs, weapons) or a web link holds it for the moderator; a failed check leaves it unapproved; otherwise it is approved. The topic categories (Health, Religion & Belief, Politics, ...) are ignored on purpose, because they say what a text is about, not whether it is harmful. The function uses the Admin SDK, so the rules never let a visitor approve their own comment; it emails the moderator every decision, and `review.html` / `approve.html` can reverse any of them (`autoReview` on the comment records what the check found). Turn the page's side on with `comments-auto-moderation: true` in `_config.yml` **only after** the function is deployed. Because a comment can now be approved within seconds, the rules let only school accounts and trusted people change a comment's text (everyone can still delete theirs), so a screened comment can't be edited into something that was never screened. Setup, costs, testing and troubleshooting: **`docs/auto-moderation-setup.md`**. The function has its own tests (`cd functions && npm test`).
+
+**Things that live outside this repo** and must be done by hand: the Firestore rules (`docs/firestore.rules`; `firebase deploy --only firestore:rules` publishes them), the second EmailJS template if you want decisions made by hand to email commenters, and, for automatic screening, billing, the Natural Language API, the Gmail secrets and the deploy. Step-by-step instructions, what each feature needs, and troubleshooting are in **`docs/comments-setup.md`** and **`docs/auto-moderation-setup.md`**. Until they're done, the features that need them stay off and commenting works as before.
 
 **Important:** none of the interactive Firebase features (posting, liking, editing, deleting, approving) work until the Firestore security rules for the `comments` collection are published in the Firebase console — that's a manual step outside this repo. Don't leave Firestore in open "test mode" on a real deployment, since visitors sign in with their real Google accounts here.
 

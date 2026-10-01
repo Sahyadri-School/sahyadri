@@ -45,3 +45,11 @@ beautiful-jekyll-theme-*.gem # Built RubyGem archive packages generated locally
 *.swp           # Vim temporary swap files
 *.swo           # Vim temporary swap files
 
+
+# ------------------------------------------------------------------------------
+# Firebase Cloud Function (functions/)
+# Installed packages are rebuilt on deploy; never commit them.
+# ------------------------------------------------------------------------------
+functions/node_modules/
+firebase-debug.log
+firebase-debug.*.log

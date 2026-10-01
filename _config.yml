@@ -224,6 +224,25 @@ comments-cooldown-seconds: 45
 comments-max-pending: 3
 emailjs-notify-template-id: ""
 
+# -----------------------------------------------------------------------------
+# Comments: automatic screening, and instant publishing for school accounts
+# comments-auto-moderation: turn this to true ONLY once the Cloud Function in
+#   functions/ has been deployed (steps in docs/auto-moderation-setup.md).
+#   True means: comments from other accounts are screened automatically within
+#   seconds (the function emails the moderator its decision, so this page stops
+#   sending its own moderation email), and the comment box says so. While
+#   false, every non-trusted comment waits for the moderator as before. Do NOT
+#   set it to true before deploying: comments would then sit unreviewed with no
+#   email to anyone.
+# comments-auto-approve-domain: accounts whose verified Google email ends in
+#   @<this domain> are published immediately with no screening (staff and, if
+#   they use school accounts, students). Leave blank to turn this off. It must
+#   match isSchoolAccount() in docs/firestore.rules, or the rules will refuse
+#   the comment and it simply waits for review instead.
+# -----------------------------------------------------------------------------
+comments-auto-moderation: false
+comments-auto-approve-domain: "sahyadrischool.org"
+
 
 # -----------------------------------------------------------------------------
 # Default Layouts & Front Matter
@@ -269,6 +288,9 @@ exclude:
   - README.md
   - screenshot.png
   - docs/
+  - functions/
+  - firebase.json
+  - .firebaserc
   - vendor/
   - node_modules/
   - .github/

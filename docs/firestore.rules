@@ -1,22 +1,43 @@
 // Firestore security rules for Sahyadri Connect's comments.
 //
-// This file is a COPY kept in the repository so the rules aren't lost. It is
-// NOT deployed from here: to change what Firebase enforces, open
-// Firebase console -> your project -> Firestore Database -> Rules, paste this
-// whole file over what is there, and press Publish. Steps and screenshots-
-// free walkthrough: docs/comments-setup.md.
+// A COPY kept in the repository so the rules aren't lost. To make Firebase
+// enforce them, EITHER paste this whole file into
+//   Firebase console -> your project -> Firestore Database -> Rules -> Publish
+// OR, if you use the Firebase CLI, run:  firebase deploy --only firestore:rules
+// (firebase.json points at this file). Full steps: docs/comments-setup.md and
+// docs/auto-moderation-setup.md.
 //
-// What changed compared with the previous rules (everything else is the same):
-//  1. New /trusted collection: the moderator's list of people whose comments are
-//     published immediately. A person can only check their own entry.
-//  2. New /commentPrivate collection: each commenter's email, readable ONLY by
-//     the moderator, used to email them and to offer "Approve & always trust".
-//  3. The moderator may now also write "rejected" and "moderationNote" on a
-//     comment, so a rejected commenter can be shown why (previously only
-//     "approved" and "deleted").
-//  4. A comment may be created already approved, but only by a trusted person.
-//  5. Length fix: the page allows up to 2000 characters but the old rule said
-//     "less than 2000", so a comment of exactly 2000 characters was refused.
+// What is in these rules, on top of the original "sign in, comments start
+// unapproved, moderator approves":
+//  1. /trusted: the moderator's list of people whose comments are published
+//     immediately. A person can only look up their own entry.
+//  2. Accounts on the school's own domain (isSchoolAccount) are published
+//     immediately too. To change the domain, edit isSchoolAccount() below and
+//     comments-auto-approve-domain in _config.yml. (The Cloud Function needs no
+//     change: it only looks at whether a comment arrived already approved.)
+//  3. /commentPrivate: each commenter's email, readable ONLY by the moderator,
+//     used to email them and to offer "Approve & always trust".
+//  4. The moderator may write "rejected" and "moderationNote" as well as
+//     "approved" and "deleted", so a rejected commenter can be told why and
+//     an automatic decision can be reversed.
+//  5. Length: a comment may be exactly 2000 characters (the old rule refused
+//     that by saying "less than 2000").
+//  6. Editing: only school accounts and trusted people may change the text of a
+//     comment. Everyone else may still delete theirs and post again. (Without
+//     this, a comment screened as harmless could be edited afterwards into
+//     something that never went through the screening.)
+//
+// The automatic-screening Cloud Function (functions/src/index.js) uses the
+// Admin SDK, which bypasses these rules, to approve or reject comments. So the
+// rules never need to let an ordinary visitor set "approved" to true.
+//
+// Notes on details that are easy to get wrong:
+//  - String .lower() DOES exist in Firestore rules, so emails are compared in
+//    lower case. Trusted-person document IDs are therefore always the
+//    lower-cased email (the review page does this for you).
+//  - "likes" is stored as a map {uid: true} (not a list), and deleting your own
+//    comment writes an empty text with deleted = true, so both are allowed
+//    below.
 //
 // If you change the moderator's address in _config.yml (comments-moderator-email),
 // change it in isModerator() below too.
@@ -28,6 +49,13 @@ service cloud.firestore {
     function isModerator() {
       return request.auth != null
           && request.auth.token.email == 'archives@sahyadrischool.org';
+    }
+
+    // A verified account on the school's own domain.
+    function isSchoolAccount() {
+      return request.auth != null
+          && request.auth.token.email_verified == true
+          && request.auth.token.email.lower().matches('.*@sahyadrischool[.]org');
     }
 
     // A document in /trusted whose ID is the person's email, in lower case.
@@ -42,23 +70,41 @@ service cloud.firestore {
                   || (request.auth != null && request.auth.uid == resource.data.uid)
                   || isModerator();
 
+      // Everyone may create a comment UNapproved. Only school accounts and
+      // trusted people may create one already approved.
       allow create: if request.auth != null
                     && request.resource.data.uid == request.auth.uid
                     && request.resource.data.text is string
                     && request.resource.data.text.size() > 0
                     && request.resource.data.text.size() <= 2000
                     && (request.resource.data.approved == false
-                        || (request.resource.data.approved == true && isTrusted()));
+                        || (request.resource.data.approved == true && (isSchoolAccount() || isTrusted())));
 
       allow update: if request.auth != null && (
         // anyone signed in: likes and emoji reactions
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likeCount', 'reactions']) ||
-        // the author: edit or delete their own comment
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes', 'likeCount', 'reactions']) &&
+         request.resource.data.likeCount is int && request.resource.data.likeCount >= 0 &&
+         request.resource.data.likes is map &&
+         request.resource.data.reactions is map) ||
+        // the author: delete their own comment (which blanks the text), or edit it.
+        // Only people whose comments are published WITHOUT review (school accounts
+        // and trusted people) may change the text of a comment. For everyone else a
+        // comment could be approved while harmless and then edited into something
+        // the automatic check never saw. They can delete it and post a new one,
+        // which is screened again.
         (request.auth.uid == resource.data.uid &&
-         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt', 'deleted'])) ||
-        // the moderator: approve, or reject (optionally with a note for the commenter)
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', 'editedAt', 'deleted']) &&
+         (request.resource.data.deleted == true ||
+          ((isSchoolAccount() || isTrusted()) &&
+           request.resource.data.text is string &&
+           request.resource.data.text.size() > 0 &&
+           request.resource.data.text.size() <= 2000))) ||
+        // the moderator: approve, reject, or reverse a decision (with an optional note)
         (isModerator() &&
-         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['approved', 'deleted', 'rejected', 'moderationNote']))
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['approved', 'deleted', 'rejected', 'moderationNote']) &&
+         (!('moderationNote' in request.resource.data) ||
+          (request.resource.data.moderationNote is string &&
+           request.resource.data.moderationNote.size() <= 1000)))
       );
 
       allow delete: if false;
@@ -73,13 +119,17 @@ service cloud.firestore {
     }
 
     // One private record per comment: who wrote it (email) and whether they
-    // want emails. Only the moderator can read it; nobody can change it.
+    // want emails. Only the moderator (and the Cloud Function, which bypasses
+    // rules) can read it; nobody can change it. existsAfter/getAfter check the
+    // comment as it will be once this write lands, so this works whether the
+    // comment was saved a moment earlier or in the same batch.
     match /commentPrivate/{commentId} {
       allow create: if request.auth != null
                     && request.resource.data.uid == request.auth.uid
                     && request.resource.data.email == request.auth.token.email
                     && request.resource.data.keys().hasOnly(['uid', 'email', 'name', 'notify', 'parentId', 'createdAt'])
-                    && get(/databases/$(database)/documents/comments/$(commentId)).data.uid == request.auth.uid;
+                    && existsAfter(/databases/$(database)/documents/comments/$(commentId))
+                    && getAfter(/databases/$(database)/documents/comments/$(commentId)).data.uid == request.auth.uid;
       allow read: if isModerator();
       allow update, delete: if false;
     }

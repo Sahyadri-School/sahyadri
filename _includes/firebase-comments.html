@@ -34,8 +34,16 @@
        only) holding the commenter's email and whether they asked to be
        emailed; review.html / approve.html use it to email them when their
        comment is approved, not published, or replied to.
-     - A rejected comment stays visible to its author, with the
-       moderator's note if one was left. -->
+     - A rejected comment stays visible to its author, with a note if one
+       was left.
+     - Only school accounts and trusted people see an Edit button (the rules
+       enforce the same): anyone else's comment text can't be changed after it
+       has been screened or approved. They can delete it and post again.
+     - Automatic screening (comments-auto-moderation) and instant publishing
+       for school-domain accounts (comments-auto-approve-domain). The
+       screening itself is the Cloud Function in functions/, which sets
+       approved / rejected within seconds; this page only changes what it
+       says and stops sending its own moderation email. -->
 {% if site.firebase-api-key and site.firebase-project-id %}
 
 <div id="comments-section">
@@ -136,6 +144,17 @@
   const COOLDOWN_SECONDS = Number("{{ site.comments-cooldown-seconds | default: 45 }}") || 0;
   const MAX_PENDING = Number("{{ site.comments-max-pending | default: 3 }}") || 0;
 
+  // Automatic screening by the Cloud Function in functions/. Only switch on
+  // (in _config.yml) after that function is deployed, or comments would wait
+  // with nobody told.
+  const AUTO_MODERATION = "{{ site.comments-auto-moderation }}" === "true";
+  // Accounts on this domain are published immediately, no screening. The
+  // rules (isSchoolAccount) make the real decision; this only asks for it.
+  const AUTO_APPROVE_DOMAIN = "{{ site.comments-auto-approve-domain }}".trim().toLowerCase();
+  // The "email me" tick box: emails come from EmailJS (moderator decisions)
+  // and/or from the Cloud Function (automatic decisions).
+  const NOTIFY_OPTION_AVAILABLE = COMMENTER_EMAILS_ENABLED || AUTO_MODERATION;
+
   const pageUrl = window.location.origin + window.location.pathname;
   const MAX_LENGTH = 2000;
   const REACTION_EMOJIS = ["👍", "❤️", "😂", "😮", "😢"];
@@ -160,6 +179,7 @@
 
   let currentUser = null;
   let isTrusted = false; // on the moderator's trusted list: comments are published immediately
+  let isSchool = false;  // a verified account on the school domain: also published immediately
   let latestDocs = null; // merged cache used by rendering -- combination of the two sources below
   let latestApprovedDocs = [];
   let latestOwnPendingDocs = [];
@@ -189,10 +209,11 @@
       formEl.style.display = "none";
     }
     isTrusted = false;
+    isSchool = isSchoolAccount(user);
     updateFormNotes();
     if (user) {
       checkTrusted(user).then((trusted) => {
-        if (currentUser === user) { isTrusted = trusted; updateFormNotes(); }
+        if (currentUser === user) { isTrusted = trusted; updateFormNotes(); renderFeed(); } // redraw: a trusted person gets the Edit button
       });
     }
     renderFeed();
@@ -211,11 +232,23 @@
     }
   }
 
+  function isSchoolAccount(user) {
+    return !!(AUTO_APPROVE_DOMAIN && user && user.email && user.emailVerified !== false &&
+      user.email.toLowerCase().endsWith("@" + AUTO_APPROVE_DOMAIN));
+  }
+
+  // True for people whose comments and replies go live with no waiting.
+  function publishesImmediately() { return isTrusted || isSchool; }
+
   function updateFormNotes() {
-    formNoteEl.textContent = isTrusted
-      ? "Your comments and replies are published right away."
-      : "Comments are read by a moderator before they appear. Your Google email is seen only by the moderator.";
-    notifyLabel.style.display = (COMMENTER_EMAILS_ENABLED && currentUser) ? "" : "none";
+    if (publishesImmediately()) {
+      formNoteEl.textContent = "Your comments and replies are published right away.";
+    } else if (AUTO_MODERATION) {
+      formNoteEl.textContent = "Comments are checked automatically before they appear, and a moderator can review any of them. Your Google email is seen only by the moderator.";
+    } else {
+      formNoteEl.textContent = "Comments are read by a moderator before they appear. Your Google email is seen only by the moderator.";
+    }
+    notifyLabel.style.display = (NOTIFY_OPTION_AVAILABLE && currentUser) ? "" : "none";
   }
 
   // Remember the "email me" choice on this device.
@@ -251,7 +284,9 @@
       updateCharCount(textarea, charCountEl);
       showFormStatus(res.published
         ? "Posted. Your comment is live."
-        : "Thanks! A moderator will read your comment before it appears. You can see it below in the meantime.", false);
+        : AUTO_MODERATION
+          ? "Thanks! Your comment is being checked and should appear in a moment. You can see it below in the meantime."
+          : "Thanks! A moderator will read your comment before it appears. You can see it below in the meantime.", false);
     } catch (err) {
       if (!err.userMessage) console.error("Failed to post comment:", err); // limit messages are expected, not errors
       showFormStatus(err.userMessage || "Could not post comment. Please try again.", true);
@@ -280,7 +315,7 @@
     if (COOLDOWN_SECONDS > 0 && last && waitSec > 0) {
       throw limitError(`Please wait ${waitSec} more second${waitSec === 1 ? "" : "s"} before posting again.`);
     }
-    if (MAX_PENDING > 0 && !isTrusted) {
+    if (MAX_PENDING > 0 && !publishesImmediately()) {
       let pending = 0;
       try {
         const snap = await getDocs(query(
@@ -288,7 +323,7 @@
           where("uid", "==", currentUser.uid),
           where("approved", "==", false)
         ));
-        pending = snap.docs.filter((d) => !d.data().deleted).length;
+        pending = snap.docs.filter((d) => !d.data().deleted && !d.data().rejected).length; // rejected ones are not waiting
       } catch (err) {
         console.warn("Could not check how many of your comments are waiting; allowing the post.", err);
         return; // fail open: a failed check should never stop someone commenting
@@ -311,7 +346,7 @@
         uid: currentUser.uid,
         email: currentUser.email || "",
         name: currentUser.displayName || "",
-        notify: !!(COMMENTER_EMAILS_ENABLED && notifyBox.checked),
+        notify: !!(NOTIFY_OPTION_AVAILABLE && notifyBox.checked),
         parentId: parentId || null,
         createdAt: serverTimestamp()
       });
@@ -343,7 +378,7 @@
     // Trusted people's comments are created already approved. If the rules
     // refuse that (e.g. they were just removed from the list), fall back to
     // the normal review path instead of failing.
-    let published = isTrusted;
+    let published = publishesImmediately();
     let docRef;
     try {
       docRef = await addDoc(collection(db, "comments"), payload(published));
@@ -361,7 +396,7 @@
     // Fire-and-forget: notify the moderator, if configured and if there is
     // actually something to review. A failure here should never block the
     // comment itself.
-    if (!published && MODERATION_EMAIL_ENABLED) {
+    if (!published && MODERATION_EMAIL_ENABLED && !AUTO_MODERATION) { // with automatic screening the Cloud Function emails the moderator instead
       notifyModerator({
         docId: docRef.id,
         authorName: currentUser.displayName || "Anonymous",
@@ -524,16 +559,16 @@
 
     const ownedByViewer = !!(currentUser && currentUser.uid === data.uid);
 
-    if (data.deleted && data.rejected && ownedByViewer) {
+    if (data.rejected && !data.approved && ownedByViewer) {
       const note = data.moderationNote
-        ? `<br><em>Note from the moderator:</em> ${escapeHtml(data.moderationNote)}`
+        ? `<br><em>Note:</em> ${escapeHtml(data.moderationNote)}`
         : "";
       return `
         <div class="sc-comment sc-comment-rejected" data-id="${id}">
           <div class="sc-avatar">–</div>
           <div class="sc-comment-body">
             <div class="sc-comment-head"><span class="sc-comment-time">Not published</span></div>
-            <p class="sc-comment-text sc-deleted-text">A moderator didn't publish this comment, so no one else can see it.${note}</p>
+            <p class="sc-comment-text sc-deleted-text">This comment wasn't published, so no one else can see it.${note}</p>
           </div>
         </div>
       `;
@@ -596,7 +631,7 @@
             </button>
             ${reactionButtons}
             ${!isReply ? `<button class="sc-text-btn" data-action="reply" data-id="${id}">Reply</button>` : ""}
-            ${isOwn ? `<button class="sc-text-btn" data-action="edit" data-id="${id}">Edit</button>` : ""}
+            ${isOwn && publishesImmediately() ? `<button class="sc-text-btn" data-action="edit" data-id="${id}">Edit</button>` : ""}
             ${isOwn ? `<button class="sc-text-btn" data-action="delete" data-id="${id}">Delete</button>` : ""}
           </div>
         </div>
@@ -630,7 +665,11 @@
         await updateDoc(doc(db, "comments", commentId), { text: trimmed, editedAt: serverTimestamp() });
       } catch (err) {
         console.error("Failed to edit comment:", err);
-        alert("Could not save your edit.");
+        // The rules only let school accounts and trusted people change a comment's text
+        // (otherwise a screened comment could be edited into something that never was).
+        alert(isPermissionDenied(err)
+          ? "Editing isn't available for this comment. You can delete it and post a new one."
+          : "Could not save your edit.");
       }
       return;
     }
