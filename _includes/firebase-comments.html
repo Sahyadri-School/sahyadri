@@ -19,31 +19,7 @@
      validate for a list query: a rule based on request.auth.uid ==
      resource.data.uid (own-pending) or resource.data.approved == true
      (public) is provably safe, unlike trusting the client to hide
-     unapproved comments from other viewers after a single broad read.
-
-     Also here (all optional, and they degrade quietly if their Firebase
-     rules or EmailJS template aren't set up yet; see docs/comments-setup.md):
-     - Posting limits: a short cooldown between posts and a cap on how many
-       of one person's comments can be waiting for review at once. These
-       are enforced in this page, so they stop ordinary misuse and
-       accidents but not someone deliberately bypassing the page.
-     - Trusted people (the `trusted` collection): their comments and
-       replies are created already approved, so they appear immediately and
-       no moderation email is sent.
-     - A private record per comment (`commentPrivate`, moderator-readable
-       only) holding the commenter's email and whether they asked to be
-       emailed; review.html / approve.html use it to email them when their
-       comment is approved, not published, or replied to.
-     - A rejected comment stays visible to its author, with a note if one
-       was left.
-     - Only school accounts and trusted people see an Edit button (the rules
-       enforce the same): anyone else's comment text can't be changed after it
-       has been screened or approved. They can delete it and post again.
-     - Automatic screening (comments-auto-moderation) and instant publishing
-       for school-domain accounts (comments-auto-approve-domain). The
-       screening itself is the Cloud Function in functions/, which sets
-       approved / rejected within seconds; this page only changes what it
-       says and stops sending its own moderation email. -->
+     unapproved comments from other viewers after a single broad read. -->
 {% if site.firebase-api-key and site.firebase-project-id %}
 
 <div id="comments-section">
@@ -68,11 +44,6 @@
     <textarea id="comments-textarea" class="sc-textarea" maxlength="2000" placeholder="Add a comment..."></textarea>
     <span id="comments-char-count" class="sc-char-count">0 / 2000</span>
     <button id="comments-submit-btn" class="sc-btn">Post comment</button>
-    <p id="comments-form-status" class="sc-form-status" role="status" aria-live="polite" style="display:none;"></p>
-    <label id="comments-notify-label" class="sc-notify" style="display:none;">
-      <input type="checkbox" id="comments-notify" checked> Email me when my comment is reviewed or someone replies
-    </label>
-    <p id="comments-form-note" class="sc-form-note"></p>
   </div>
 
   <div id="comments-feed">
@@ -95,9 +66,6 @@
     collection,
     doc,
     addDoc,
-    setDoc,
-    getDoc,
-    getDocs,
     updateDoc,
     deleteField,
     increment,
@@ -134,27 +102,6 @@
   const MODERATOR_EMAIL = "{{ site.comments-moderator-email }}";
   const MODERATION_EMAIL_ENABLED = !!(EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY && MODERATOR_EMAIL);
 
-  // Emails TO commenters (approved / not published / someone replied) use a
-  // second EmailJS template. Until emailjs-notify-template-id is set, the
-  // "email me" checkbox stays hidden and nothing is sent to commenters.
-  const COMMENTER_EMAILS_ENABLED = !!(EMAILJS_SERVICE_ID && EMAILJS_PUBLIC_KEY && "{{ site.emailjs-notify-template-id }}");
-
-  // Posting limits, enforced in this page (see docs/comments-setup.md for
-  // what that does and doesn't stop). 0 turns a limit off.
-  const COOLDOWN_SECONDS = Number("{{ site.comments-cooldown-seconds | default: 45 }}") || 0;
-  const MAX_PENDING = Number("{{ site.comments-max-pending | default: 3 }}") || 0;
-
-  // Automatic screening by the Cloud Function in functions/. Only switch on
-  // (in _config.yml) after that function is deployed, or comments would wait
-  // with nobody told.
-  const AUTO_MODERATION = "{{ site.comments-auto-moderation }}" === "true";
-  // Accounts on this domain are published immediately, no screening. The
-  // rules (isSchoolAccount) make the real decision; this only asks for it.
-  const AUTO_APPROVE_DOMAIN = "{{ site.comments-auto-approve-domain }}".trim().toLowerCase();
-  // The "email me" tick box: emails come from EmailJS (moderator decisions)
-  // and/or from the Cloud Function (automatic decisions).
-  const NOTIFY_OPTION_AVAILABLE = COMMENTER_EMAILS_ENABLED || AUTO_MODERATION;
-
   const pageUrl = window.location.origin + window.location.pathname;
   const MAX_LENGTH = 2000;
   const REACTION_EMOJIS = ["👍", "❤️", "😂", "😮", "😢"];
@@ -172,14 +119,8 @@
   const loadingEl = document.getElementById("comments-loading");
   const countEl = document.getElementById("comments-count");
   const sortSelect = document.getElementById("comments-sort");
-  const formStatusEl = document.getElementById("comments-form-status");
-  const notifyLabel = document.getElementById("comments-notify-label");
-  const notifyBox = document.getElementById("comments-notify");
-  const formNoteEl = document.getElementById("comments-form-note");
 
   let currentUser = null;
-  let isTrusted = false; // on the moderator's trusted list: comments are published immediately
-  let isSchool = false;  // a verified account on the school domain: also published immediately
   let latestDocs = null; // merged cache used by rendering -- combination of the two sources below
   let latestApprovedDocs = [];
   let latestOwnPendingDocs = [];
@@ -208,60 +149,9 @@
       userInfo.style.display = "none";
       formEl.style.display = "none";
     }
-    isTrusted = false;
-    isSchool = isSchoolAccount(user);
-    updateFormNotes();
-    if (user) {
-      checkTrusted(user).then((trusted) => {
-        if (currentUser === user) { isTrusted = trusted; updateFormNotes(); renderFeed(); } // redraw: a trusted person gets the Edit button
-      });
-    }
     renderFeed();
     subscribeOwnPending();
   });
-
-  // Is this person on the moderator's trusted list? Any failure (including
-  // the updated Firebase rules not being published yet) just means "no".
-  async function checkTrusted(user) {
-    if (!user || !user.email) return false;
-    try {
-      const snap = await getDoc(doc(db, "trusted", user.email.toLowerCase()));
-      return snap.exists();
-    } catch (err) {
-      return false;
-    }
-  }
-
-  function isSchoolAccount(user) {
-    return !!(AUTO_APPROVE_DOMAIN && user && user.email && user.emailVerified !== false &&
-      user.email.toLowerCase().endsWith("@" + AUTO_APPROVE_DOMAIN));
-  }
-
-  // True for people whose comments and replies go live with no waiting.
-  function publishesImmediately() { return isTrusted || isSchool; }
-
-  function updateFormNotes() {
-    if (publishesImmediately()) {
-      formNoteEl.textContent = "Your comments and replies are published right away.";
-    } else if (AUTO_MODERATION) {
-      formNoteEl.textContent = "Comments are checked automatically before they appear, and a moderator can review any of them. Your Google email is seen only by the moderator.";
-    } else {
-      formNoteEl.textContent = "Comments are read by a moderator before they appear. Your Google email is seen only by the moderator.";
-    }
-    notifyLabel.style.display = (NOTIFY_OPTION_AVAILABLE && currentUser) ? "" : "none";
-  }
-
-  // Remember the "email me" choice on this device.
-  try { if (localStorage.getItem("sc_notify_pref") === "off") notifyBox.checked = false; } catch (e) { /* storage unavailable */ }
-  notifyBox.addEventListener("change", () => {
-    try { localStorage.setItem("sc_notify_pref", notifyBox.checked ? "on" : "off"); } catch (e) { /* storage unavailable */ }
-  });
-
-  function showFormStatus(message, isError) {
-    formStatusEl.textContent = message;
-    formStatusEl.classList.toggle("sc-form-status-error", !!isError);
-    formStatusEl.style.display = message ? "block" : "none";
-  }
 
   // --- Character counter on the main compose box ---
   textarea.addEventListener("input", () => updateCharCount(textarea, charCountEl));
@@ -277,89 +167,21 @@
     const text = textarea.value.trim();
     if (!text || !currentUser) return;
     submitBtn.disabled = true;
-    showFormStatus("", false);
     try {
-      const res = await postComment(text, null);
+      await postComment(text, null);
       textarea.value = "";
       updateCharCount(textarea, charCountEl);
-      showFormStatus(res.published
-        ? "Posted. Your comment is live."
-        : AUTO_MODERATION
-          ? "Thanks! Your comment is being checked and should appear in a moment. You can see it below in the meantime."
-          : "Thanks! A moderator will read your comment before it appears. You can see it below in the meantime.", false);
     } catch (err) {
-      if (!err.userMessage) console.error("Failed to post comment:", err); // limit messages are expected, not errors
-      showFormStatus(err.userMessage || "Could not post comment. Please try again.", true);
+      console.error("Failed to post comment:", err);
+      alert("Could not post comment. Please try again.");
     } finally {
       submitBtn.disabled = false;
     }
   });
 
-  // --- Posting limits (enforced here in the page) ---
-  function limitError(message) {
-    const e = new Error(message);
-    e.userMessage = message;
-    return e;
-  }
-  function lastPostKey() { return "sc_last_post_" + (currentUser ? currentUser.uid : ""); }
-  function readLastPost() {
-    try { return Number(localStorage.getItem(lastPostKey())) || 0; } catch (e) { return 0; }
-  }
-  function recordPost() {
-    try { localStorage.setItem(lastPostKey(), String(Date.now())); } catch (e) { /* storage unavailable */ }
-  }
-
-  async function enforcePostingLimits() {
-    const last = readLastPost();
-    const waitSec = Math.ceil(COOLDOWN_SECONDS - (Date.now() - last) / 1000);
-    if (COOLDOWN_SECONDS > 0 && last && waitSec > 0) {
-      throw limitError(`Please wait ${waitSec} more second${waitSec === 1 ? "" : "s"} before posting again.`);
-    }
-    if (MAX_PENDING > 0 && !publishesImmediately()) {
-      let pending = 0;
-      try {
-        const snap = await getDocs(query(
-          collection(db, "comments"),
-          where("uid", "==", currentUser.uid),
-          where("approved", "==", false)
-        ));
-        pending = snap.docs.filter((d) => !d.data().deleted && !d.data().rejected).length; // rejected ones are not waiting
-      } catch (err) {
-        console.warn("Could not check how many of your comments are waiting; allowing the post.", err);
-        return; // fail open: a failed check should never stop someone commenting
-      }
-      if (pending >= MAX_PENDING) {
-        throw limitError(`You already have ${pending} comments waiting for review. Please wait until they've been reviewed before posting more.`);
-      }
-    }
-  }
-
-  function isPermissionDenied(err) {
-    return !!err && (err.code === "permission-denied" || /permission/i.test(String(err.message || "")));
-  }
-
-  // The private record (moderator-readable only): the commenter's email and
-  // whether they asked to be emailed. Failure here never affects the comment.
-  async function savePrivateInfo(commentId, parentId) {
-    try {
-      await setDoc(doc(db, "commentPrivate", commentId), {
-        uid: currentUser.uid,
-        email: currentUser.email || "",
-        name: currentUser.displayName || "",
-        notify: !!(NOTIFY_OPTION_AVAILABLE && notifyBox.checked),
-        parentId: parentId || null,
-        createdAt: serverTimestamp()
-      });
-    } catch (err) {
-      console.warn("Could not save the private record for this comment (the comment itself was saved):", err);
-    }
-  }
-
   async function postComment(text, parentId) {
     if (!currentUser) throw new Error("not signed in");
-    await enforcePostingLimits();
-
-    const payload = (approved) => ({
+    const docRef = await addDoc(collection(db, "comments"), {
       text,
       pageUrl,
       uid: currentUser.uid,
@@ -368,35 +190,16 @@
       createdAt: serverTimestamp(),
       editedAt: null,
       deleted: false,
-      approved, // false = hidden from everyone but the author until a moderator approves it
+      approved: false, // hidden from everyone but the author until a moderator approves it
       parentId: parentId || null,
       likes: {},
       likeCount: 0,
       reactions: {}
     });
 
-    // Trusted people's comments are created already approved. If the rules
-    // refuse that (e.g. they were just removed from the list), fall back to
-    // the normal review path instead of failing.
-    let published = publishesImmediately();
-    let docRef;
-    try {
-      docRef = await addDoc(collection(db, "comments"), payload(published));
-    } catch (err) {
-      if (published && isPermissionDenied(err)) {
-        published = false;
-        docRef = await addDoc(collection(db, "comments"), payload(false));
-      } else {
-        throw err;
-      }
-    }
-    recordPost();
-    await savePrivateInfo(docRef.id, parentId);
-
-    // Fire-and-forget: notify the moderator, if configured and if there is
-    // actually something to review. A failure here should never block the
-    // comment itself.
-    if (!published && MODERATION_EMAIL_ENABLED && !AUTO_MODERATION) { // with automatic screening the Cloud Function emails the moderator instead
+    // Fire-and-forget: notify the moderator, if configured. A failure
+    // here should never block the comment itself.
+    if (MODERATION_EMAIL_ENABLED) {
       notifyModerator({
         docId: docRef.id,
         authorName: currentUser.displayName || "Anonymous",
@@ -405,7 +208,6 @@
         isReply: !!parentId
       });
     }
-    return { published };
   }
 
   async function notifyModerator({ docId, authorName, authorEmail, text, isReply }) {
@@ -425,8 +227,7 @@
             author_email: authorEmail,
             comment_text: text,
             page_url: pageUrl,
-            approve_link: consoleLink,
-            review_link: `${window.location.origin}/review.html`
+            approve_link: consoleLink
           }
         })
       });
@@ -557,23 +358,6 @@
     const data = docSnap.data();
     const id = docSnap.id;
 
-    const ownedByViewer = !!(currentUser && currentUser.uid === data.uid);
-
-    if (data.rejected && !data.approved && ownedByViewer) {
-      const note = data.moderationNote
-        ? `<br><em>Note:</em> ${escapeHtml(data.moderationNote)}`
-        : "";
-      return `
-        <div class="sc-comment sc-comment-rejected" data-id="${id}">
-          <div class="sc-avatar">–</div>
-          <div class="sc-comment-body">
-            <div class="sc-comment-head"><span class="sc-comment-time">Not published</span></div>
-            <p class="sc-comment-text sc-deleted-text">This comment wasn't published, so no one else can see it.${note}</p>
-          </div>
-        </div>
-      `;
-    }
-
     if (data.deleted) {
       return `
         <div class="sc-comment" data-id="${id}">
@@ -631,7 +415,7 @@
             </button>
             ${reactionButtons}
             ${!isReply ? `<button class="sc-text-btn" data-action="reply" data-id="${id}">Reply</button>` : ""}
-            ${isOwn && publishesImmediately() ? `<button class="sc-text-btn" data-action="edit" data-id="${id}">Edit</button>` : ""}
+            ${isOwn ? `<button class="sc-text-btn" data-action="edit" data-id="${id}">Edit</button>` : ""}
             ${isOwn ? `<button class="sc-text-btn" data-action="delete" data-id="${id}">Delete</button>` : ""}
           </div>
         </div>
@@ -665,11 +449,7 @@
         await updateDoc(doc(db, "comments", commentId), { text: trimmed, editedAt: serverTimestamp() });
       } catch (err) {
         console.error("Failed to edit comment:", err);
-        // The rules only let school accounts and trusted people change a comment's text
-        // (otherwise a screened comment could be edited into something that never was).
-        alert(isPermissionDenied(err)
-          ? "Editing isn't available for this comment. You can delete it and post a new one."
-          : "Could not save your edit.");
+        alert("Could not save your edit.");
       }
       return;
     }
@@ -738,8 +518,8 @@
         await postComment(text, parentId);
         wrapper.remove();
       } catch (err) {
-        if (!err.userMessage) console.error("Failed to post reply:", err); // limit messages are expected, not errors
-        alert(err.userMessage || "Could not post reply.");
+        console.error("Failed to post reply:", err);
+        alert("Could not post reply.");
         btn.disabled = false;
       }
     });

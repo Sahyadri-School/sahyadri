@@ -54,7 +54,6 @@ The site hosts:
 ├── assets/
 │   ├── css/custom-styles.css  # All site-specific CSS (the theme's own CSS
 │   │                            files are untouched)
-│   ├── js/comment-moderation.js # Shared logic for approve.html + review.html
 │   ├── img/                    # Site icons, logo files and the default share
 │   │                            card. Every photo on the site is a Google
 │   │                            Drive file ID, not a file in the repo.
@@ -83,15 +82,7 @@ The site hosts:
 │                                or the "Tags:" line on a tagged post.
 ├── comms.md                   # Static "how to reach us" page
 ├── maintenance.html            # Maintenance-mode landing page (see below)
-├── approve.html                # Reviews ONE comment (the link in the moderation email)
-├── review.html                 # Review queue: everything waiting for approval + trusted people
-├── docs/                       # Not published. firestore.rules (the comment rules; paste into
-│                                Firebase or deploy with the CLI) + comments-setup.md
-│                                + auto-moderation-setup.md
-├── functions/                  # Not published. The Firebase Cloud Function that screens
-│                                comments automatically (src/index.js, tests in test/)
-├── firebase.json, .firebaserc  # Not published. Tell the Firebase CLI where the function,
-│                                the rules and the project are
+├── approve.html                # Comment moderation review page (see below)
 └── 404.html                    # Custom not-found page
 ```
 
@@ -191,15 +182,7 @@ These use `_includes/pdf.html`, which expects a card wrapper with a `thumbnail_p
 
 New comments save with `approved: false` and are visible only to their author until approved. The widget uses two separate Firestore queries (a public one requiring `approved == true`, and a second scoped to the signed-in viewer's own `uid`) rather than one broad read filtered client-side, so a Firestore security rule can actually validate what each query is allowed to see.
 
-**Reviewing comments.** Two moderator-only pages (both `noindex`, both keep working while the site is in maintenance mode, both require signing in as the address in `comments-moderator-email`): **`review.html`** is a live queue of every comment and reply waiting for approval, with Approve, "Approve & always trust" and Reject (with an optional note for the commenter); **`approve.html?id=<commentId>`** shows a single comment and is the link in the notification email. If the `emailjs-*` values and `comments-moderator-email` are all set, each new comment that needs review also triggers a moderation email (via EmailJS). Both pages share their logic in **`assets/js/comment-moderation.js`**, a JavaScript file with Jekyll front matter so it can read the Firebase/EmailJS values from `_config.yml`.
-
-**Trusted people.** A person on the moderator's trusted list (the `trusted` Firestore collection, edited on `review.html`) has their comments and replies created already approved: they appear immediately and no moderation email is sent. Posting limits (`comments-cooldown-seconds`, `comments-max-pending`) are checked in the page and stop accidents and ordinary misuse, not deliberate bypassing.
-
-**Telling commenters.** A rejected comment stays visible to its author as "Not published", with the moderator's note if there is one. Each comment also gets a private record (`commentPrivate`, moderator-readable only) with the commenter's email and whether they asked to be emailed; if a second EmailJS template is configured (`emailjs-notify-template-id`), the moderator's browser uses it to email them when a comment is approved or rejected or someone replies.
-
-**Automatic screening (off by default).** The Cloud Function in `functions/src/index.js` runs whenever a comment is created. Comments from school-domain accounts (`comments-auto-approve-domain`) and trusted people are created already approved and are not screened. For everyone else it asks Google's Cloud Natural Language `moderateText` API for scores: a harm category (Toxic, Insult, Profanity, Derogatory, Violent, Sexual) above 0.5 rejects the comment; a sensitive-safety category (death or harm, public safety, drugs, weapons) or a web link holds it for the moderator; a failed check leaves it unapproved; otherwise it is approved. The topic categories (Health, Religion & Belief, Politics, ...) are ignored on purpose, because they say what a text is about, not whether it is harmful. The function uses the Admin SDK, so the rules never let a visitor approve their own comment; it emails the moderator every decision, and `review.html` / `approve.html` can reverse any of them (`autoReview` on the comment records what the check found). Turn the page's side on with `comments-auto-moderation: true` in `_config.yml` **only after** the function is deployed. Because a comment can now be approved within seconds, the rules let only school accounts and trusted people change a comment's text (everyone can still delete theirs), so a screened comment can't be edited into something that was never screened. Setup, costs, testing and troubleshooting: **`docs/auto-moderation-setup.md`**. The function has its own tests (`cd functions && npm test`).
-
-**Things that live outside this repo** and must be done by hand: the Firestore rules (`docs/firestore.rules`; `firebase deploy --only firestore:rules` publishes them), the second EmailJS template if you want decisions made by hand to email commenters, and, for automatic screening, billing, the Natural Language API, the Gmail secrets and the deploy. Step-by-step instructions, what each feature needs, and troubleshooting are in **`docs/comments-setup.md`** and **`docs/auto-moderation-setup.md`**. Until they're done, the features that need them stay off and commenting works as before.
+To review and approve a pending comment: **`approve.html`** (at the repo root, `noindex`) takes a `?id=<commentId>` query param, requires signing in as the address in `comments-moderator-email`, and shows an Approve/Reject UI. If `emailjs-*` config values and `comments-moderator-email` are all set, a new comment also triggers an email (via EmailJS) with a direct link to that page.
 
 **Important:** none of the interactive Firebase features (posting, liking, editing, deleting, approving) work until the Firestore security rules for the `comments` collection are published in the Firebase console — that's a manual step outside this repo. Don't leave Firestore in open "test mode" on a real deployment, since visitors sign in with their real Google accounts here.
 
@@ -217,7 +200,7 @@ This unlocks browsing for the rest of that browser tab's session (via `sessionSt
 
 `maintenance.html` itself also reverse-redirects to the homepage if someone lands on it while maintenance mode is actually off (e.g. from a stale cached page) — see its own comments for details.
 
-`approve.html` and `review.html` intentionally bypass the maintenance-mode redirect entirely, so a moderator can still approve/reject comments while the rest of the site is down.
+`approve.html` intentionally bypasses the maintenance-mode redirect entirely, so a moderator can still approve/reject comments while the rest of the site is down.
 
 ## Configuration reference (`_config.yml`)
 
