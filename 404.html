@@ -12,7 +12,7 @@ share-description: "This page doesn't exist on Sahyadri Connect."
   --------------------
   Renders a 404 error page with visual feedback and client-side URL detection.
   If a visitor attempts to access a URL under '/profiles/', it automatically
-  redirects them to a placeholder 'not_done_yet.html' page.
+  redirects them to the placeholder page at /not_done_yet (profiles-directory.html).
 {%- endcomment -%}
 
 <div class="text-center my-4">
@@ -36,7 +36,7 @@ share-description: "This page doesn't exist on Sahyadri Connect."
     // Check if the missing route belongs to the /profiles/ directory
     if (currentPath.includes('/profiles/')) {
       // Redirect to the relative placeholder page
-      window.location.replace("{{ '/not_done_yet.html' | relative_url }}");
+      window.location.replace("{{ '/not_done_yet' | relative_url }}");
     }
   })();
 </script>

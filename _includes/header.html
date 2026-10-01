@@ -1,4 +1,8 @@
-<!-- FILE: _includes/header.html — Legacy/alternate header partial (verify usage before removing — may be superseded by header-section in layouts). -->
+<!-- FILE: _includes/header.html — Page-header partial for standard pages. Included only from
+     _layouts/page.html with type="page" (confirmed: no other caller exists), so the
+     include.type == "post" branch below, and the generic include.type handling, are
+     unreachable in practice -- posts and profiles render their own header markup directly
+     in _layouts/post.html and _layouts/profile.html instead of going through this file. -->
 <!-- Set default date format from site configuration or fall back to standard format -->
 {% assign date_format = site.date_format | default: "%B %-d, %Y" %}
 
