@@ -125,7 +125,7 @@
     {%- if network[0] == "reddit" -%}
     {% assign reddit_start = network[1] | split: "/" | first -%}
     {%- comment -%}
-      reddit_url_prefix must be reset on every pass: Liquid {% assign %} is not
+      reddit_url_prefix must be reset on every pass: a Liquid assign is not
       scoped to a single loop iteration, so without this reset, a bare username
       entry (which sets the prefix) followed by a second, already-prefixed Reddit
       entry would incorrectly reuse the first entry's prefix and double it, e.g.
