@@ -4,6 +4,7 @@
 layout: page
 title: Ninad
 subtitle: Click thumbnail to download Ninad
+share-description: "Ninad, the Sahyadri School magazine: past editions to read or download as PDFs."
 ---
 
 <!-- Page-specific CSS previously here (pdf-grid-container, ninad-card,

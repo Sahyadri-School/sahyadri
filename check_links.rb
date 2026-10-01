@@ -29,4 +29,21 @@ options = {
   checks: config["checks"] || ["Links"],
 }
 
+# Guard: template code must never reach a meta tag (link previews and search snippets read these).
+# A page that begins with template code and has no share-description: used to show that code as its
+# description. _includes/head.html now falls back to the site description, so this should never trigger;
+# it exists so that, if it ever does, the build fails with a clear message instead of publishing it.
+leaks = []
+Dir.glob("./_site/**/*.html").each do |path|
+  File.read(path, encoding: "UTF-8").scan(/<meta\b[^>]*\bcontent="([^"]*)"/m).flatten.each do |content|
+    leaks << path if content.include?("{%") || content.include?("{{")
+  end
+end
+unless leaks.empty?
+  warn "Template code leaked into meta tags (link previews / search snippets) on:"
+  leaks.uniq.each { |path| warn "  #{path.sub('./_site', '')}" }
+  warn "Give each of these pages a share-description: line in its front matter."
+  exit 1
+end
+
 HTMLProofer.check_directory("./_site", options).run

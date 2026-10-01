@@ -92,7 +92,18 @@
       {{ page.subtitle | strip_html | xml_escape }}
     {%- else -%}
       {%- assign excerpt_length = site.excerpt_length | default: 50 -%}
-      {{ page.content | strip_html | xml_escape | truncatewords: excerpt_length | strip }}
+      {%- assign auto_description = page.content | strip_html | xml_escape | truncatewords: excerpt_length | strip -%}
+      {%- comment -%}
+        For a plain page, page.content here is the page's SOURCE, not its rendered result. A page that
+        begins with template code therefore has nothing readable to show, and the code itself would end
+        up in link previews and search snippets. A brace in the text means that happened (or the text is
+        empty), so use the site description instead. Pages should set share-description anyway.
+      {%- endcomment -%}
+      {%- if auto_description == '' or auto_description contains '{' -%}
+        {{ site.description | strip_html | xml_escape }}
+      {%- else -%}
+        {{ auto_description }}
+      {%- endif -%}
     {%- endif -%}
   {%- endcapture %}
 

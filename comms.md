@@ -4,6 +4,7 @@
 layout: page
 title: Communication
 subtitle: 
+share-description: "Which Sahyadri School office to email for student affairs, admissions, transport, finance, escalations and the study centre."
 ---
 
 <br>

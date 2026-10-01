@@ -4,6 +4,7 @@
 # similar to posts.md/kfi.html. Pulls from _activities collection.
 layout: page
 title: "Activities"
+share-description: "Workshops, events and activities at Sahyadri School, grouped by academic year."
 ---
 
 <!--

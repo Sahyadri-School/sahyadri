@@ -6,6 +6,7 @@ layout: page
 title: Geet Gunjan
 subtitle: Click thumbnail to download Geet Gunjan
 permalink: /geeth
+share-description: "Geet Gunjan from Sahyadri School, to read as a PDF in the original script or in English transliteration."
 ---
 <!-- Page-specific CSS previously here (pdf-grid-container, ninad-card,
      ninad-caption-banner) has been removed — it was a stale duplicate of

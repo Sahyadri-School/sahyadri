@@ -6,6 +6,7 @@
 layout: page
 title: "Newsletter"
 permalink: /posts/
+share-description: "Student-written newsletter articles from Sahyadri School, grouped by academic year and month."
 ---
 
 {% comment %}
