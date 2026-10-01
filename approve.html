@@ -187,13 +187,48 @@ layout: null
       }
     }
 
+    /*
+      data.pageUrl is set client-side from window.location when a comment is
+      posted normally (see firebase-comments.html), but it is still just a
+      plain field in the comment document: the Firestore rules only check
+      the "text" field's type and length, not pageUrl's. Anyone who can
+      authenticate (i.e. anyone who can post a comment at all) can call
+      Firestore's addDoc directly -- trivial from the browser console -- with
+      pageUrl set to anything, including a javascript: URL. escapeHtml()
+      protects against breaking out of the HTML (a quote, a "<"), but does
+      NOT neutralize a URL *scheme*, so a javascript: value would still be
+      rendered as a clickable, executable link in the moderator's own
+      authenticated session. safePageHref below is only set when the URL
+      genuinely parses with an http(s) protocol; otherwise the comment's
+      page is shown as plain (escaped) text instead of a link, so there is
+      never an href built from unvalidated data.
+    */
+    function safeHttpUrl(raw) {
+      if (!raw) return null; // no pageUrl stored: show as plain (empty) text, not a link to the homepage
+      try {
+        // No base argument: a relative or malformed string should fail to
+        // parse here, not be silently resolved against this site's own
+        // origin into a real-looking link to an arbitrary, possibly
+        // nonexistent path.
+        const u = new URL(raw);
+        return (u.protocol === "http:" || u.protocol === "https:") ? u.href : null;
+      } catch (err) {
+        return null;
+      }
+    }
+
     function renderReview(data) {
       const safeName = escapeHtml(data.name || "Anonymous");
       const safeText = escapeHtml(data.text || "");
-      const safeUrl = escapeHtml(data.pageUrl || "");
+      const rawUrl = data.pageUrl || "";
+      const safePageHref = safeHttpUrl(rawUrl);
+      const safeUrlText = escapeHtml(rawUrl);
+      const pageLineHtml = safePageHref
+        ? `<a href="${escapeHtml(safePageHref)}" target="_blank" rel="noopener">${safeUrlText}</a>`
+        : safeUrlText;
       appEl.innerHTML = `
         <div class="sc-preview">
-          <div class="sc-meta"><strong>${safeName}</strong> on <a href="${safeUrl}" target="_blank" rel="noopener">${safeUrl}</a></div>
+          <div class="sc-meta"><strong>${safeName}</strong> on ${pageLineHtml}</div>
           <div>${safeText}</div>
         </div>
         <div class="sc-actions">
