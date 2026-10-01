@@ -124,6 +124,15 @@
     <!-- Reddit (formats prefix for subreddits 'r/' vs users 'u/') -->
     {%- if network[0] == "reddit" -%}
     {% assign reddit_start = network[1] | split: "/" | first -%}
+    {%- comment -%}
+      reddit_url_prefix must be reset on every pass: Liquid {% assign %} is not
+      scoped to a single loop iteration, so without this reset, a bare username
+      entry (which sets the prefix) followed by a second, already-prefixed Reddit
+      entry would incorrectly reuse the first entry's prefix and double it, e.g.
+      reddit.com/u/r/subredditname. Only relevant if social-network-links ever
+      configures more than one Reddit entry -- not currently the case.
+    {%- endcomment -%}
+    {% assign reddit_url_prefix = '' -%}
     {% unless reddit_start == 'r' or reddit_start == 'u' -%}
       {% assign reddit_url_prefix = 'u/' -%}
     {% endunless -%}
@@ -375,6 +384,11 @@
     <!-- Discord (formats prefix for user IDs vs server invite codes) -->
     {%- if network[0] == "discord" -%}
     {% assign discord_start = network[1] | split: "/" | first -%}
+    {%- comment -%}
+      discord_url_prefix reset each pass for the same reason as reddit_url_prefix
+      above -- see that comment. Only relevant with more than one Discord entry.
+    {%- endcomment -%}
+    {% assign discord_url_prefix = '' -%}
     {% unless discord_start == 'users' or discord_start == 'invite' -%}
       {% assign discord_url_prefix = 'invite/' -%}
     {% endunless -%}
