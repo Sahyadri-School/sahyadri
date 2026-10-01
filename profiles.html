@@ -398,22 +398,55 @@ share-description: "Profiles of the students and teachers of Sahyadri School, wi
           card.className = 'profile-card';
 
           /*
+            Built with DOM methods (textContent / setAttribute), not
+            innerHTML with these values interpolated into a template
+            literal. getAttribute() -- used above when rawNodes was
+            built -- already decodes the HTML entities Liquid's escape
+            filter wrote into data-name/data-role/etc at build time, so
+            by this point p.name/p.role are back to plain, unescaped
+            text; re-inserting that into innerHTML would let a literal
+            "<" or '"' in a profile's name or subtitle be parsed as
+            real HTML (break the layout at best) instead of shown as
+            text. No current profile's title/subtitle contains one,
+            but textContent/setAttribute never re-parses their input
+            as HTML regardless, so this can't happen later either.
+          */
+          const imgWrapper = document.createElement('div');
+          imgWrapper.className = 'profile-img-wrapper';
+
+          const imgLight = document.createElement('img');
+          imgLight.src = p.image;
+          imgLight.alt = p.name;
+          imgLight.setAttribute('loading', 'lazy');
+          imgLight.className = 'profile-pic-light';
+
+          const imgDark = document.createElement('img');
+          imgDark.src = p.imageDark;
+          imgDark.alt = p.name;
+          imgDark.setAttribute('loading', 'lazy');
+          imgDark.className = 'profile-pic-dark';
+
+          imgWrapper.appendChild(imgLight);
+          imgWrapper.appendChild(imgDark);
+
+          const nameDiv = document.createElement('div');
+          nameDiv.className = 'profile-name';
+          nameDiv.textContent = p.name;
+
+          card.appendChild(imgWrapper);
+          card.appendChild(nameDiv);
+
+          /*
             Only render the role line if a subtitle/role exists.
             This prevents an empty <div> pushing layout on
             profiles that have no role assigned.
           */
-          const roleMarkup = p.role
-            ? `<div class="profile-role">${p.role}</div>`
-            : '';
-
-          card.innerHTML = `
-            <div class="profile-img-wrapper">
-              <img src="${p.image}" alt="${p.name}" loading="lazy" class="profile-pic-light">
-              <img src="${p.imageDark}" alt="${p.name}" loading="lazy" class="profile-pic-dark">
-            </div>
-            <div class="profile-name">${p.name}</div>
-            ${roleMarkup}
-          `;
+          if (p.role) {
+            const roleDiv = document.createElement('div');
+            roleDiv.className = 'profile-role';
+            roleDiv.textContent = p.role;
+            card.appendChild(roleDiv);
+          }
 
           grid.appendChild(card);
         });
