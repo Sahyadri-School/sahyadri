@@ -85,16 +85,30 @@ layout: base
         this profile. Mirrors the forward byline->profile slug-matching
         logic used in posts.md/activities.md (split subtitle into
         first+last word, downcase, hyphenate) run backwards against this
-        profile's own name, PLUS a direct check against profile-link/
+        profile's own slug, PLUS a direct check against profile-link/
         profile-link2 overrides -- for the handful of bylines that didn't
         cleanly slugify (a middle name, an unusual name order) and link
         here manually instead. Rendered via a single {% raw %}{% capture %}{% endraw %}
         rather than building a filtered array, since standard Jekyll
         Liquid has no array-push filter to collect matches into as we go.
+
+        this_profile_slug is read from page.url, not reconstructed from
+        page.title: the profiles collection's permalink is /profiles/:title/,
+        and Jekyll's :title permalink placeholder is the document's FILENAME
+        slug, not its front-matter title (confirmed: ishita-pinnamaneni.md's
+        title is "Ishita Sai Pinnamaneni", three words -- rebuilding the slug
+        from the first two words of page.title would produce "ishita-sai",
+        which never matches the "Ishita Pinnamaneni" byline her own articles
+        actually use, so her "Articles by" section would silently show
+        nothing even though three real posts correctly link to her profile
+        from the newsletter side. Six of the 34 profiles have a title with
+        more than two words; four of those currently have real articles
+        this bug was hiding.
       {% endcomment %}
-      {% assign profile_name_parts = page.title | split: " " %}
-      {% assign this_profile_slug = profile_name_parts[0] | downcase | append: "-" | append: profile_name_parts[1] | downcase %}
       {% assign this_profile_url = page.url | relative_url %}
+      {% assign url_parts = page.url | split: "/" %}
+      {% assign slug_index = url_parts.size | minus: 2 %}
+      {% assign this_profile_slug = url_parts[slug_index] %}
       {% assign all_content = site.posts | concat: site.activities | sort: "date" | reverse %}
 
       {% capture written_by_items %}
