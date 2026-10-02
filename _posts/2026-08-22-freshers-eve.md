@@ -1,16 +1,19 @@
 ---
 layout: post
-title: "FRESHER’S EVE"
-subtitle: "Adil Ali"
-subtitle2: "Puneeth Dasari (Class 11th)"
+title: FRESHER’S EVE
+subtitle: Adil Ali
+subtitle2: Puneeth Dasari (Class 11)
 category: August 2026
 date: 2026-08-22
-image: "1dJjcw8-qtcvrKUdh30Uw1jx1Tu5MNQgp"
-image2: "1gDUVAEugJrr0zSgGCdrNRBSuJuwnZUIO"
-image3: "1MRFNghVi7jY4tOguukVrvSew0gb8Vfa9"
-image4: "1kF6Z5Y53oGGqZwyrZzw9-TC75gSX3coR"
-image5: "1PcxeJNwOKVq-2u-onAi1BOotYzBLxaqr"
-tags: [student-life, performing-arts]
+image: 1dJjcw8-qtcvrKUdh30Uw1jx1Tu5MNQgp
+image2: 1gDUVAEugJrr0zSgGCdrNRBSuJuwnZUIO
+image3: 1MRFNghVi7jY4tOguukVrvSew0gb8Vfa9
+image4: 1kF6Z5Y53oGGqZwyrZzw9-TC75gSX3coR
+image5: 1PcxeJNwOKVq-2u-onAi1BOotYzBLxaqr
+tags:
+  - student-life
+  - performing-arts
+pinned: false
 ---
 Freshers' Eve truly stands out as one of the first nights to remember as new students at school. It was a time for all of us freshers to gather, showcase our talents, and enjoy the feeling of being part of a fresh community.
 
