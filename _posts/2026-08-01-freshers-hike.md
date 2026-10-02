@@ -1,8 +1,8 @@
 ---
 title: FRESHER’S HIKE
-date: 2026-08-01
+date: 2026-06-21
 subtitle: Mallika George (Grade 11)
-category: August 2026
+category: June 2026
 pinned: false
 ---
 As a newly admitted student at Sahyadri, the freshers Hike to Shambhu hill was one of my first opportunities to experience the school beyond the classroom. Having only recently arrived, I was still finding my place among the unfamiliar faces and learning to navigate a completely new environment. The hike, therefore, felt like more than just an excursion; it was also an opportunity for me to step outside my comfort zone and become acquainted with the people around me.
