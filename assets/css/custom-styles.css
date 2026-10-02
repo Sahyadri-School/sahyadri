@@ -98,6 +98,14 @@ main .col-lg-10 {
    3. NAVBAR
    !important needed: beautifuljekyll.css sets color via var(--navbar-text-col)
    on .navbar-custom .navbar-brand and .navbar-nav .nav-link.
+
+   #E8F3DF (brand/nav-link text) and #FFF (their :hover state) below are
+   hardcoded, not var(--navbar-text-col) -- unlike navbar-text-col itself,
+   they will NOT automatically stay readable if navbar-col in _config.yml
+   is ever changed again. Currently verified against the live navbar-col
+   (#587362): #E8F3DF is 4.53:1 (passes WCAG AA's 4.5:1 even for normal
+   text, not just the 3:1 this bold/large text would only need) and #FFF
+   is 5.19:1. If navbar-col changes, re-check these two values by hand.
    ============================================================ */
 
 /* Higher specificity to beat _navbar.scss which sets font-size: 1.25rem */
