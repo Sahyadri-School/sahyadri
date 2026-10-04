@@ -7,7 +7,7 @@ subtitle2: Kyntang Rangad (Class 12)
 category: July 2026
 tags:
   - student-life
-image: 11MmnVrFHm5baQD5yjadZh-sC-3dqXQBe
+image: 1naPYqBqozChQbhWtM55cXhOPJEJsYMrS
 pinned: false
 ---
 The Peanut Butter and 'Jam' Club is a new space for students from Grades 9 to 12 to come together, make music, and have a good time. Whether you sing, play an instrument, write songs, or are just curious about music, the club is open to everyone. You don't have to be an expert to join — sometimes, all you need is an interest in music and a willingness to try.
