@@ -38,7 +38,7 @@ import re
 import sys
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 REPO = os.environ.get("GITHUB_REPOSITORY", "")
 TOKEN = os.environ.get("GITHUB_TOKEN", "")
@@ -74,7 +74,6 @@ def fetch_recent_commits():
     excluded automatically once GitHub's `since` filter stops returning
     results -- paginated defensively up to a sane limit so one unusually
     busy window can't loop forever."""
-    from datetime import timedelta
     since_iso = (datetime.now(timezone.utc) - timedelta(days=WINDOW_DAYS)).isoformat()
     commits, page = [], 1
     while page <= 10:  # 10 x 100 = 1000 commits is far beyond any realistic month of CMS use
@@ -117,9 +116,24 @@ def classify(commit):
     return None
 
 
-def format_when(iso_string):
-    dt = datetime.fromisoformat(iso_string.replace("Z", "+00:00"))
-    return dt.strftime("%Y-%m-%d %H:%M UTC")
+IST = timezone(timedelta(hours=5, minutes=30))
+
+
+def to_ist(iso_string_or_utc_dt):
+    """Converts a UTC timestamp (either an ISO string, as GitHub's API
+    returns, or an already-parsed datetime) to IST for display. Uses a
+    fixed +5:30 offset rather than zoneinfo.ZoneInfo("Asia/Kolkata"): IST
+    has had this exact, unchanging offset with no daylight saving since
+    1947, so a fixed offset is correct, not an approximation, and avoids
+    depending on the IANA timezone database being installed at all --
+    GitHub's own ubuntu-latest runners are not guaranteed to have it
+    (minimal Debian/Ubuntu images commonly ship without the tzdata
+    package, which zoneinfo requires to resolve a named zone)."""
+    if isinstance(iso_string_or_utc_dt, str):
+        dt = datetime.fromisoformat(iso_string_or_utc_dt.replace("Z", "+00:00"))
+    else:
+        dt = iso_string_or_utc_dt
+    return dt.astimezone(IST)
 
 
 COLLECTION_LABELS = {
@@ -192,7 +206,7 @@ def build_markdown(entries, generated_at, repo_url, window_days):
 
     current_day = None
     for e in entries:
-        dt = datetime.fromisoformat(e["when"].replace("Z", "+00:00"))
+        dt = to_ist(e["when"])
         day = dt.strftime("%A, %d %B %Y")
         if day != current_day:
             if current_day is not None:
@@ -233,7 +247,7 @@ def main():
     entries.sort(key=lambda e: e["when"], reverse=True)
     entries = entries[:MAX_ENTRIES]
 
-    generated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    generated_at = to_ist(datetime.now(timezone.utc)).strftime("%Y-%m-%d %H:%M IST")
     repo_url = f"https://github.com/{REPO}"
     markdown = build_markdown(entries, generated_at, repo_url, WINDOW_DAYS)
 
