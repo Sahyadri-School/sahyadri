@@ -1,13 +1,15 @@
 ---
 layout: post
-title: "Peanut, Butter and Jam — The Music Club"
+title: Peanut, Butter and Jam — The Music Club
 date: 2026-07-17
-subtitle: "Maian Rangad (Class 12)"
-subtitle2: "Kyntang Rangad (Class 12)"
+subtitle: Maian Rangad (Class 12)
+subtitle2: Kyntang Rangad (Class 12)
 category: July 2026
-tags: [clubs, student-life, music]
+tags:
+  - student-life
+image: 11MmnVrFHm5baQD5yjadZh-sC-3dqXQBe
+pinned: false
 ---
-
 The Peanut Butter and 'Jam' Club is a new space for students from Grades 9 to 12 to come together, make music, and have a good time. Whether you sing, play an instrument, write songs, or are just curious about music, the club is open to everyone. You don't have to be an expert to join — sometimes, all you need is an interest in music and a willingness to try.
 
 We, the Jam Club, want members to be able to play the songs they enjoy, discover new music, and learn from each other. Sessions can include learning songs, experimenting with different genres, improvising, songwriting, or simply sitting down and having a jam.
