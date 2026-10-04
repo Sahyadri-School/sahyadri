@@ -7,7 +7,7 @@ category: July 2026
 tags:
   - student-life
   - literature
-image: 14TQCxEYcqbgf_XumvRD5TqHm5onDOT4w
+image: 19bnGBrJZMZ4aF_Db1smnQkhWVLrXFWFD
 pinned: false
 ---
 Every Saturday during the club slot, a few of us sit with nothing too special but words. Some we found, some we remembered, some we wrote. We try to explore the world through thematic poetry, from paper boats to conspiracy theories.
