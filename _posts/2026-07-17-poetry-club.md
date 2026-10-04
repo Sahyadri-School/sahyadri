@@ -1,12 +1,15 @@
 ---
 layout: post
-title: "Poetry Club"
+title: Poetry Club
 date: 2026-07-17
-subtitle: "Anvi Bharti (Class 10)"
+subtitle: Anvi Bharti (Class 10)
 category: July 2026
-tags: [clubs, student-life, literature]
+tags:
+  - student-life
+  - literature
+image: 14TQCxEYcqbgf_XumvRD5TqHm5onDOT4w
+pinned: false
 ---
-
 Every Saturday during the club slot, a few of us sit with nothing too special but words. Some we found, some we remembered, some we wrote. We try to explore the world through thematic poetry, from paper boats to conspiracy theories.
 
 It is a place to experience new feelings, to express, to think and to accidentally fall in love with poetry. Everything from self-written poetry to rap is welcome.
