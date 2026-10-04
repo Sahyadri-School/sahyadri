@@ -388,6 +388,22 @@ content:
         type: boolean
         description: "Switch ON to send every visitor to the maintenance page, e.g. while making big changes; switch OFF to reopen the site. Takes effect after the site rebuilds, usually 1-2 minutes after saving. This takes the whole public site offline, so only switch it on deliberately."
 
+  # No `fields:`, so this opens as a plain text editor (Pages CMS's raw-file
+  # editor), showing cms-activity-log.md exactly as written -- not a form.
+  # The file itself is generated (see .github/workflows/cms-activity-log.yml
+  # and generate_cms_log.py), and its own header says so; nothing typed here
+  # is kept, so this entry has no fields to preserve. operations.delete is
+  # off so the entry can't be removed from the sidebar by accident; create
+  # and rename are left at their type: file defaults (create: true,
+  # rename: false), though in practice there is nowhere else to "create"
+  # this one named file from inside this single-file entry.
+  - name: cms-activity-log
+    label: CMS Activity Log
+    type: file
+    path: cms-activity-log.md
+    operations:
+      delete: false
+
 settings:
   # merge: true preserves front-matter keys not listed in a collection's
   # fields (e.g. layout: post/activity/profile) when Pages CMS saves an
