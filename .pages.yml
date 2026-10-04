@@ -405,3 +405,18 @@ settings:
       create: "Add {name} entry via Pages CMS: {path}"
       update: "Update {name} entry via Pages CMS: {path}"
       delete: "Delete {name} entry via Pages CMS: {path}"
+
+# Buttons on the CMS "Actions" page (sidebar, Admin group). Each one starts a
+# GitHub Actions workflow, and every click is listed on that page (who, when,
+# whether it finished). Docs: https://pagescms.org/docs/configuration/actions/
+# The workflow named here must accept a `payload` input -- see the
+# workflow_dispatch block of the workflow file itself.
+actions:
+  - name: check-external-links
+    label: Run link check now
+    workflow: external-links.yml
+    ref: current
+    confirm:
+      title: Check external links now?
+      message: Checks every link on the site that points to another website. It takes a few minutes and never changes the site. If a link is broken, it is reported in the "External Link Check" issue on GitHub.
+      button: Run the check

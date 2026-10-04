@@ -1,7 +1,9 @@
 name: External Link Check
 
 # Runs weekly (Mondays 06:00 UTC), plus can be triggered manually from
-# the Actions tab (workflow_dispatch) for testing. Deliberately separate
+# the Actions tab (workflow_dispatch) for testing, or from the "Run link
+# check now" button on the Pages CMS Actions page (see `actions:` in
+# .pages.yml). Deliberately separate
 # from ci.yml -- this never blocks a deploy, since external link checks
 # are inherently flaky in CI (rate-limiting, transient outages, a site
 # blocking bot traffic even though it's fine for a real visitor).
@@ -12,6 +14,16 @@ on:
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
+    inputs:
+      # Pages CMS always sends its context here as JSON when its button starts
+      # this workflow. Optional (not required: true as in Pages CMS's example)
+      # so that running it by hand from GitHub's Actions tab still works with
+      # the box left blank, and the weekly schedule is unaffected.
+      payload:
+        description: "Filled in by the Pages CMS button; leave blank when running from GitHub"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   issues: write
@@ -20,6 +32,41 @@ jobs:
   check-external-links:
     runs-on: ubuntu-latest
     steps:
+      # Records, in the run's own summary, what started it -- so the run page
+      # says whether it was the schedule, someone on GitHub, or a person using
+      # the Pages CMS button (and which one). Purely informational; it cannot
+      # fail the run. The payload is passed through an environment variable,
+      # never pasted into the script text, since it comes from outside.
+      - name: Note what started this run
+        continue-on-error: true
+        run: |
+          python3 - <<'PY'
+          import json, os
+          raw = os.environ.get("PAYLOAD", "").strip()
+          event = os.environ.get("EVENT", "")
+          actor = os.environ.get("ACTOR", "unknown")
+          if raw:
+              try:
+                  user = (json.loads(raw).get("triggeredBy") or {})
+                  who = "{} (GitHub: {}) using the Pages CMS button".format(
+                      user.get("name") or "an unnamed CMS user",
+                      user.get("githubUsername") or "no username given")
+              except (ValueError, AttributeError):
+                  who = "the Pages CMS button (its details could not be read)"
+          elif event == "schedule":
+              who = "the weekly schedule"
+          else:
+              who = "{} on GitHub".format(actor)
+          line = "Link check started by: " + who
+          print(line)
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+              f.write(line + "\n")
+          PY
+        env:
+          PAYLOAD: ${{ inputs.payload }}
+          EVENT: ${{ github.event_name }}
+          ACTOR: ${{ github.actor }}
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
