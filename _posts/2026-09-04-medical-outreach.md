@@ -7,7 +7,7 @@ profile-link: https://www.sahyadrischool.org/dr-reshma-shah/
 category: September 2026
 tags:
   - community-service
-image: 1HNXYHdOrCKnEpeTyNIO86iNzkHszrCgN
+image: 101CSC5XrLgU8xa7BWhLSnV1EXlBXAEtt
 pinned: false
 ---
 Story telling and music listening for the baby in womb 
