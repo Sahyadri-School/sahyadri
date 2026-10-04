@@ -1,15 +1,17 @@
 ---
 layout: post
-title: "MEDICAL OUTREACH"
+title: MEDICAL OUTREACH
 date: 2026-09-04
-subtitle: "Reshma Shah (Teacher)"
-profile-link: "https://www.sahyadrischool.org/dr-reshma-shah/"
+subtitle: Reshma Shah (Teacher)
+profile-link: https://www.sahyadrischool.org/dr-reshma-shah/
 category: September 2026
-tags: [community-service]
+tags:
+  - community-service
+image: 1HNXYHdOrCKnEpeTyNIO86iNzkHszrCgN
+pinned: false
 ---
 Story telling and music listening for the baby in womb 
 Prenatal medical outreach initiative at Primary Health Center, Wada.
-
 
 A baby in the womb is highly cognisant and is affected deeply by surroundings. Traditional wisdom of “garbhasanskar” promotes parent-baby bonding before birth through story telling and music listening. Science has proved that almost 80% of brain growth throughout life occurs in the first 1000 days of life, i.e. 9 months of pregnancy and first 2 years of life. Words and soothing music act as an important stimulus for brain growth which is the foundation of intellectual, emotional, cognitive and behavioral patterns of growing adults. 
 
