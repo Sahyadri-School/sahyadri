@@ -1,10 +1,13 @@
 ---
 layout: post
-title: "DR. SHIRALI ON TRADITIONS"
+title: DR. SHIRALI ON TRADITIONS
 date: 2026-06-20
-subtitle: "Bhagyashree Patil (Teacher)"
+subtitle: Bhagyashree Patil (Teacher)
 category: June 2026
-tags: [assembly]
+tags:
+  - assembly
+image: 1PXLxBTqmbFKt6x9zxpF4-foo697vaAMy
+pinned: false
 ---
 By giving the reference to the famous musical film “Fiddler on the Roof” set in 1905 Russia, in which a father tried to battle between Jewish traditions and the modernity that is changing the world around him, Dr. Shirali loosely defined what traditions are - common customs that we relate to or are familiar with.
 
