@@ -7,7 +7,7 @@ subtitle2: Kriday Kulkarni (Class 10)
 category: July 2026
 tags:
   - student-life
-image: 1gstY0dZ7yVOXi0Iwr0_e9_H5bMS7v1KC
+image: 1ProQSGF09XvLDVIfavBurozy_Blvb97_
 pinned: false
 ---
 In the Checkmate Club for 9th to 12th grades, we play games, watch and analyse famous matches, solve puzzles and learn tactics such as fork, pin, skewer and other creative ways of beating your opponents. You also study openings because moving the same knight three times is not a good idea.
