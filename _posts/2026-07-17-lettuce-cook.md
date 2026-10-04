@@ -7,7 +7,7 @@ subtitle2: Reya Shah (Class 12)
 category: July 2026
 tags:
   - student-life
-image: 128RaNrEQQ52s99y5JlI9RqxonhHIQ7Ok
+image: 1lt9ZSlrsJJ8pxdhLZBDdQ9nLXndfYA3J
 pinned: false
 ---
 Food is the most essential part of life. We simply cannot survive without it. Hence we all share an intimate relationship with food. But as the modern age progresses, we are beginning to have a rather impersonal relationship with food. Most of us are unaware of the origins of the food on our plate. Where did the ingredients come from? What are the different processes to prepare the food? Or even the science behind it.
