@@ -6,7 +6,7 @@ subtitle: Bhagyashree Patil (Teacher)
 category: June 2026
 tags:
   - assembly
-image: 1Mlmuko-LVUcuO5JHqch-ZMRD0TZD5GVr
+image: 1ZvMQcsZpddy0dp4TBQSUjfKetOg5_waR
 pinned: false
 ---
 Mr. T.M. Veeraraghav, an Ex-NDTV, The Hindu, CNN IBC and Ex-Professor at The School of Modern Media at UPES (SoMM) in Dehradun visited the school early in this term. 
