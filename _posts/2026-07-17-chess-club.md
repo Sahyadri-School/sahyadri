@@ -1,13 +1,15 @@
 ---
 layout: post
-title: "Chess Club"
+title: Chess Club
 date: 2026-07-17
-subtitle: "Gatik Sirohia (Class 10)"
-subtitle2: "Kriday Kulkarni (Class 10)"
+subtitle: Gatik Sirohia (Class 10)
+subtitle2: Kriday Kulkarni (Class 10)
 category: July 2026
-tags: [clubs, student-life]
+tags:
+  - student-life
+image: 1gstY0dZ7yVOXi0Iwr0_e9_H5bMS7v1KC
+pinned: false
 ---
-
 In the Checkmate Club for 9th to 12th grades, we play games, watch and analyse famous matches, solve puzzles and learn tactics such as fork, pin, skewer and other creative ways of beating your opponents. You also study openings because moving the same knight three times is not a good idea.
 
 The club helps students develop concentration, logical thinking, patience and problem solving skills. It also teaches important life lessons such as never judging a book by its cover, which many students tend to do while playing.
