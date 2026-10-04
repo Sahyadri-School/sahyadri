@@ -436,3 +436,12 @@ actions:
       title: Check external links now?
       message: Checks every link on the site that points to another website. It takes a few minutes and never changes the site. If a link is broken, it is reported in the "External Link Check" issue on GitHub.
       button: Run the check
+
+  - name: update-cms-activity-log
+    label: Update CMS activity log
+    workflow: cms-activity-log.yml
+    ref: current
+    confirm:
+      title: Update the CMS activity log now?
+      message: Rebuilds the CMS Activity Log page from the last 30 days of CMS changes. Takes under a minute. It also refreshes automatically every night, so this is only needed to see the latest changes right away.
+      button: Update it
