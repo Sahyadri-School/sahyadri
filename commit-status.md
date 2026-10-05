@@ -4,7 +4,7 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-05 11:11 IST
+Last updated: 2026-10-05 11:21 IST
 
 ------------------------------------------------------------
 
@@ -14,6 +14,12 @@ Last updated: 2026-10-05 11:11 IST
 
 Monday, 05 October 2026
 -----------------------
+  11:16  Sahyadri-archives: Refresh the commit status page automatically after every build, not just daily
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37269297544
+  11:13  Sahyadri-archives: Update posts entry via Pages CMS: _posts/2026-07-17-cubing-club.md
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37269041134
   11:08  Sahyadri-archives: Add a Commit Status entry to the Pages CMS sidebar
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37268661161
@@ -326,12 +332,6 @@ Tuesday, 29 September 2026
   11:21  Sahyadri-archives: CMS-GUIDE.md: mention that a link URL can be left blank for a plain text label
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36528165880
-  11:18  Sahyadri-archives: Document the automated checks (per-push html-proofer + weekly external link check) in README.md -- both were entirely undocumented
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36527876665
-  11:12  Sahyadri-archives: Exclude bare fonts.gstatic.com preconnect URL too -- same false-positive pattern as fonts.googleapis.com
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36527414750
 
 ------------------------------------------------------------
 
