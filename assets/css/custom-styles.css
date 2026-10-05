@@ -2878,3 +2878,127 @@ html {
     color: #e0e0e0;
 }
 
+/* ============================================================
+   36. SITE-WIDE ANNOUNCEMENT BANNER
+   _includes/announcement.html, shown on every page (included from
+   _layouts/base.html, right after the nav). Controlled entirely from the
+   CMS -- see _data/announcement.yml.
+
+   Three tones (set by the CMS's "style" field), each independently
+   checked against WCAG AA (4.5:1 minimum for normal text):
+     info      -- this site's own navbar green/text colors, so it reads as
+                  "part of the site" rather than an alert (e.g. routine news)
+     important -- a warm amber, for something that needs real attention
+                  without being an emergency (e.g. "Admissions now open")
+     urgent    -- a deeper red, for something urgent (e.g. a closure)
+   Each tone has its own dark-mode pair (desaturated/darkened backgrounds,
+   since the light-mode backgrounds would glare against the dark-mode
+   page background, #1a1a1a), also independently checked against AA.
+   ============================================================ */
+.site-announcement {
+    width: 100%;
+    position: relative;
+    z-index: 900; /* below the fixed navbar's own stacking but above normal page content */
+}
+
+.site-announcement-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.7em 2.5em 0.7em 1.2em; /* extra right padding so text never sits under the close button */
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    position: relative;
+}
+
+.site-announcement-text {
+    flex: 1 1 auto;
+}
+
+.site-announcement-link {
+    margin-left: 0.5em;
+    font-weight: 600;
+    text-decoration: underline;
+    white-space: nowrap;
+}
+
+.site-announcement-close {
+    position: absolute;
+    top: 50%;
+    right: 0.6em;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.2em 0.4em;
+    opacity: 0.75;
+}
+.site-announcement-close:hover {
+    opacity: 1;
+}
+
+/* info: contrast 4.60:1 (light), 7.54:1 (dark) -- both pass AA */
+.site-announcement-info {
+    background-color: #587362;
+    color: #eff2ec;
+}
+.site-announcement-info .site-announcement-link,
+.site-announcement-info .site-announcement-close {
+    color: #eff2ec;
+}
+.dark-mode .site-announcement-info {
+    background-color: #3e5144;
+    color: #eff2ec;
+}
+.dark-mode .site-announcement-info .site-announcement-link,
+.dark-mode .site-announcement-info .site-announcement-close {
+    color: #eff2ec;
+}
+
+/* important: contrast 9.09:1 (light), 6.71:1 (dark) */
+.site-announcement-important {
+    background-color: #f4e3b2;
+    color: #3E3830;
+}
+.site-announcement-important .site-announcement-link,
+.site-announcement-important .site-announcement-close {
+    color: #3E3830;
+}
+.dark-mode .site-announcement-important {
+    background-color: #5c4a1f;
+    color: #f4e3b2;
+}
+.dark-mode .site-announcement-important .site-announcement-link,
+.dark-mode .site-announcement-important .site-announcement-close {
+    color: #f4e3b2;
+}
+
+/* urgent: contrast 6.77:1 (light), 9.04:1 (dark) */
+.site-announcement-urgent {
+    background-color: #9c3b3b;
+    color: #ffffff;
+}
+.site-announcement-urgent .site-announcement-link,
+.site-announcement-urgent .site-announcement-close {
+    color: #ffffff;
+}
+.dark-mode .site-announcement-urgent {
+    background-color: #5e2424;
+    color: #f6d9d9;
+}
+.dark-mode .site-announcement-urgent .site-announcement-link,
+.dark-mode .site-announcement-urgent .site-announcement-close {
+    color: #f6d9d9;
+}
+
+@media (max-width: 600px) {
+    .site-announcement-inner {
+        font-size: 0.88rem;
+        padding: 0.6em 2.2em 0.6em 1em;
+    }
+}
+

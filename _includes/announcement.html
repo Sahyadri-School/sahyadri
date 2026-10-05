@@ -1,0 +1,68 @@
+<!-- FILE: _includes/announcement.html — Site-wide announcement banner.
+     Controlled entirely from the CMS: an "Announcement" entry (sidebar,
+     same type: file pattern as "Site status") edits _data/announcement.yml
+     directly -- enabled (on/off), message, style (info/important/urgent),
+     and an optional link. Included once, from _layouts/base.html right
+     after the nav, so it shows above every page's own content.
+
+     Turning it on takes effect after the next site build (usually
+     1-2 minutes after saving), same as the maintenance-mode switch.
+
+     Dismissal: a visitor can close it for their browser session (not
+     permanently -- it reappears on their next visit, and immediately for
+     everyone else). The dismissal is keyed to a short hash of the message
+     text itself, not just a plain "seen" flag, so editing the message (or
+     turning it off then on again with new text) always shows the new
+     version even to someone who dismissed an earlier one -- only dismissing
+     the EXACT current text hides it. -->
+{% assign a = site.data.announcement %}
+{% if a.enabled and a.message and a.message != "" %}
+  {% assign style = a.style | default: "info" %}
+  {%- comment -%}
+    The dismissal key is the message and style text itself (escaped for
+    safe use in an HTML attribute), not a true hash: plain Jekyll/Liquid,
+    as used by GitHub Pages, has no hashing filter built in (confirmed:
+    this is a still-open Jekyll feature request, jekyll/jekyll#5967), and
+    GitHub Pages' fixed plugin allowlist wouldn't permit installing one of
+    the third-party gems that add it. Using the text itself has no
+    collision risk at all, unlike a character count or similar cheap
+    stand-in, at the cost of a slightly longer HTML attribute -- a
+    reasonable trade for an announcement message, which is short by nature.
+  {%- endcomment -%}
+  {% assign dismiss_key = a.message | append: "|" | append: style | escape %}
+  <div
+    id="site-announcement"
+    class="site-announcement site-announcement-{{ style }}"
+    data-announcement-key="{{ dismiss_key }}"
+    role="status"
+  >
+    <div class="site-announcement-inner">
+      <span class="site-announcement-text">
+        {{ a.message }}
+        {% if a.link-url and a.link-url != "" %}
+          <a href="{{ a.link-url }}" class="site-announcement-link">{{ a.link-text | default: "Learn more" }}</a>
+        {% endif %}
+      </span>
+      <button type="button" class="site-announcement-close" aria-label="Dismiss this announcement" onclick="dismissSiteAnnouncement()">&times;</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var KEY = 'sahyadri-announcement-dismissed';
+      var el = document.getElementById('site-announcement');
+      if (!el) return;
+      var key = el.getAttribute('data-announcement-key');
+      try {
+        if (sessionStorage.getItem(KEY) === key) {
+          el.style.display = 'none';
+        }
+      } catch (e) {
+        // storage unavailable (private browsing, blocked storage, etc.) -- the banner just always shows; fine either way
+      }
+      window.dismissSiteAnnouncement = function () {
+        el.style.display = 'none';
+        try { sessionStorage.setItem(KEY, key); } catch (e) { /* ignore */ }
+      };
+    })();
+  </script>
+{% endif %}

@@ -202,6 +202,12 @@ This unlocks browsing for the rest of that browser tab's session (via `sessionSt
 
 `approve.html` intentionally bypasses the maintenance-mode redirect entirely, so a moderator can still approve/reject comments while the rest of the site is down.
 
+## Site-wide announcement banner
+
+A banner can be shown at the top of every page, controlled from the CMS's **Announcement** entry (same pattern as Site status above — it edits `_data/announcement.yml` directly). Fields: an on/off switch, the message text, a style (`info`/`important`/`urgent` — see `custom-styles.css` section 36 for the exact colors, each independently checked against WCAG AA), and an optional link. Leaving it off, or leaving the message blank, shows nothing. Takes effect after the next rebuild, same 1–2 minutes as maintenance mode.
+
+Rendered by `_includes/announcement.html`, included once from `_layouts/base.html` right after the nav, so every page gets it without needing its own markup. A visitor can dismiss it for their browser session (`sessionStorage`, resets on their next visit); the dismissal is keyed to the message and style text itself, not just a plain "seen" flag, so changing the message (or the same text with a different style) always shows again even to someone who dismissed an earlier version — only re-saving the *exact* same text and style keeps it dismissed. (Plain Jekyll has no built-in hashing filter to make a shorter key from this — see the comment in `announcement.html` — so the key is the text itself, escaped for safe use in an HTML attribute.)
+
 ## Configuration reference (`_config.yml`)
 
 | Key | Purpose |
