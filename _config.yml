@@ -246,6 +246,7 @@ exclude:
   - CONTENT-GUIDE.md
   - CMS-GUIDE.md
   - cms-activity-log.md
+  - commit-status.md
   - Gemfile
   - Gemfile.lock
   - LICENSE

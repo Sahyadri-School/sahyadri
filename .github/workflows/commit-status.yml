@@ -1,0 +1,109 @@
+name: Update Commit Status
+
+# Writes commit-status.md: a plain, readable list of the site's recent
+# builds and deploys (did each change actually go live), read from this
+# repository's GitHub Actions run history (see generate_commit_status.py
+# for exactly how). Shown in the CMS sidebar as a read-only "Commit Status"
+# file entry (.pages.yml) -- Pages CMS can only display files already in
+# the repo, so this workflow is what keeps that file current.
+#
+# Answers a different question from cms-activity-log.yml: that one lists
+# what was saved through the CMS; this one lists whether the site actually
+# built successfully afterwards, for every change regardless of source.
+#
+# Runs on its own schedule, plus on demand from the "Update commit status"
+# button on the CMS Actions page (same payload-input mechanism as
+# external-links.yml and cms-activity-log.yml; see the comment in
+# external-links.yml for how that works in general). Never blocks or
+# affects the site build itself -- this only ever writes the one status
+# file, nothing else, and reads the main build's history without
+# interfering with it.
+on:
+  schedule:
+    - cron: "15 3 * * *" # a few minutes after cms-activity-log.yml's 03:00, so the two don't contend for the same commit
+  workflow_dispatch:
+    inputs:
+      # Pages CMS always sends its context here as JSON when its button starts
+      # this workflow. Optional (not required: true as in Pages CMS's own
+      # example) so running it by hand from GitHub's Actions tab still works
+      # with the box left blank, and the schedule is unaffected.
+      payload:
+        description: "Filled in by the Pages CMS button; leave blank when running from GitHub"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: write
+  actions: read # this workflow reads OTHER runs' history (ci.yml) via the API, not just its own
+
+jobs:
+  update-status:
+    runs-on: ubuntu-latest
+    steps:
+      # Records, in the run's own summary, what started it. Identical in
+      # spirit to the same step in external-links.yml and
+      # cms-activity-log.yml; kept duplicated per-workflow rather than
+      # factored out, same reasoning as the comment in that file.
+      - name: Note what started this run
+        continue-on-error: true
+        run: |
+          python3 - <<'PY'
+          import json, os
+          raw = os.environ.get("PAYLOAD", "").strip()
+          event = os.environ.get("EVENT", "")
+          actor = os.environ.get("ACTOR", "unknown")
+          if raw:
+              try:
+                  user = (json.loads(raw).get("triggeredBy") or {})
+                  who = "{} (GitHub: {}) using the Pages CMS button".format(
+                      user.get("name") or "an unnamed CMS user",
+                      user.get("githubUsername") or "no username given")
+              except (ValueError, AttributeError):
+                  who = "the Pages CMS button (its details could not be read)"
+          elif event == "schedule":
+              who = "the schedule"
+          else:
+              who = "{} on GitHub".format(actor)
+          line = "Commit status refresh started by: " + who
+          print(line)
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+              f.write(line + "\n")
+          PY
+        env:
+          PAYLOAD: ${{ inputs.payload }}
+          EVENT: ${{ github.event_name }}
+          ACTOR: ${{ github.actor }}
+
+      # A shallow checkout is enough here, unlike cms-activity-log.yml:
+      # generate_commit_status.py reads GitHub's Actions run history over
+      # the API, not local git log, so this only needs a working copy of
+      # the repo to write the output file into and commit from.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Generate the commit status page
+        run: python3 generate_commit_status.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      # Commits the refreshed file only if it actually changed. Uses
+      # `git status --porcelain`, not `git diff --quiet`: the latter only
+      # compares against what Git already tracks, so it silently reports
+      # "no change" for a brand-new, untracked file -- a real bug found and
+      # fixed in cms-activity-log.yml's identical step (every run of that
+      # workflow silently did nothing until it was corrected), carried over
+      # here already fixed rather than repeating that mistake.
+      - name: Commit the status page if it changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -z "$(git status --porcelain -- commit-status.md)" ]; then
+            echo "No change to the commit status page; nothing to commit."
+          else
+            git add commit-status.md
+            git commit -m "Refresh commit status"
+            git push
+          fi

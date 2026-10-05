@@ -428,6 +428,17 @@ content:
     operations:
       delete: false
 
+  # Same pattern as cms-activity-log above (plain raw-text editor, delete
+  # disabled), but a different question: not what the CMS changed, but
+  # whether each change actually built and went live. See
+  # generate_commit_status.py / commit-status.yml for how it's built.
+  - name: commit-status
+    label: Commit Status
+    type: file
+    path: commit-status.md
+    operations:
+      delete: false
+
 settings:
   # merge: true preserves front-matter keys not listed in a collection's
   # fields (e.g. layout: post/activity/profile) when Pages CMS saves an
@@ -468,4 +479,13 @@ actions:
     confirm:
       title: Update the CMS activity log now?
       message: Rebuilds the CMS Activity Log page from the last 30 days of CMS changes. Takes under a minute. It also refreshes automatically every night, so this is only needed to see the latest changes right away.
+      button: Update it
+
+  - name: update-commit-status
+    label: Update commit status
+    workflow: commit-status.yml
+    ref: current
+    confirm:
+      title: Update the commit status now?
+      message: Rebuilds the Commit Status page from the last 30 days of builds, showing whether each change actually went live. Takes under a minute. It also refreshes automatically, so this is only needed to see the latest result right away.
       button: Update it
