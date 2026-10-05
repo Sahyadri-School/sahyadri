@@ -2899,6 +2899,23 @@ html {
     width: 100%;
     position: relative;
     z-index: 900; /* below the fixed navbar's own stacking but above normal page content */
+    /* The navbar is `position: fixed` (nav.html's own fixed-top class),
+       which takes it out of normal document flow entirely -- it doesn't
+       push following content down, it just floats on top of it. Every
+       other page avoids this by having its own first element
+       (.intro-header, in beautifuljekyll.css) carry a 5rem top margin for
+       exactly this reason. This banner, included right after the nav in
+       base.html, is the first thing on the page that ISN'T .intro-header,
+       so without its own matching offset it rendered at the very top of
+       the page and was hidden underneath the navbar -- confirmed directly
+       from a real screenshot (DevTools showed the element present, in the
+       DOM, with a real non-zero size, just visually covered). Reusing the
+       exact same 5rem value .intro-header uses (also already reused by
+       .toc-sidebar and the Profiles sidebar elsewhere in this file) rather
+       than guessing a new number, so this stays correct if the navbar's
+       own height is ever intentionally changed and that reference value
+       is updated to match. */
+    margin-top: 5rem;
 }
 
 .site-announcement-inner {
