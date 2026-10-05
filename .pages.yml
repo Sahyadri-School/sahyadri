@@ -80,6 +80,18 @@ content:
         label: Thumbnail image (Google Drive file ID)
         type: string
         description: "Paste just the file ID from the Drive sharing link (the long string between /d/ and /view), e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\" -- not the full URL. The file must be shared as \"Anyone with the link can view.\""
+      - name: image-focus
+        label: Thumbnail crop position (optional)
+        type: select
+        description: "Only needed if the thumbnail above looks cropped wrong on the Newsletter/Activities list (e.g. people's heads or the main subject cut off). Most photos don't need this -- leave it blank and the default works. If it still looks wrong after a save, try \"Subject is near the top\" (a tall photo where people are cut off) or \"Subject is near the bottom\" (a wide photo where people are squeezed into a thin strip at the bottom)."
+        options:
+          values:
+            - value: top
+              label: "Subject is near the top of the photo"
+            - value: center
+              label: "Subject is centered"
+            - value: bottom
+              label: "Subject is near the bottom of the photo"
 
       - name: image2
         label: Gallery image 2 (Google Drive file ID, optional)
@@ -167,6 +179,18 @@ content:
         label: Thumbnail image (Google Drive file ID)
         type: string
         description: "Paste just the file ID from the Drive sharing link (the long string between /d/ and /view), e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\" -- not the full URL. The file must be shared as \"Anyone with the link can view.\""
+      - name: image-focus
+        label: Thumbnail crop position (optional)
+        type: select
+        description: "Only needed if the thumbnail above looks cropped wrong on the Newsletter/Activities list (e.g. people's heads or the main subject cut off). Most photos don't need this -- leave it blank and the default works. If it still looks wrong after a save, try \"Subject is near the top\" (a tall photo where people are cut off) or \"Subject is near the bottom\" (a wide photo where people are squeezed into a thin strip at the bottom)."
+        options:
+          values:
+            - value: top
+              label: "Subject is near the top of the photo"
+            - value: center
+              label: "Subject is centered"
+            - value: bottom
+              label: "Subject is near the bottom of the photo"
       - name: image2
         type: string
         label: Gallery image 2 (Google Drive file ID, optional)

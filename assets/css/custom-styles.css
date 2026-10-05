@@ -1350,7 +1350,15 @@ html { scroll-behavior: smooth; }
 .post-image {
     flex-shrink: 0;
     width: 220px;
-    aspect-ratio: 4 / 3;
+    /* 5:4, not the old 4:3: a little taller, so cover crops a landscape
+       source's top/bottom slightly too, not only its left/right -- on its
+       own this is a small change, but it's what makes the per-photo
+       image-focus front-matter field (below) actually able to move the
+       crop vertically for a landscape photo at all. At 4:3 a landscape
+       source's full height was always used (cover only ever trimmed its
+       sides), so no vertical object-position value, default or
+       per-photo, could change anything for one. */
+    aspect-ratio: 5 / 4;
     overflow: hidden;
     border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -1360,18 +1368,34 @@ html { scroll-behavior: smooth; }
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Biased toward the top (not 50% center): most of these are group
-       photos of students, and a tall (portrait) source photo was getting
-       cropped to its vertical middle, often keeping desks/background and
-       losing the people's faces entirely, since they tend to sit in the
-       upper portion of a photo rather than dead-center. A landscape
-       source is completely unaffected by this value -- cover only trims
-       its left/right edges in that case, never top/bottom, so this only
-       ever changes anything for a portrait-oriented photo. */
-    object-position: center 18%;
+    /* Default crop position, used whenever a post doesn't set its own
+       image-focus front-matter value (below). Biased toward the top
+       (30%, not 50% center): most thumbnails here are group photos of
+       students, who more often sit in the upper part of a photo than
+       dead-center, especially in a portrait (taller-than-wide) source,
+       where the old 50% center crop could cut their heads off entirely
+       and keep mostly desk/background instead. Deliberately gentler than
+       an earlier version of this rule (which used 18%): some real photos
+       on this site instead have their subject low in the frame (people
+       sitting below a tall ceiling/doorway) and need the *opposite*
+       bias, which this default can't give every photo at once -- those
+       are handled by image-focus instead of trying to guess one value
+       that serves every photo. */
+    object-position: center 30%;
     border-radius: 6px;
     box-shadow: none;
 }
+
+/* Set by the optional "image-focus" field in a post/activity's front
+   matter (posts.md / activities.md render it as an inline style on
+   .post-image when present) for the photos the default crop doesn't
+   suit -- most often one where the subject sits in the LOWER part of
+   the frame (e.g. people seated below a tall ceiling or doorway), the
+   opposite of what the default above assumes. Values: "top", "center",
+   "bottom", matching the field's three options in the CMS. */
+.post-image.focus-top img    { object-position: center 10%; }
+.post-image.focus-center img { object-position: center 50%; }
+.post-image.focus-bottom img { object-position: center 88%; }
 
 .post-entry {
     flex: 1;
@@ -1448,12 +1472,21 @@ html { scroll-behavior: smooth; }
         width: 100%;
         height: 100%;
         object-fit: cover;
-        /* See the desktop .post-image img rule for why this isn't 50%/50%. */
-        object-position: center 18%;
+        /* See the desktop .post-image img rule for why this isn't 50%/50%,
+           and why 30% (not the 18% an earlier version of this rule used). */
+        object-position: center 30%;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
     }
+
+    /* Same per-post override classes as the desktop rule, mirrored here
+       since .post-image/.post-image img are redeclared for this
+       breakpoint rather than only overridden -- see the desktop
+       .post-image.focus-* rules for what sets these classes. */
+    .post-image.focus-top img    { object-position: center 10%; }
+    .post-image.focus-center img { object-position: center 50%; }
+    .post-image.focus-bottom img { object-position: center 88%; }
 
     .post-entry {
         width: 100%;

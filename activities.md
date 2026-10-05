@@ -251,7 +251,10 @@ share-description: "Workshops, events and activities at Sahyadri School, grouped
                   <!-- Thumbnail + excerpt row -->
                   <div class="post-entry-container">
                     {% if post.image %}
-                      <div class="post-image">
+                      {%- comment -%}
+                        image-focus: see the same comment in posts.md's identical block.
+                      {%- endcomment -%}
+                      <div class="post-image{% if post.image-focus %} focus-{{ post.image-focus }}{% endif %}">
                         <a href="{{ post.url | relative_url }}">
                           <img src="https://lh3.googleusercontent.com/d/{{ post.image }}?sz=800" alt="{{ post.title }}">
                         </a>

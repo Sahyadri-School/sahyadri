@@ -212,7 +212,15 @@ share-description: "Student-written newsletter articles from Sahyadri School, gr
                   <div class="post-entry-container">
                     {% assign current_image = post.image_id | default: post.image %}
                     {% if current_image %}
-                      <div class="post-image">
+                      {%- comment -%}
+                        image-focus (optional front matter, posts.md CMS field): "top",
+                        "center" or "bottom", matching the .focus-top/-center/-bottom
+                        classes in custom-styles.css's .post-image rules. Left off a
+                        post entirely, no class is added and the default crop position
+                        in that stylesheet applies -- this never requires every post
+                        to set it.
+                      {%- endcomment -%}
+                      <div class="post-image{% if post.image-focus %} focus-{{ post.image-focus }}{% endif %}">
                         <a href="{{ post.url | relative_url }}">
                           <img src="https://lh3.googleusercontent.com/d/{{ current_image }}?sz=800" alt="{{ post.title }}" loading="lazy">
                         </a>
