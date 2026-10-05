@@ -120,27 +120,79 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Generate the commit status page
-        run: python3 generate_commit_status.py
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-
-      # Commits the refreshed file only if it actually changed. Uses
-      # `git status --porcelain`, not `git diff --quiet`: the latter only
-      # compares against what Git already tracks, so it silently reports
-      # "no change" for a brand-new, untracked file -- a real bug found and
-      # fixed in cms-activity-log.yml's identical step (every run of that
-      # workflow silently did nothing until it was corrected), carried over
-      # here already fixed rather than repeating that mistake.
-      - name: Commit the status page if it changed
+      # Generates, commits (only if changed -- see the git status --porcelain
+      # note below) and pushes commit-status.md, retrying the WHOLE thing
+      # (not just the push) against fresh data if the push is rejected.
+      #
+      # Why retry the generation too, not just re-push the same commit: two
+      # real site builds close together each start their own, separate run
+      # of this workflow (workflow_run fires once per build, not once per
+      # burst of activity -- see the trigger comment near the top of this
+      # file), and both runs' final pushes can land close enough together
+      # that the second one is rejected because the first one's commit beat
+      # it to the remote. This is a confirmed real failure, not a
+      # hypothetical one: two runs on 2026-10-05 failed at exactly this
+      # point, each generating the page successfully but never managing to
+      # push it, on a day when two site builds landed a few minutes apart.
+      #
+      # The first fix attempted here was `git fetch` + `git rebase` onto the
+      # winner's commit before retrying the same push -- but commit-status.md
+      # is the ONLY file either run ever touches, so both commits always
+      # change that exact same file, which is exactly the shape of change
+      # `git rebase` cannot reconcile on its own: it stops with a real merge
+      # conflict and leaves the repository in a half-finished rebase state
+      # that every further retry attempt then fails against immediately,
+      # before even reaching git push again. Confirmed this with a real,
+      # from-scratch simulation (two actual git clones racing to push to a
+      # shared remote) before writing the fix below, not just reasoned
+      # about -- the rebase approach reliably hit a conflict and never
+      # recovered in that simulation, across every attempt.
+      #
+      # Fixed by discarding the stale attempt instead of trying to merge it:
+      # on a rejected push, `git reset --hard` to whatever is now on the
+      # remote (throwing away this run's own commit entirely, not just
+      # updating it) and regenerate the page from scratch against that
+      # current state, then commit and push that. There is nothing worth
+      # preserving in the "losing" attempt -- the script always produces a
+      # fresh read of the real current state regardless of which run
+      # produces it, so the version that didn't win the race is simply
+      # replaced by a newer one, the same way the next scheduled refresh
+      # would update it anyway. Re-ran the same from-scratch simulation
+      # against this version: a genuinely rejected push recovers cleanly in
+      # one retry, with a clean working tree and no leftover rebase state.
+      - name: Generate and commit the status page, retrying if the push races another run
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [ -z "$(git status --porcelain -- commit-status.md)" ]; then
-            echo "No change to the commit status page; nothing to commit."
-          else
+          attempt=1
+          max_attempts=5
+          while true; do
+            python3 generate_commit_status.py
+            # `git status --porcelain`, not `git diff --quiet`: the latter
+            # only compares against what Git already tracks, so it silently
+            # reports "no change" for a brand-new, untracked file -- a real
+            # bug found and fixed in cms-activity-log.yml's identical check
+            # (every run of that workflow silently did nothing until it was
+            # corrected), carried over here already fixed.
+            if [ -z "$(git status --porcelain -- commit-status.md)" ]; then
+              echo "No change to the commit status page; nothing to commit."
+              break
+            fi
             git add commit-status.md
-            git commit -m "Refresh commit status"
-            git push
-          fi
+            git commit -q -m "Refresh commit status"
+            if git push; then
+              echo "Pushed successfully on attempt $attempt."
+              break
+            fi
+            if [ "$attempt" -ge "$max_attempts" ]; then
+              echo "Could not push after $max_attempts attempts; giving up for this run. The next scheduled or triggered run will try again with fresh data."
+              exit 1
+            fi
+            echo "Push rejected (another run pushed first) -- attempt $attempt of $max_attempts. Discarding this attempt and regenerating against the current remote state."
+            git fetch origin master
+            git reset --hard origin/master
+            attempt=$((attempt + 1))
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
