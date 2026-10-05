@@ -11,16 +11,37 @@ name: Update Commit Status
 # what was saved through the CMS; this one lists whether the site actually
 # built successfully afterwards, for every change regardless of source.
 #
-# Runs on its own schedule, plus on demand from the "Update commit status"
-# button on the CMS Actions page (same payload-input mechanism as
-# external-links.yml and cms-activity-log.yml; see the comment in
-# external-links.yml for how that works in general). Never blocks or
-# affects the site build itself -- this only ever writes the one status
-# file, nothing else, and reads the main build's history without
-# interfering with it.
+# Runs automatically a few minutes after every build/deploy of the main
+# site workflow finishes (workflow_run, below), on its own daily schedule as
+# a backstop, and on demand from the "Update commit status" button on the
+# CMS Actions page (same payload-input mechanism as external-links.yml and
+# cms-activity-log.yml; see the comment in external-links.yml for how that
+# works in general). Never blocks or affects the site build itself -- this
+# only ever writes the one status file, nothing else, and reads the main
+# build's history without interfering with it.
+#
+# workflow_run triggers on EVERY completion of "Sahyadri Connect" (ci.yml),
+# whatever its conclusion -- success, failure, or cancelled. That matters
+# here: ci.yml's own concurrency setting (cancel-in-progress: true) means a
+# push that's quickly followed by another push produces a *cancelled* run
+# of ci.yml for the first one, which still counts as "completed" and still
+# fires this trigger (confirmed against GitHub's own documented list of
+# conclusion values, which includes "cancelled" as a normal, triggering
+# outcome of types: [completed], not a special non-firing case). So a burst
+# of near-simultaneous pushes can start this workflow more than once in a
+# row. That's intentionally left alone rather than guarded against: every
+# run of generate_commit_status.py queries GitHub's live, current state
+# regardless of which push triggered it, so a redundant run just produces
+# the same correct output a few seconds early and commits nothing extra
+# (the "commit the page if it changed" step, below, already makes a
+# duplicate run a no-op) -- cheaper and more robust than adding logic here
+# to detect and skip a "stale" trigger.
 on:
+  workflow_run:
+    workflows: ["Sahyadri Connect"] # must match ci.yml's own `name:` field exactly
+    types: [completed]
   schedule:
-    - cron: "15 3 * * *" # a few minutes after cms-activity-log.yml's 03:00, so the two don't contend for the same commit
+    - cron: "15 3 * * *" # daily backstop in case a workflow_run trigger is ever missed; a few minutes after cms-activity-log.yml's 03:00, so the two don't contend for the same commit
   workflow_dispatch:
     inputs:
       # Pages CMS always sends its context here as JSON when its button starts
@@ -62,7 +83,9 @@ jobs:
               except (ValueError, AttributeError):
                   who = "the Pages CMS button (its details could not be read)"
           elif event == "schedule":
-              who = "the schedule"
+              who = "the daily schedule"
+          elif event == "workflow_run":
+              who = "the site build finishing (automatic)"
           else:
               who = "{} on GitHub".format(actor)
           line = "Commit status refresh started by: " + who
@@ -74,6 +97,20 @@ jobs:
           PAYLOAD: ${{ inputs.payload }}
           EVENT: ${{ github.event_name }}
           ACTOR: ${{ github.actor }}
+
+      # Only relevant for the workflow_run trigger: GitHub Actions has no
+      # native "wait N minutes, then start" scheduling option, so the wait
+      # happens here, inside the already-running job, rather than delaying
+      # when the job starts. 3 minutes comfortably covers the real build
+      # time (checked recent runs of ci.yml: consistently 40-55 seconds
+      # start to finish) plus some margin for GitHub's own status/API
+      # propagation delay, in case the run this was triggered by (or a
+      # concurrent one) hasn't fully settled the instant workflow_run
+      # fires. A no-op for every other trigger (the schedule and the CMS
+      # button already only fire once the previous build is long done).
+      - name: Wait a few minutes so the triggering build has settled
+        if: github.event_name == 'workflow_run'
+        run: sleep 180
 
       # A shallow checkout is enough here, unlike cms-activity-log.yml:
       # generate_commit_status.py reads GitHub's Actions run history over
