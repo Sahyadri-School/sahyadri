@@ -4,7 +4,7 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-05 12:28 IST
+Last updated: 2026-10-05 18:31 IST
 
 ------------------------------------------------------------
 
@@ -14,6 +14,12 @@ Last updated: 2026-10-05 12:28 IST
 
 Monday, 05 October 2026
 -----------------------
+  18:28  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37313309733
+  18:24  Sahyadri-archives: Add a site-wide announcement banner, controlled from the CMS
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37312745478
   12:23  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-08-19-stocks.md
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37274709521
@@ -326,12 +332,6 @@ Tuesday, 29 September 2026
   18:27  Sahyadri-archives: Add _data/maintenance.yml: the maintenance-mode switch now lives in its own tiny file so the CMS can toggle it without rewriting _config.yml
           Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36571668363
-  17:59  Sahyadri-archives: Unquote date in decision-making workshop entry so it matches every other entry (and how the CMS writes dates)
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36568448695
-  17:58  Sahyadri-archives: Remove .github/FUNDING.yml -- pointed at a personal GitHub account (unkonwn-s), not the school
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36568371018
 
 ------------------------------------------------------------
 
