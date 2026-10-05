@@ -9,7 +9,7 @@ tags:
   - student-life
 image: 1xShykYQiD6_zlxZreQ2r6eFmhqU7Ciwv
 pinned: false
-image-focus: bottom
+image-focus: center
 ---
 Anyone, whether you are a beginner or an experienced speedcuber, is an important part of the cubing community. The Rubik's Cube is much more than just a colourful puzzle. It teaches us patience, logical thinking, concentration, creativity and perseverance. Every twist brings us one step closer to solving a challenge, reminding us that even the most complex problems can be solved with the right strategy and practice.
 
