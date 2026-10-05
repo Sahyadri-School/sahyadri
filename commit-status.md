@@ -4,7 +4,7 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-05 18:41 IST
+Last updated: 2026-10-05 18:49 IST
 
 ------------------------------------------------------------
 
@@ -14,6 +14,9 @@ Last updated: 2026-10-05 18:41 IST
 
 Monday, 05 October 2026
 -----------------------
+  18:43  Sahyadri-archives: Fix a real push failure: two builds close together could make this workflow fail silently
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37315126221
   18:33  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37313884088
@@ -329,9 +332,6 @@ Tuesday, 29 September 2026
   18:27  Sahyadri-archives: maintenance.html: read the switch from _data/maintenance.yml
           Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36571672920
-  18:27  Sahyadri-archives: maintenance-status.json: read the switch from _data/maintenance.yml
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36571670247
 
 ------------------------------------------------------------
 
