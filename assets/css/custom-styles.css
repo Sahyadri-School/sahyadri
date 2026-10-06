@@ -2958,10 +2958,27 @@ html {
     line-height: 1;
     cursor: pointer;
     padding: 0.2em 0.4em;
-    opacity: 0.75;
+    border-radius: 4px;
+    /* No opacity here: it would blend this button's color toward the
+       background behind it, silently lowering its real contrast below
+       what the color-pair checks below actually verify (confirmed: the
+       0.75 this used to have dropped "info" in light mode -- the default,
+       most commonly used style -- to 3.35:1, a genuine WCAG AA failure,
+       even though the plain text/background pair alone passes at 4.60:1).
+       Hover feedback below uses a background tint instead, which doesn't
+       touch this element's own text contrast at all. */
 }
-.site-announcement-close:hover {
-    opacity: 1;
+.site-announcement-close:hover,
+.site-announcement-close:focus-visible {
+    background-color: rgba(0, 0, 0, 0.12);
+}
+.dark-mode .site-announcement-close:hover,
+.dark-mode .site-announcement-close:focus-visible {
+    /* 0.10, not the 0.15 originally tried here: checked all six style/mode
+       combinations with the hover tint applied and found "important dark"
+       dropped to 4.48:1 at 0.15, just under WCAG AA's 4.5:1 -- re-verified
+       at 0.10 that all six pass comfortably (lowest: 5.12:1). */
+    background-color: rgba(255, 255, 255, 0.10);
 }
 
 /* info: contrast 4.60:1 (light), 7.54:1 (dark) -- both pass AA */
