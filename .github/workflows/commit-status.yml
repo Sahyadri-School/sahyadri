@@ -11,37 +11,22 @@ name: Update Commit Status
 # what was saved through the CMS; this one lists whether the site actually
 # built successfully afterwards, for every change regardless of source.
 #
-# Runs automatically a few minutes after every build/deploy of the main
-# site workflow finishes (workflow_run, below), on its own daily schedule as
-# a backstop, and on demand from the "Update commit status" button on the
-# CMS Actions page (same payload-input mechanism as external-links.yml and
-# cms-activity-log.yml; see the comment in external-links.yml for how that
-# works in general). Never blocks or affects the site build itself -- this
-# only ever writes the one status file, nothing else, and reads the main
-# build's history without interfering with it.
+# Runs automatically once a day, at midnight India time (00:00 IST), and on
+# demand from the "Update commit status" button on the CMS Actions page (same
+# payload-input mechanism as external-links.yml and cms-activity-log.yml; see
+# the comment in external-links.yml for how that works in general). It does
+# NOT run after each commit or build: an earlier version did (a workflow_run
+# trigger on the main build plus a 3-minute wait), and it was removed on
+# request in favour of one refresh per day. Never blocks or affects the site
+# build itself -- this only ever writes the one status file, nothing else,
+# and reads the main build's history without interfering with it.
 #
-# workflow_run triggers on EVERY completion of "Sahyadri Connect" (ci.yml),
-# whatever its conclusion -- success, failure, or cancelled. That matters
-# here: ci.yml's own concurrency setting (cancel-in-progress: true) means a
-# push that's quickly followed by another push produces a *cancelled* run
-# of ci.yml for the first one, which still counts as "completed" and still
-# fires this trigger (confirmed against GitHub's own documented list of
-# conclusion values, which includes "cancelled" as a normal, triggering
-# outcome of types: [completed], not a special non-firing case). So a burst
-# of near-simultaneous pushes can start this workflow more than once in a
-# row. That's intentionally left alone rather than guarded against: every
-# run of generate_commit_status.py queries GitHub's live, current state
-# regardless of which push triggered it, so a redundant run just produces
-# the same correct output a few seconds early and commits nothing extra
-# (the "commit the page if it changed" step, below, already makes a
-# duplicate run a no-op) -- cheaper and more robust than adding logic here
-# to detect and skip a "stale" trigger.
+# GitHub evaluates cron schedules in UTC: 00:00 IST (UTC+5:30, no daylight
+# saving) is 18:30 UTC the previous day. GitHub may start scheduled runs a
+# few minutes late when its runners are busy.
 on:
-  workflow_run:
-    workflows: ["Sahyadri Connect"] # must match ci.yml's own `name:` field exactly
-    types: [completed]
   schedule:
-    - cron: "15 3 * * *" # daily backstop in case a workflow_run trigger is ever missed; a few minutes after cms-activity-log.yml's 03:00, so the two don't contend for the same commit
+    - cron: "30 18 * * *" # 18:30 UTC = 00:00 IST
   workflow_dispatch:
     inputs:
       # Pages CMS always sends its context here as JSON when its button starts
@@ -84,8 +69,6 @@ jobs:
                   who = "the Pages CMS button (its details could not be read)"
           elif event == "schedule":
               who = "the daily schedule"
-          elif event == "workflow_run":
-              who = "the site build finishing (automatic)"
           else:
               who = "{} on GitHub".format(actor)
           line = "Commit status refresh started by: " + who
@@ -97,20 +80,6 @@ jobs:
           PAYLOAD: ${{ inputs.payload }}
           EVENT: ${{ github.event_name }}
           ACTOR: ${{ github.actor }}
-
-      # Only relevant for the workflow_run trigger: GitHub Actions has no
-      # native "wait N minutes, then start" scheduling option, so the wait
-      # happens here, inside the already-running job, rather than delaying
-      # when the job starts. 3 minutes comfortably covers the real build
-      # time (checked recent runs of ci.yml: consistently 40-55 seconds
-      # start to finish) plus some margin for GitHub's own status/API
-      # propagation delay, in case the run this was triggered by (or a
-      # concurrent one) hasn't fully settled the instant workflow_run
-      # fires. A no-op for every other trigger (the schedule and the CMS
-      # button already only fire once the previous build is long done).
-      - name: Wait a few minutes so the triggering build has settled
-        if: github.event_name == 'workflow_run'
-        run: sleep 180
 
       # A shallow checkout is enough here, unlike cms-activity-log.yml:
       # generate_commit_status.py reads GitHub's Actions run history over
@@ -124,42 +93,20 @@ jobs:
       # note below) and pushes commit-status.md, retrying the WHOLE thing
       # (not just the push) against fresh data if the push is rejected.
       #
-      # Why retry the generation too, not just re-push the same commit: two
-      # real site builds close together each start their own, separate run
-      # of this workflow (workflow_run fires once per build, not once per
-      # burst of activity -- see the trigger comment near the top of this
-      # file), and both runs' final pushes can land close enough together
-      # that the second one is rejected because the first one's commit beat
-      # it to the remote. This is a confirmed real failure, not a
-      # hypothetical one: two runs on 2026-10-05 failed at exactly this
-      # point, each generating the page successfully but never managing to
-      # push it, on a day when two site builds landed a few minutes apart.
+      # Why a retry at all: another commit (a CMS save, the CMS activity
+      # log's own refresh) can land on master between this job's checkout
+      # and its push, and git then correctly rejects the push. This is a
+      # confirmed real failure, not a hypothetical one: two runs failed this
+      # way on 2026-10-05, back when this workflow ran after every build.
       #
-      # The first fix attempted here was `git fetch` + `git rebase` onto the
-      # winner's commit before retrying the same push -- but commit-status.md
-      # is the ONLY file either run ever touches, so both commits always
-      # change that exact same file, which is exactly the shape of change
-      # `git rebase` cannot reconcile on its own: it stops with a real merge
-      # conflict and leaves the repository in a half-finished rebase state
-      # that every further retry attempt then fails against immediately,
-      # before even reaching git push again. Confirmed this with a real,
-      # from-scratch simulation (two actual git clones racing to push to a
-      # shared remote) before writing the fix below, not just reasoned
-      # about -- the rebase approach reliably hit a conflict and never
-      # recovered in that simulation, across every attempt.
-      #
-      # Fixed by discarding the stale attempt instead of trying to merge it:
-      # on a rejected push, `git reset --hard` to whatever is now on the
-      # remote (throwing away this run's own commit entirely, not just
-      # updating it) and regenerate the page from scratch against that
-      # current state, then commit and push that. There is nothing worth
-      # preserving in the "losing" attempt -- the script always produces a
-      # fresh read of the real current state regardless of which run
-      # produces it, so the version that didn't win the race is simply
-      # replaced by a newer one, the same way the next scheduled refresh
-      # would update it anyway. Re-ran the same from-scratch simulation
-      # against this version: a genuinely rejected push recovers cleanly in
-      # one retry, with a clean working tree and no leftover rebase state.
+      # Why discard-and-regenerate rather than rebase: this job only ever
+      # changes commit-status.md, so a rebase onto another run's commit hits
+      # a genuine merge conflict on that same file and leaves a half-finished
+      # rebase that every further attempt fails against (reproduced with two
+      # real git clones racing to push). On a rejected push we instead
+      # `git reset --hard` to the remote, regenerate the page from current
+      # data, and commit and push again; nothing in the discarded attempt is
+      # worth keeping, since the page is always a fresh read of live state.
       - name: Generate and commit the status page, retrying if the push races another run
         run: |
           git config user.name "github-actions[bot]"

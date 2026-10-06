@@ -172,7 +172,7 @@ def build_markdown(runs_with_outcomes, generated_at, window_days):
         f"Shows whether each change in the last {window_days} days actually "
         "built and went live on the site -- not just what was saved through "
         "the CMS (see CMS Activity Log for that), but every change, from any "
-        "source. Refreshes automatically, and any time someone clicks "
+        "source. Refreshes once a day at midnight (IST), and any time someone clicks "
         '"Update commit status" on the Actions page.'
     )
     lines.append("")

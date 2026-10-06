@@ -527,5 +527,5 @@ actions:
     ref: current
     confirm:
       title: Update the commit status now?
-      message: Rebuilds the Commit Status page from the last 30 days of builds, showing whether each change actually went live. Takes under a minute. It also refreshes automatically, so this is only needed to see the latest result right away.
+      message: Rebuilds the Commit Status page from the last 30 days of builds, showing whether each change actually went live. Takes under a minute. It also refreshes automatically once a day at midnight (IST), so this is only needed to see the latest result right away.
       button: Update it
