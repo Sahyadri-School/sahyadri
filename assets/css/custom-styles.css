@@ -2895,9 +2895,41 @@ html {
    since the light-mode backgrounds would glare against the dark-mode
    page background, #1a1a1a), also independently checked against AA.
    ============================================================ */
+/* Deliberately NOT a flex/grid container itself: body (beautifuljekyll.css)
+   is `display: flex; flex-direction: column`, and .site-announcement is one
+   of its direct children, which makes position: sticky on that element a
+   sticky FLEX ITEM with its own margin-top, among other flex siblings --
+   a combination with a real, documented history of cross-browser
+   inconsistency (e.g. Firefox Bugzilla 1488080: "a div partially hidden
+   behind a sticky div is scrollable... because a previous sibling element
+   takes up space in the flex container", traced to how the sticky
+   calculation and a flex-resolved margin interact). This wrapper gives the
+   sticky element its own plain block containing block instead, sidestepping
+   that specific intersection entirely regardless of what body's own
+   display mode is or ever becomes. */
+.site-announcement-wrapper {
+    width: 100%;
+}
+
 .site-announcement {
     width: 100%;
-    position: relative;
+    /* position: sticky, not fixed or relative: this needs to (a) sit right
+       below the navbar on first load (handled by margin-top below) AND
+       (b) stay right below the navbar while the page is scrolled, rather
+       than scrolling away with the rest of the content the way a plain
+       `relative` element does. `sticky` does both at once: the element
+       behaves normally (participates in document flow, respects the
+       margin-top below) until scrolling would carry it past `top`, at
+       which point it sticks there instead of continuing to scroll --
+       exactly "stays in place below the navbar" without needing a second,
+       separate mechanism for the scrolled state. `top` uses the exact
+       same --site-announcement-offset variable as margin-top below (the
+       navbar's real, measured height -- see the long comment there), so
+       both "where it starts" and "where it sticks" are driven by the one
+       real number, not two independently guessed ones that could drift
+       out of sync with each other. */
+    position: sticky;
+    top: var(--site-announcement-offset, 5rem);
     z-index: 900; /* below the fixed navbar's own stacking but above normal page content */
     /* The navbar is `position: fixed` (nav.html's own fixed-top class),
        which takes it out of normal document flow entirely -- it doesn't

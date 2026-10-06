@@ -30,6 +30,7 @@
     reasonable trade for an announcement message, which is short by nature.
   {%- endcomment -%}
   {% assign dismiss_key = a.message | append: "|" | append: style | escape %}
+  <div class="site-announcement-wrapper">
   <div
     id="site-announcement"
     class="site-announcement site-announcement-{{ style }}"
@@ -45,6 +46,7 @@
       </span>
       <button type="button" class="site-announcement-close" aria-label="Dismiss this announcement" onclick="dismissSiteAnnouncement()">&times;</button>
     </div>
+  </div>
   </div>
   <script>
     (function () {
