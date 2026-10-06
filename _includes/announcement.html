@@ -67,16 +67,17 @@
       // Sets --site-announcement-offset (read by .site-announcement's
       // margin-top AND top in custom-styles.css) to the navbar's real,
       // currently rendered height, so the banner starts directly below the
-      // fixed navbar and stays directly below it while scrolling. Measured
-      // from the .navbar-custom element itself rather than hardcoded,
-      // because its height depends on things like zoom, font loading and
-      // the nav items wrapping onto a second line at narrow widths.
+      // fixed navbar and stays flush against its bottom edge while scrolling.
       //
-      // Re-measured whenever that element's size changes (ResizeObserver,
-      // below; a debounced resize listener is the fallback for old
-      // browsers). Verified in a real Chromium that changing this variable
-      // after the banner is already stuck moves it immediately, so no
-      // "force the browser to recompute" workaround is needed.
+      // The navbar does NOT have a single height. At 1200px and wider,
+      // beautifuljekyll.css gives .navbar-custom 1.25rem of padding top and
+      // bottom (40px in total, so ~109px tall); once the page is scrolled
+      // about 50px, assets/js/beautifuljekyll.js adds .top-nav-short, which
+      // removes that padding over a 0.5s transition (~69px tall). The offset
+      // therefore has to follow the navbar through both states. Measured
+      // from the element itself rather than hardcoded, because its height
+      // also depends on zoom, font loading and the nav items wrapping at
+      // narrow widths.
       function applyNavbarOffset() {
         var navbar = document.querySelector('.navbar-custom');
         if (!navbar) return; // CSS fallback (5rem) applies
@@ -88,19 +89,28 @@
 
       applyNavbarOffset();
 
-      if (typeof ResizeObserver !== 'undefined') {
-        var navbarEl = document.querySelector('.navbar-custom');
-        if (navbarEl) {
-          new ResizeObserver(applyNavbarOffset).observe(navbarEl);
-        }
+      var navbarEl = document.querySelector('.navbar-custom');
+      if (navbarEl && typeof ResizeObserver !== 'undefined') {
+        // box: 'border-box' is essential. ResizeObserver watches the CONTENT
+        // box by default, and the navbar's height change is a padding change
+        // (content box unchanged), so a default observer never fires when
+        // the navbar shrinks on scroll -- confirmed in a real Chromium: the
+        // offset stayed at 109px while the navbar was 69px, leaving a 40px
+        // gap between navbar and banner. Border-box fires on every frame of
+        // the padding transition, so the banner follows it smoothly.
+        new ResizeObserver(applyNavbarOffset).observe(navbarEl, { box: 'border-box' });
       } else {
-        var resizeTimer;
-        function debouncedApply() {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(applyNavbarOffset, 100);
-        }
-        window.addEventListener('resize', debouncedApply);
-        window.addEventListener('orientationchange', debouncedApply);
+        // Very old browsers without ResizeObserver: re-measure on resize,
+        // and shortly after scrolling (once the 0.5s padding transition
+        // has finished).
+        var timer;
+        var remeasure = function (delay) {
+          clearTimeout(timer);
+          timer = setTimeout(applyNavbarOffset, delay);
+        };
+        window.addEventListener('resize', function () { remeasure(100); });
+        window.addEventListener('orientationchange', function () { remeasure(100); });
+        window.addEventListener('scroll', function () { remeasure(600); }, { passive: true });
       }
     })();
   </script>
