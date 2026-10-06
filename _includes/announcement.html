@@ -30,7 +30,6 @@
     reasonable trade for an announcement message, which is short by nature.
   {%- endcomment -%}
   {% assign dismiss_key = a.message | append: "|" | append: style | escape %}
-  <div class="site-announcement-wrapper">
   <div
     id="site-announcement"
     class="site-announcement site-announcement-{{ style }}"
@@ -46,7 +45,6 @@
       </span>
       <button type="button" class="site-announcement-close" aria-label="Dismiss this announcement" onclick="dismissSiteAnnouncement()">&times;</button>
     </div>
-  </div>
   </div>
   <script>
     (function () {
@@ -67,76 +65,25 @@
       };
 
       // Sets --site-announcement-offset (read by .site-announcement's
-      // margin-top AND top in custom-styles.css -- see that file for why
-      // both need to track the same real number) to the navbar's REAL,
-      // currently rendered height, measured directly, rather than
-      // assuming a fixed number is always right. The navbar is
-      // .navbar-custom (nav.html); getBoundingClientRect().height
-      // reflects its true on-screen size, including any wrapping of the
-      // nav items onto a second line at narrower widths, font-loading
-      // differences, or browser zoom -- none of which a single hardcoded
-      // CSS value can account for.
+      // margin-top AND top in custom-styles.css) to the navbar's real,
+      // currently rendered height, so the banner starts directly below the
+      // fixed navbar and stays directly below it while scrolling. Measured
+      // from the .navbar-custom element itself rather than hardcoded,
+      // because its height depends on things like zoom, font loading and
+      // the nav items wrapping onto a second line at narrow widths.
       //
-      // The navbar does NOT have one single height, full stop:
-      // assets/js/beautifuljekyll.js adds a top-nav-short class to it
-      // once the page is scrolled more than 50px (removing it again near
-      // the top), and that class's own rule (beautifuljekyll.css) reduces
-      // its padding, over a 0.5s CSS transition on padding declared on
-      // .navbar-custom itself. So the navbar is genuinely taller near the
-      // top of the page and shorter once scrolled -- exactly the two
-      // states this banner's own sticky positioning needs to track,
-      // since the banner only visually matters once scrolling is
-      // involved. A one-time measurement at page load, or one driven
-      // only by ResizeObserver/window-resize, can only ever reliably
-      // catch ONE of these two states (confirmed the problem this
-      // caused: a real screenshot showed the banner's offset stuck at
-      // the TALL, pre-scroll measurement, so once actually scrolled --
-      // when the navbar had shrunk to its real, shorter height -- the
-      // banner sat too far down, overlapping the now-shorter navbar
-      // instead of sitting below it).
-      //
-      // UPDATE -- this was the wrong diagnosis. Checked directly (not
-      // guessed): every CSS rule tied to the navbar's "short" state
-      // (top-nav-short/top-nav-short-permanent, beautifuljekyll.css)
-      // only ever touches .navbar-brand-logo and .avatar-container --
-      // neither of which this site actually uses (it has a plain text
-      // brand, no logo image or avatar), so that shrink-on-scroll
-      // mechanism, while real in the theme's code, has ZERO effect on
-      // THIS site's navbar height. It was never the cause here.
-      //
-      // The REAL bug, confirmed with live numbers from the actual page
-      // (not simulated): the banner was sticking at top: -11px while the
-      // navbar's real height was 69px. -11 is exactly 69 minus 80 (5rem,
-      // the CSS fallback value in `var(--site-announcement-offset, 5rem)`).
-      // That is not a coincidence: it means the browser locked in the
-      // STUCK position using the 5rem fallback at the moment this element
-      // first became sticky-eligible -- which happens as soon as the
-      // element is parsed, before this script has had a chance to run and
-      // correct the variable -- and never recomputed it afterward, even
-      // though the variable itself DID update correctly (confirmed
-      // separately: DevTools' Computed panel showed the right 69px value
-      // stored on the element). A position: sticky element's effective
-      // stuck offset, once established, does not reliably re-derive from
-      // a later var() change on its own.
-      //
-      // Fixed by forcing the browser to drop whatever stuck state it has
-      // cached and recompute from scratch, every time the real value is
-      // set: toggle position away from sticky and immediately back. This
-      // doesn't depend on understanding exactly why the original value
-      // stuck in any particular browser -- it works regardless of the
-      // precise mechanism, since changing `position` itself (not just a
-      // variable it references) cannot be served from a stale cached
-      // state the way `top: var(...)` alone apparently can be.
+      // Re-measured whenever that element's size changes (ResizeObserver,
+      // below; a debounced resize listener is the fallback for old
+      // browsers). Verified in a real Chromium that changing this variable
+      // after the banner is already stuck moves it immediately, so no
+      // "force the browser to recompute" workaround is needed.
       function applyNavbarOffset() {
         var navbar = document.querySelector('.navbar-custom');
-        if (!navbar) return; // no navbar on this page for some reason -- CSS fallback (5rem) applies
+        if (!navbar) return; // CSS fallback (5rem) applies
         var height = navbar.getBoundingClientRect().height;
-        if (height <= 0) return;
-        document.documentElement.style.setProperty('--site-announcement-offset', height + 'px');
-        el.style.position = 'static';
-        // eslint-disable-next-line no-unused-expressions
-        el.offsetHeight; // reading a layout property forces the browser to apply the 'static' change before the next line, rather than batching both together and never truly dropping the old sticky state
-        el.style.position = '';
+        if (height > 0) {
+          document.documentElement.style.setProperty('--site-announcement-offset', height + 'px');
+        }
       }
 
       applyNavbarOffset();

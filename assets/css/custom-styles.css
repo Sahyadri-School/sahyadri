@@ -2907,22 +2907,15 @@ html {
    since the light-mode backgrounds would glare against the dark-mode
    page background, #1a1a1a), also independently checked against AA.
    ============================================================ */
-/* Deliberately NOT a flex/grid container itself: body (beautifuljekyll.css)
-   is `display: flex; flex-direction: column`, and .site-announcement is one
-   of its direct children, which makes position: sticky on that element a
-   sticky FLEX ITEM with its own margin-top, among other flex siblings --
-   a combination with a real, documented history of cross-browser
-   inconsistency (e.g. Firefox Bugzilla 1488080: "a div partially hidden
-   behind a sticky div is scrollable... because a previous sibling element
-   takes up space in the flex container", traced to how the sticky
-   calculation and a flex-resolved margin interact). This wrapper gives the
-   sticky element its own plain block containing block instead, sidestepping
-   that specific intersection entirely regardless of what body's own
-   display mode is or ever becomes. */
-.site-announcement-wrapper {
-    width: 100%;
-}
-
+/* No wrapper element around the banner, on purpose. position: sticky only
+   lets an element travel inside its parent's box. An earlier version wrapped
+   the banner in a div that was exactly as tall as the banner itself (plus its
+   margin-top), which left the sticky banner zero room to move: it never
+   stuck, it just scrolled away with that wrapper. Reproduced in a real
+   Chromium: with the wrapper, the banner sat at top = 69 - scrollY (e.g. -11
+   at scrollY 80); without it, it stays at top = 69 at every scroll position.
+   As a direct child of body (display: flex, column; min-height: 100vh), its
+   parent is as tall as the whole page, so it can stay stuck all the way down. */
 .site-announcement {
     width: 100%;
     /* position: sticky, not fixed or relative: this needs to (a) sit right
@@ -2990,6 +2983,24 @@ html {
     font-size: 0.95rem;
     line-height: 1.4;
     position: relative;
+}
+
+/* The theme rule near the top of this file, `body, p, div { color: #404040;
+   font-weight: 300 !important; ... }`, matches every <div> directly. A rule
+   that matches an element directly always beats a colour merely inherited
+   from its parent, so .site-announcement-inner (a div) was rendering dark
+   grey (#404040) text on the green banner, no matter what colour
+   .site-announcement-info (its parent) set -- about 2:1 contrast, which is
+   why the text looked faint. Confirmed by reading the computed colour in a
+   real Chromium. `color: inherit` here (specificity 0,1,0 beats the bare
+   `div` selector's 0,0,1) makes it take the banner's own colour, and the
+   weight is raised from the theme's very thin 300 to 500 so small text
+   stays legible on a coloured strip (!important is needed because the
+   theme's 300 is itself !important). The span and everything else inside
+   inherit both from here. */
+.site-announcement-inner {
+    color: inherit;
+    font-weight: 500 !important;
 }
 
 .site-announcement-text {
