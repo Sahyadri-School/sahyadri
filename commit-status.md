@@ -4,16 +4,19 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 11:20 IST
+Last updated: 2026-10-06 11:37 IST
 
 ------------------------------------------------------------
 
-4 of the last 100 shown below did NOT go live cleanly -- see below.
+3 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
 Tuesday, 06 October 2026
 ------------------------
+  11:32  Sahyadri-archives: Fix the actual, confirmed bug: sticky's stuck position never picked up the corrected offset
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37421587414
   11:15  Sahyadri-archives: Fix the actual root cause: the navbar genuinely shrinks on scroll, with no single height
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37420115020
@@ -332,9 +335,6 @@ Tuesday, 29 September 2026
   19:14  Sahyadri-archives: Site icon: add iPhone/iPad home-screen icon
           Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577351680
-  19:14  Sahyadri-archives: Site icon: add full-bleed maskable app icon for Android
-          Build unknown -- the site was NOT updated with this change.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577350214
 
 ------------------------------------------------------------
 
