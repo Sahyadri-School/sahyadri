@@ -4,7 +4,7 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 10:42 IST
+Last updated: 2026-10-06 10:53 IST
 
 ------------------------------------------------------------
 
@@ -14,6 +14,12 @@ Last updated: 2026-10-06 10:42 IST
 
 Tuesday, 06 October 2026
 ------------------------
+  10:49  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37417947374
+  10:46  Sahyadri-archives: Fix a real contrast failure on the announcement banner's close button
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37417700482
   10:36  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37416876974
@@ -329,12 +335,6 @@ Tuesday, 29 September 2026
   18:51  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36574489790
-  18:48  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36574157657
-  18:27  Sahyadri-archives: CMS-GUIDE: how to turn maintenance mode on/off from the CMS
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36571682665
 
 ------------------------------------------------------------
 
