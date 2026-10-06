@@ -4,7 +4,7 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 17:16 IST
+Last updated: 2026-10-06 17:30 IST
 
 ------------------------------------------------------------
 
@@ -14,6 +14,18 @@ Last updated: 2026-10-06 17:16 IST
 
 Tuesday, 06 October 2026
 ------------------------
+  17:27  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37459864993
+  17:27  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build unknown -- the site was NOT updated with this change.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37459858126
+  17:27  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37459847987
+  17:24  Sahyadri-archives: Fix the announcement banner for real: it never stuck, and its text was dark grey
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37459510623
   17:10  Sahyadri-archives: Add videos entry via Pages CMS: _videos/2026-10-06-musical-eve.md
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37457949483
@@ -323,18 +335,6 @@ Tuesday, 29 September 2026
   19:14  Sahyadri-archives: Site icon: link the manifest and iPhone icon; declare icon sizes
           Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577369723
-  19:14  Sahyadri-archives: Site icon: rewrite web app manifest with real icons (192, 512, maskable), start_url and theme colour
-          Build unknown -- the site was NOT updated with this change.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577367208
-  19:14  Sahyadri-archives: Site icon: replace root favicon.ico with a real multi-size ICO
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577363801
-  19:14  Sahyadri-archives: Site icon: replace PNG-named-.ico with a real multi-size ICO
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577361256
-  19:14  Sahyadri-archives: Site icon: replace stretched 153x63 logo with a proper 48px tab icon
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577359006
 
 ------------------------------------------------------------
 
