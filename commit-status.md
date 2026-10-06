@@ -4,7 +4,7 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 10:55 IST
+Last updated: 2026-10-06 11:02 IST
 
 ------------------------------------------------------------
 
@@ -14,6 +14,9 @@ Last updated: 2026-10-06 10:55 IST
 
 Tuesday, 06 October 2026
 ------------------------
+  10:57  Sahyadri-archives: Keep the announcement banner right below the navbar while scrolling
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37418632905
   10:49  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37417947374
@@ -332,9 +335,6 @@ Tuesday, 29 September 2026
   19:14  Sahyadri-archives: Site icon: add editable SVG master (redrawn mountain-and-birds mark from the school logo)
           Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577340847
-  18:51  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36574489790
 
 ------------------------------------------------------------
 
