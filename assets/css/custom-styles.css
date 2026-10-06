@@ -2973,16 +2973,31 @@ html {
     margin-top: var(--site-announcement-offset, 5rem);
 }
 
+/* Look and feel, borrowed from the rest of the site: a centred message (the
+   site centres its titles and content column), a pill-shaped link (the
+   site's buttons are pills), a round close button (like the round dark-mode
+   toggle in the navbar) and a soft shadow (like the site's cards), so the
+   banner reads as part of the site rather than a bare strip. Positioning
+   (sticky, top, margin-top, z-index) is deliberately untouched, above. */
 .site-announcement-inner {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 0.7em 2.5em 0.7em 1.2em; /* extra right padding so text never sits under the close button */
+    /* Equal padding on both sides so a centred message is really centred on
+       the page; the close button sits in the right-hand padding. */
+    padding: 0.65em 3.4em;
     display: flex;
     align-items: center;
-    gap: 0.75em;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.35em 0.9em;
     font-size: 0.95rem;
-    line-height: 1.4;
-    position: relative;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    text-align: center;
+    /* No position: relative here on purpose: it lets the close button below
+       anchor to the full-width banner (which is sticky, so already a
+       positioned ancestor) and sit at the viewport's right edge, lined up
+       with the navbar's round toggle, instead of inside this 1100px box. */
 }
 
 /* The theme rule near the top of this file, `body, p, div { color: #404040;
@@ -2990,122 +3005,158 @@ html {
    that matches an element directly always beats a colour merely inherited
    from its parent, so .site-announcement-inner (a div) was rendering dark
    grey (#404040) text on the green banner, no matter what colour
-   .site-announcement-info (its parent) set -- about 2:1 contrast, which is
-   why the text looked faint. Confirmed by reading the computed colour in a
-   real Chromium. `color: inherit` here (specificity 0,1,0 beats the bare
-   `div` selector's 0,0,1) makes it take the banner's own colour, and the
-   weight is raised from the theme's very thin 300 to 500 so small text
-   stays legible on a coloured strip (!important is needed because the
-   theme's 300 is itself !important). The span and everything else inside
-   inherit both from here. */
+   .site-announcement-info (its parent) set -- about 2:1 contrast. Confirmed
+   by reading the computed colour in a real Chromium. `color: inherit` here
+   (specificity 0,1,0 beats the bare `div` selector's 0,0,1) makes it take
+   the banner's own colour, and the weight is raised from the theme's very
+   thin 300 to 500 so small text stays legible on a coloured strip
+   (!important is needed because the theme's 300 is itself !important). The
+   span and everything else inside inherit both from here. */
 .site-announcement-inner {
     color: inherit;
     font-weight: 500 !important;
 }
 
 .site-announcement-text {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
 }
 
-.site-announcement-link {
-    margin-left: 0.5em;
+/* Lifts the banner off the page content that scrolls underneath it. */
+.site-announcement {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14);
+}
+.dark-mode .site-announcement {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
+}
+
+/* The link is a pill filled with the banner's text colour and lettered in
+   the banner's own background colour (colours swapped), so its contrast
+   equals the message's. Selectors are two classes deep (0,2,0) so the
+   theme's own `a:hover` (0,1,1) cannot override colour or underline. */
+.site-announcement .site-announcement-link {
+    display: inline-block;
+    margin-left: 0.6em;
+    padding: 0.1em 0.95em;
+    border-radius: 999px;
+    background-color: var(--sa-pill-bg);
+    color: var(--sa-pill-fg);
+    font-size: 0.88em;
     font-weight: 600;
-    text-decoration: underline;
+    letter-spacing: 0.04em;
+    text-decoration: none;
     white-space: nowrap;
+    transition: box-shadow 0.15s ease;
+}
+.site-announcement .site-announcement-link:hover,
+.site-announcement .site-announcement-link:focus-visible {
+    background-color: var(--sa-pill-bg);
+    color: var(--sa-pill-fg);
+    text-decoration: none;
+    box-shadow: 0 0 0 2px var(--sa-ring);
 }
 
-.site-announcement-close {
+/* Round close button, like the round dark-mode toggle in the navbar. Its
+   glyph uses the banner's own text colour at full strength (no opacity,
+   which would blend it toward the background and lower its contrast); the
+   hover/focus feedback is a background tint behind it. */
+.site-announcement .site-announcement-close {
     position: absolute;
     top: 50%;
-    right: 0.6em;
+    right: 1rem;
     transform: translateY(-50%);
-    background: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0 0 0.12em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
-    font-size: 1.4rem;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--sa-ring);
+    color: var(--sa-fg);
+    font-size: 1.25rem;
     line-height: 1;
     cursor: pointer;
-    padding: 0.2em 0.4em;
-    border-radius: 4px;
-    /* No opacity here: it would blend this button's color toward the
-       background behind it, silently lowering its real contrast below
-       what the color-pair checks below actually verify (confirmed: the
-       0.75 this used to have dropped "info" in light mode -- the default,
-       most commonly used style -- to 3.35:1, a genuine WCAG AA failure,
-       even though the plain text/background pair alone passes at 4.60:1).
-       Hover feedback below uses a background tint instead, which doesn't
-       touch this element's own text contrast at all. */
+    transition: background-color 0.15s ease;
 }
-.site-announcement-close:hover,
-.site-announcement-close:focus-visible {
-    background-color: rgba(0, 0, 0, 0.12);
-}
-.dark-mode .site-announcement-close:hover,
-.dark-mode .site-announcement-close:focus-visible {
-    /* 0.10, not the 0.15 originally tried here: checked all six style/mode
-       combinations with the hover tint applied and found "important dark"
-       dropped to 4.48:1 at 0.15, just under WCAG AA's 4.5:1 -- re-verified
-       at 0.10 that all six pass comfortably (lowest: 5.12:1). */
-    background-color: rgba(255, 255, 255, 0.10);
+.site-announcement .site-announcement-close:hover,
+.site-announcement .site-announcement-close:focus-visible {
+    background-color: var(--sa-hover);
 }
 
-/* info: contrast 4.60:1 (light), 7.54:1 (dark) -- both pass AA */
+/* Colours. Each style sets the banner colours plus the variables used
+   above: --sa-fg (text and close glyph), --sa-pill-bg / --sa-pill-fg (the
+   link pill), --sa-ring (outline of the close button and the pill's hover
+   ring) and --sa-hover (tint behind the close button on hover). Every
+   text/background pair is measured in a real browser, in all six
+   style/mode combinations, before shipping. */
 .site-announcement-info {
+    --sa-fg: #eff2ec;
+    --sa-pill-bg: #eff2ec;
+    --sa-pill-fg: #3e5144;
+    --sa-ring: rgba(239, 242, 236, 0.55);
+    --sa-hover: rgba(0, 0, 0, 0.12);
     background-color: #587362;
     color: #eff2ec;
 }
-.site-announcement-info .site-announcement-link,
-.site-announcement-info .site-announcement-close {
-    color: #eff2ec;
-}
 .dark-mode .site-announcement-info {
+    --sa-fg: #eff2ec;
+    --sa-pill-bg: #eff2ec;
+    --sa-pill-fg: #3e5144;
+    --sa-ring: rgba(239, 242, 236, 0.5);
+    --sa-hover: rgba(255, 255, 255, 0.10);
     background-color: #3e5144;
     color: #eff2ec;
 }
-.dark-mode .site-announcement-info .site-announcement-link,
-.dark-mode .site-announcement-info .site-announcement-close {
-    color: #eff2ec;
-}
 
-/* important: contrast 9.09:1 (light), 6.71:1 (dark) */
 .site-announcement-important {
+    --sa-fg: #3e3830;
+    --sa-pill-bg: #3e3830;
+    --sa-pill-fg: #f4e3b2;
+    --sa-ring: rgba(62, 56, 48, 0.45);
+    --sa-hover: rgba(0, 0, 0, 0.12);
     background-color: #f4e3b2;
-    color: #3E3830;
-}
-.site-announcement-important .site-announcement-link,
-.site-announcement-important .site-announcement-close {
-    color: #3E3830;
+    color: #3e3830;
 }
 .dark-mode .site-announcement-important {
+    --sa-fg: #f4e3b2;
+    --sa-pill-bg: #f4e3b2;
+    --sa-pill-fg: #5c4a1f;
+    --sa-ring: rgba(244, 227, 178, 0.5);
+    --sa-hover: rgba(255, 255, 255, 0.10);
     background-color: #5c4a1f;
     color: #f4e3b2;
 }
-.dark-mode .site-announcement-important .site-announcement-link,
-.dark-mode .site-announcement-important .site-announcement-close {
-    color: #f4e3b2;
-}
 
-/* urgent: contrast 6.77:1 (light), 9.04:1 (dark) */
 .site-announcement-urgent {
+    --sa-fg: #ffffff;
+    --sa-pill-bg: #ffffff;
+    --sa-pill-fg: #9c3b3b;
+    --sa-ring: rgba(255, 255, 255, 0.55);
+    --sa-hover: rgba(0, 0, 0, 0.12);
     background-color: #9c3b3b;
     color: #ffffff;
 }
-.site-announcement-urgent .site-announcement-link,
-.site-announcement-urgent .site-announcement-close {
-    color: #ffffff;
-}
 .dark-mode .site-announcement-urgent {
+    --sa-fg: #f6d9d9;
+    --sa-pill-bg: #f6d9d9;
+    --sa-pill-fg: #5e2424;
+    --sa-ring: rgba(246, 217, 217, 0.5);
+    --sa-hover: rgba(255, 255, 255, 0.10);
     background-color: #5e2424;
-    color: #f6d9d9;
-}
-.dark-mode .site-announcement-urgent .site-announcement-link,
-.dark-mode .site-announcement-urgent .site-announcement-close {
     color: #f6d9d9;
 }
 
 @media (max-width: 600px) {
     .site-announcement-inner {
         font-size: 0.88rem;
-        padding: 0.6em 2.2em 0.6em 1em;
+        padding: 0.6em 3rem 0.6em 1rem;
+    }
+    .site-announcement .site-announcement-close {
+        width: 1.7rem;
+        height: 1.7rem;
+        right: 0.75rem;
+        font-size: 1.1rem;
     }
 }
-
