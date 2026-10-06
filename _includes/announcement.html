@@ -95,37 +95,51 @@
       // banner sat too far down, overlapping the now-shorter navbar
       // instead of sitting below it).
       //
-      // Fixed by listening for the exact same scroll event that drives
-      // the shrink, and re-measuring after the transition has had time
-      // to finish (shrinkTransitionMs below matches the 0.5s transition
-      // duration in beautifuljekyll.css, plus a small margin) -- so this
-      // always measures the navbar's real, settled height for whichever
-      // state it's actually in, rather than guessing at one state or
-      // racing the transition.
-      var shrinkTransitionMs = 550; // beautifuljekyll.css's transition: padding .5s, plus ~50ms margin
-      var scrollMeasureTimer;
-
+      // UPDATE -- this was the wrong diagnosis. Checked directly (not
+      // guessed): every CSS rule tied to the navbar's "short" state
+      // (top-nav-short/top-nav-short-permanent, beautifuljekyll.css)
+      // only ever touches .navbar-brand-logo and .avatar-container --
+      // neither of which this site actually uses (it has a plain text
+      // brand, no logo image or avatar), so that shrink-on-scroll
+      // mechanism, while real in the theme's code, has ZERO effect on
+      // THIS site's navbar height. It was never the cause here.
+      //
+      // The REAL bug, confirmed with live numbers from the actual page
+      // (not simulated): the banner was sticking at top: -11px while the
+      // navbar's real height was 69px. -11 is exactly 69 minus 80 (5rem,
+      // the CSS fallback value in `var(--site-announcement-offset, 5rem)`).
+      // That is not a coincidence: it means the browser locked in the
+      // STUCK position using the 5rem fallback at the moment this element
+      // first became sticky-eligible -- which happens as soon as the
+      // element is parsed, before this script has had a chance to run and
+      // correct the variable -- and never recomputed it afterward, even
+      // though the variable itself DID update correctly (confirmed
+      // separately: DevTools' Computed panel showed the right 69px value
+      // stored on the element). A position: sticky element's effective
+      // stuck offset, once established, does not reliably re-derive from
+      // a later var() change on its own.
+      //
+      // Fixed by forcing the browser to drop whatever stuck state it has
+      // cached and recompute from scratch, every time the real value is
+      // set: toggle position away from sticky and immediately back. This
+      // doesn't depend on understanding exactly why the original value
+      // stuck in any particular browser -- it works regardless of the
+      // precise mechanism, since changing `position` itself (not just a
+      // variable it references) cannot be served from a stale cached
+      // state the way `top: var(...)` alone apparently can be.
       function applyNavbarOffset() {
         var navbar = document.querySelector('.navbar-custom');
         if (!navbar) return; // no navbar on this page for some reason -- CSS fallback (5rem) applies
         var height = navbar.getBoundingClientRect().height;
-        if (height > 0) {
-          document.documentElement.style.setProperty('--site-announcement-offset', height + 'px');
-        }
+        if (height <= 0) return;
+        document.documentElement.style.setProperty('--site-announcement-offset', height + 'px');
+        el.style.position = 'static';
+        // eslint-disable-next-line no-unused-expressions
+        el.offsetHeight; // reading a layout property forces the browser to apply the 'static' change before the next line, rather than batching both together and never truly dropping the old sticky state
+        el.style.position = '';
       }
 
       applyNavbarOffset();
-
-      window.addEventListener('scroll', function () {
-        // Measure once right away (catches browsers/cases where the
-        // class toggles with no transition at all) and once again after
-        // the transition should have finished (catches the normal case,
-        // where measuring immediately would still capture the navbar
-        // mid-shrink or mid-grow).
-        applyNavbarOffset();
-        clearTimeout(scrollMeasureTimer);
-        scrollMeasureTimer = setTimeout(applyNavbarOffset, shrinkTransitionMs);
-      }, { passive: true });
 
       if (typeof ResizeObserver !== 'undefined') {
         var navbarEl = document.querySelector('.navbar-custom');
