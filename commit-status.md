@@ -4,18 +4,21 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 17:43 IST
+Last updated: 2026-10-06 17:46 IST
 
 ------------------------------------------------------------
 
-3 of the last 100 shown below did NOT go live cleanly -- see below.
+2 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
 Tuesday, 06 October 2026
 ------------------------
+  17:44  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37461797431
   17:42  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, but deploy still running -- this change may not be live yet.
+          Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37461610944
   17:40  Sahyadri-archives: Announcement banner: show it again on every page load
           Build OK, deployed -- this change is live.
@@ -329,12 +332,6 @@ Wednesday, 30 September 2026
   09:49  Sahyadri-archives: Use the actual school logo for the site icons
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36668301616
-
-Tuesday, 29 September 2026
---------------------------
-  19:19  Sahyadri-archives: Rebuild the final state (earlier builds for the icon changes were cancelled by overlapping pushes; no file changes)
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577931159
 
 ------------------------------------------------------------
 
