@@ -63,6 +63,51 @@
         el.style.display = 'none';
         try { sessionStorage.setItem(KEY, key); } catch (e) { /* ignore */ }
       };
+
+      // Sets --site-announcement-offset (read by .site-announcement's
+      // margin-top in custom-styles.css) to the navbar's REAL, currently
+      // rendered height, measured directly, rather than assuming a fixed
+      // number is always right. The navbar is .navbar-custom (nav.html);
+      // getBoundingClientRect().height reflects its true on-screen size,
+      // including any wrapping of the nav items onto a second line at
+      // narrower widths, font-loading differences, or browser zoom --
+      // none of which a single hardcoded CSS value can account for.
+      //
+      // Re-measures on resize (debounced) and orientation change, since
+      // that height can genuinely change after the page has already
+      // loaded -- e.g. rotating a phone, or a window resize crossing the
+      // breakpoint where the nav items wrap. Uses ResizeObserver directly
+      // on the navbar itself when available (fires for ANY size change to
+      // that element specifically, including ones a plain window resize
+      // listener wouldn't catch, such as the nav wrapping due to a
+      // dynamic content change rather than the viewport itself resizing);
+      // falls back to a debounced window resize/orientationchange listener
+      // in older browsers without ResizeObserver.
+      function applyNavbarOffset() {
+        var navbar = document.querySelector('.navbar-custom');
+        if (!navbar) return; // no navbar on this page for some reason -- CSS fallback (5rem) applies
+        var height = navbar.getBoundingClientRect().height;
+        if (height > 0) {
+          document.documentElement.style.setProperty('--site-announcement-offset', height + 'px');
+        }
+      }
+
+      applyNavbarOffset();
+
+      if (typeof ResizeObserver !== 'undefined') {
+        var navbarEl = document.querySelector('.navbar-custom');
+        if (navbarEl) {
+          new ResizeObserver(applyNavbarOffset).observe(navbarEl);
+        }
+      } else {
+        var resizeTimer;
+        function debouncedApply() {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(applyNavbarOffset, 100);
+        }
+        window.addEventListener('resize', debouncedApply);
+        window.addEventListener('orientationchange', debouncedApply);
+      }
     })();
   </script>
 {% endif %}

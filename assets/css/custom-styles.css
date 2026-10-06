@@ -2903,19 +2903,25 @@ html {
        which takes it out of normal document flow entirely -- it doesn't
        push following content down, it just floats on top of it. Every
        other page avoids this by having its own first element
-       (.intro-header, in beautifuljekyll.css) carry a 5rem top margin for
+       (.intro-header, in beautifuljekyll.css) carry a top margin for
        exactly this reason. This banner, included right after the nav in
        base.html, is the first thing on the page that ISN'T .intro-header,
        so without its own matching offset it rendered at the very top of
-       the page and was hidden underneath the navbar -- confirmed directly
-       from a real screenshot (DevTools showed the element present, in the
-       DOM, with a real non-zero size, just visually covered). Reusing the
-       exact same 5rem value .intro-header uses (also already reused by
-       .toc-sidebar and the Profiles sidebar elsewhere in this file) rather
-       than guessing a new number, so this stays correct if the navbar's
-       own height is ever intentionally changed and that reference value
-       is updated to match. */
-    margin-top: 5rem;
+       the page and was hidden underneath the navbar.
+
+       A fixed 5rem (.intro-header's own value, confirmed from
+       beautifuljekyll.css) was tried first here and real-world testing
+       showed it was unreliable: the navbar's true rendered height isn't
+       actually constant -- it depends on things like whether the nav
+       items wrap to a second line, font loading, and zoom/DPI, none of
+       which a single hardcoded number can account for. --site-announcement-offset
+       is set by the script at the bottom of announcement.html, which
+       measures the real navbar element's actual height on each page load
+       (and again on resize/orientation change) and writes that exact
+       number here -- so this always matches reality instead of assuming
+       it. The 5rem fallback is only for the brief instant before that
+       script runs, or the rare case JavaScript is unavailable. */
+    margin-top: var(--site-announcement-offset, 5rem);
 }
 
 .site-announcement-inner {
