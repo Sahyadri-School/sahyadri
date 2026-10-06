@@ -4,13 +4,25 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-05 19:00 IST
+Last updated: 2026-10-06 10:38 IST
 
 ------------------------------------------------------------
 
-5 of the last 100 shown below did NOT go live cleanly -- see below.
+4 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
+
+Tuesday, 06 October 2026
+------------------------
+  10:36  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37416876974
+  10:36  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37416868559
+  10:32  Sahyadri-archives: Make the announcement banner's top offset dynamic, measured from the real navbar
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37416564718
 
 Monday, 05 October 2026
 -----------------------
@@ -323,15 +335,6 @@ Tuesday, 29 September 2026
   18:27  Sahyadri-archives: CMS-GUIDE: how to turn maintenance mode on/off from the CMS
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36571682665
-  18:27  Sahyadri-archives: README: document the new maintenance switch location
-          Build unknown -- the site was NOT updated with this change.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36571680592
-  18:27  Sahyadri-archives: CMS: add 'Site status' entry with a maintenance-mode toggle
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36571677802
-  18:27  Sahyadri-archives: _config.yml: remove maintenance-mode (moved to _data/maintenance.yml); keep the bypass key
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36571674656
 
 ------------------------------------------------------------
 
