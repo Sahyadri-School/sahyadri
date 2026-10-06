@@ -2387,13 +2387,25 @@ mark.year-search-highlight {
 /* 100vw can be slightly wider than the visible viewport when a vertical
    scrollbar is present, which the #comments-section full-bleed below
    would otherwise turn into an unwanted page-level horizontal scrollbar.
-   Scoped to html only (not body) -- setting overflow-x on body turns it
-   into a scroll container in its own right, which silently breaks
-   position: sticky for descendants like .toc-sidebar (the sticky
-   Editions/table-of-contents card). html alone is enough to suppress the
-   scrollbar without that side effect. */
+
+   overflow-x: CLIP, not HIDDEN: scoping this to html instead of body (the
+   original choice here) was meant to avoid breaking position: sticky for
+   descendants like .toc-sidebar and .site-announcement, reasoning that
+   only BODY becoming a scroll container was the risk -- but html having
+   any overflow-x value other than visible/clip ALSO makes html itself a
+   scroll container, which breaks sticky the exact same way, just one
+   level higher up. Confirmed directly: this is almost certainly why
+   .toc-sidebar's own sticky positioning (a pre-existing feature, not
+   something changed here) likely hasn't actually stayed stuck while
+   scrolling either -- the same root cause, on the same html rule, from
+   before this file was touched for the announcement banner. `clip`
+   suppresses the same unwanted horizontal scrollbar without creating a
+   scroll container at all (it blocks programmatic scrolling only, not
+   layout-reflow scrolling), so position: sticky keeps working normally
+   for every descendant. Supported in every browser since 2021 (Chrome/
+   Edge 90+, Firefox 81+, Safari 16+) -- checked before relying on it. */
 html {
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
 #comments-section {
