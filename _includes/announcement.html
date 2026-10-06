@@ -8,32 +8,18 @@
      Turning it on takes effect after the next site build (usually
      1-2 minutes after saving), same as the maintenance-mode switch.
 
-     Dismissal: a visitor can close it for their browser session (not
-     permanently -- it reappears on their next visit, and immediately for
-     everyone else). The dismissal is keyed to a short hash of the message
-     text itself, not just a plain "seen" flag, so editing the message (or
-     turning it off then on again with new text) always shows the new
-     version even to someone who dismissed an earlier one -- only dismissing
-     the EXACT current text hides it. -->
+     Dismissal: a visitor can close it with the x button, but that only
+     hides it on the page they are looking at. Nothing is remembered: it
+     comes back on every page load (opening another page, reloading, a new
+     visit), and also when the browser's Back/Forward buttons restore a page
+     from its cache with the banner still closed (see the pageshow handler
+     in the script below). -->
 {% assign a = site.data.announcement %}
 {% if a.enabled and a.message and a.message != "" %}
   {% assign style = a.style | default: "info" %}
-  {%- comment -%}
-    The dismissal key is the message and style text itself (escaped for
-    safe use in an HTML attribute), not a true hash: plain Jekyll/Liquid,
-    as used by GitHub Pages, has no hashing filter built in (confirmed:
-    this is a still-open Jekyll feature request, jekyll/jekyll#5967), and
-    GitHub Pages' fixed plugin allowlist wouldn't permit installing one of
-    the third-party gems that add it. Using the text itself has no
-    collision risk at all, unlike a character count or similar cheap
-    stand-in, at the cost of a slightly longer HTML attribute -- a
-    reasonable trade for an announcement message, which is short by nature.
-  {%- endcomment -%}
-  {% assign dismiss_key = a.message | append: "|" | append: style | escape %}
   <div
     id="site-announcement"
     class="site-announcement site-announcement-{{ style }}"
-    data-announcement-key="{{ dismiss_key }}"
     role="status"
   >
     <div class="site-announcement-inner">
@@ -48,21 +34,23 @@
   </div>
   <script>
     (function () {
-      var KEY = 'sahyadri-announcement-dismissed';
       var el = document.getElementById('site-announcement');
       if (!el) return;
-      var key = el.getAttribute('data-announcement-key');
-      try {
-        if (sessionStorage.getItem(KEY) === key) {
-          el.style.display = 'none';
-        }
-      } catch (e) {
-        // storage unavailable (private browsing, blocked storage, etc.) -- the banner just always shows; fine either way
-      }
+
+      // Closing only hides the banner on the current page: nothing is
+      // written to cookies or browser storage, so every new page load shows
+      // it again (including simply opening another page of the site).
       window.dismissSiteAnnouncement = function () {
         el.style.display = 'none';
-        try { sessionStorage.setItem(KEY, key); } catch (e) { /* ignore */ }
       };
+
+      // The browser's Back/Forward buttons can restore a page from its
+      // back/forward cache exactly as it was left -- including a closed
+      // banner -- without loading it again. event.persisted is true only in
+      // that case; show the banner again so it still comes back every time.
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted) el.style.display = '';
+      });
 
       // Sets --site-announcement-offset (read by .site-announcement's
       // margin-top AND top in custom-styles.css) to the navbar's real,

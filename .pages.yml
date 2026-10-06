@@ -414,9 +414,9 @@ content:
 
   # Shows a banner on every page (above the content, below the nav -- see
   # _includes/announcement.html, included from _layouts/base.html) when
-  # enabled. A visitor can close it for their visit, but it reappears for
-  # everyone else and comes back for that visitor too if the message is
-  # ever changed. Same type: file pattern as Site status above.
+  # enabled. A visitor can close it, but only for the page they are on: it
+  # comes back on every page load, including just opening another page.
+  # Same type: file pattern as Site status above.
   - name: announcement
     label: Announcement
     type: file
