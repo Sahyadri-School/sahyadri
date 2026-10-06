@@ -4,16 +4,25 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 17:35 IST
+Last updated: 2026-10-06 17:43 IST
 
 ------------------------------------------------------------
 
-2 of the last 100 shown below did NOT go live cleanly -- see below.
+3 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
 Tuesday, 06 October 2026
 ------------------------
+  17:42  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build OK, but deploy still running -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37461610944
+  17:40  Sahyadri-archives: Announcement banner: show it again on every page load
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37461346189
+  17:36  Sahyadri-archives: Keep the announcement banner flush against the navbar while it changes height
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37460913249
   17:27  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37459864993
@@ -326,15 +335,6 @@ Tuesday, 29 September 2026
   19:19  Sahyadri-archives: Rebuild the final state (earlier builds for the icon changes were cancelled by overlapping pushes; no file changes)
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577931159
-  19:15  Sahyadri-archives: Site icon: add 32px browser-tab icon
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577526295
-  19:14  Sahyadri-archives: README: note where the icons live and how they were made
-          Build OK; deploy was stopped early because a newer change was saved right after it.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577372150
-  19:14  Sahyadri-archives: Site icon: link the manifest and iPhone icon; declare icon sizes
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577369723
 
 ------------------------------------------------------------
 
