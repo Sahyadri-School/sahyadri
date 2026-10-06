@@ -4,16 +4,19 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 15:55 IST
+Last updated: 2026-10-06 17:16 IST
 
 ------------------------------------------------------------
 
-3 of the last 100 shown below did NOT go live cleanly -- see below.
+2 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
 Tuesday, 06 October 2026
 ------------------------
+  17:10  Sahyadri-archives: Add videos entry via Pages CMS: _videos/2026-10-06-musical-eve.md
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37457949483
   12:50  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37428995771
@@ -332,9 +335,6 @@ Tuesday, 29 September 2026
   19:14  Sahyadri-archives: Site icon: replace stretched 153x63 logo with a proper 48px tab icon
           Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577359006
-  19:14  Sahyadri-archives: Site icon: add 32px browser-tab icon
-          Build unknown -- the site was NOT updated with this change.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577356513
 
 ------------------------------------------------------------
 
