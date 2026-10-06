@@ -67,24 +67,44 @@
       };
 
       // Sets --site-announcement-offset (read by .site-announcement's
-      // margin-top in custom-styles.css) to the navbar's REAL, currently
-      // rendered height, measured directly, rather than assuming a fixed
-      // number is always right. The navbar is .navbar-custom (nav.html);
-      // getBoundingClientRect().height reflects its true on-screen size,
-      // including any wrapping of the nav items onto a second line at
-      // narrower widths, font-loading differences, or browser zoom --
-      // none of which a single hardcoded CSS value can account for.
+      // margin-top AND top in custom-styles.css -- see that file for why
+      // both need to track the same real number) to the navbar's REAL,
+      // currently rendered height, measured directly, rather than
+      // assuming a fixed number is always right. The navbar is
+      // .navbar-custom (nav.html); getBoundingClientRect().height
+      // reflects its true on-screen size, including any wrapping of the
+      // nav items onto a second line at narrower widths, font-loading
+      // differences, or browser zoom -- none of which a single hardcoded
+      // CSS value can account for.
       //
-      // Re-measures on resize (debounced) and orientation change, since
-      // that height can genuinely change after the page has already
-      // loaded -- e.g. rotating a phone, or a window resize crossing the
-      // breakpoint where the nav items wrap. Uses ResizeObserver directly
-      // on the navbar itself when available (fires for ANY size change to
-      // that element specifically, including ones a plain window resize
-      // listener wouldn't catch, such as the nav wrapping due to a
-      // dynamic content change rather than the viewport itself resizing);
-      // falls back to a debounced window resize/orientationchange listener
-      // in older browsers without ResizeObserver.
+      // The navbar does NOT have one single height, full stop:
+      // assets/js/beautifuljekyll.js adds a top-nav-short class to it
+      // once the page is scrolled more than 50px (removing it again near
+      // the top), and that class's own rule (beautifuljekyll.css) reduces
+      // its padding, over a 0.5s CSS transition on padding declared on
+      // .navbar-custom itself. So the navbar is genuinely taller near the
+      // top of the page and shorter once scrolled -- exactly the two
+      // states this banner's own sticky positioning needs to track,
+      // since the banner only visually matters once scrolling is
+      // involved. A one-time measurement at page load, or one driven
+      // only by ResizeObserver/window-resize, can only ever reliably
+      // catch ONE of these two states (confirmed the problem this
+      // caused: a real screenshot showed the banner's offset stuck at
+      // the TALL, pre-scroll measurement, so once actually scrolled --
+      // when the navbar had shrunk to its real, shorter height -- the
+      // banner sat too far down, overlapping the now-shorter navbar
+      // instead of sitting below it).
+      //
+      // Fixed by listening for the exact same scroll event that drives
+      // the shrink, and re-measuring after the transition has had time
+      // to finish (shrinkTransitionMs below matches the 0.5s transition
+      // duration in beautifuljekyll.css, plus a small margin) -- so this
+      // always measures the navbar's real, settled height for whichever
+      // state it's actually in, rather than guessing at one state or
+      // racing the transition.
+      var shrinkTransitionMs = 550; // beautifuljekyll.css's transition: padding .5s, plus ~50ms margin
+      var scrollMeasureTimer;
+
       function applyNavbarOffset() {
         var navbar = document.querySelector('.navbar-custom');
         if (!navbar) return; // no navbar on this page for some reason -- CSS fallback (5rem) applies
@@ -95,6 +115,17 @@
       }
 
       applyNavbarOffset();
+
+      window.addEventListener('scroll', function () {
+        // Measure once right away (catches browsers/cases where the
+        // class toggles with no transition at all) and once again after
+        // the transition should have finished (catches the normal case,
+        // where measuring immediately would still capture the navbar
+        // mid-shrink or mid-grow).
+        applyNavbarOffset();
+        clearTimeout(scrollMeasureTimer);
+        scrollMeasureTimer = setTimeout(applyNavbarOffset, shrinkTransitionMs);
+      }, { passive: true });
 
       if (typeof ResizeObserver !== 'undefined') {
         var navbarEl = document.querySelector('.navbar-custom');
