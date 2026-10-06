@@ -4,16 +4,22 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 11:02 IST
+Last updated: 2026-10-06 11:09 IST
 
 ------------------------------------------------------------
 
-4 of the last 100 shown below did NOT go live cleanly -- see below.
+5 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
 Tuesday, 06 October 2026
 ------------------------
+  11:08  Sahyadri-archives: Fix the sticky banner rendering almost hidden behind the navbar
+          Build OK, but deploy queued -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37419521500
+  11:03  Sahyadri-archives: Fix the actual reason the sticky banner (and likely .toc-sidebar) wasn't sticking
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37419143571
   10:57  Sahyadri-archives: Keep the announcement banner right below the navbar while scrolling
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37418632905
@@ -329,12 +335,6 @@ Tuesday, 29 September 2026
   19:14  Sahyadri-archives: Site icon: add 512px app icon
           Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577346285
-  19:14  Sahyadri-archives: Site icon: add 192px app icon
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577343477
-  19:14  Sahyadri-archives: Site icon: add editable SVG master (redrawn mountain-and-birds mark from the school logo)
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36577340847
 
 ------------------------------------------------------------
 
