@@ -4,7 +4,7 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes once a day at midnight (IST), and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 17:50 IST
+Last updated: 2026-10-07 04:14 IST
 
 ------------------------------------------------------------
 
@@ -14,6 +14,15 @@ Last updated: 2026-10-06 17:50 IST
 
 Tuesday, 06 October 2026
 ------------------------
+  18:05  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37464384911
+  18:00  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37463689335
+  17:57  Sahyadri-archives: Restyle the announcement banner to match the rest of the site
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37463414099
   17:46  Sahyadri-archives: Run "Update commit status" once a day at midnight (IST) instead of after every build
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37462143652
@@ -323,15 +332,6 @@ Wednesday, 30 September 2026
   10:44  Sahyadri-archives: Remove the five local Photo Gallery photos (now on Google Drive)
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36672474306
-  10:41  Sahyadri-archives: Photo Gallery post: load the five photos from Google Drive (1200px) instead of the repo
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36672267569
-  10:30  Sahyadri-archives: Remove 103 unused local images and PDFs (about 320 MB)
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36671422254
-  10:26  Sahyadri-archives: Fix link previews: cap the preview photo at 1200px and add a default school-logo card
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36671146049
 
 ------------------------------------------------------------
 
