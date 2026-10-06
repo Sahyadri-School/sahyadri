@@ -4,18 +4,18 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 11:09 IST
+Last updated: 2026-10-06 11:14 IST
 
 ------------------------------------------------------------
 
-5 of the last 100 shown below did NOT go live cleanly -- see below.
+4 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
 Tuesday, 06 October 2026
 ------------------------
   11:08  Sahyadri-archives: Fix the sticky banner rendering almost hidden behind the navbar
-          Build OK, but deploy queued -- this change may not be live yet.
+          Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37419521500
   11:03  Sahyadri-archives: Fix the actual reason the sticky banner (and likely .toc-sidebar) wasn't sticking
           Build OK, deployed -- this change is live.
