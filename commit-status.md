@@ -2,18 +2,24 @@ COMMIT STATUS
 
 This page is generated automatically. Typing here does not save anything -- it is replaced the next time this refreshes.
 
-Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes automatically, and any time someone clicks "Update commit status" on the Actions page.
+Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes once a day at midnight (IST), and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-06 17:46 IST
+Last updated: 2026-10-06 17:48 IST
 
 ------------------------------------------------------------
 
-2 of the last 100 shown below did NOT go live cleanly -- see below.
+3 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
 Tuesday, 06 October 2026
 ------------------------
+  17:46  Sahyadri-archives: Run "Update commit status" once a day at midnight (IST) instead of after every build
+          Build OK, but deploy still running -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37462143652
+  17:46  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build OK; deploy was stopped early because a newer change was saved right after it.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37462073770
   17:44  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37461797431
@@ -326,12 +332,6 @@ Wednesday, 30 September 2026
   10:26  Sahyadri-archives: Fix link previews: cap the preview photo at 1200px and add a default school-logo card
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36671146049
-  10:13  Sahyadri-archives: Rebuild the site icons from the enhanced high-resolution school logo
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36670134953
-  09:49  Sahyadri-archives: Use the actual school logo for the site icons
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36668301616
 
 ------------------------------------------------------------
 
