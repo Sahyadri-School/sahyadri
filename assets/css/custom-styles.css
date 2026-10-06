@@ -2942,7 +2942,19 @@ html {
        out of sync with each other. */
     position: sticky;
     top: var(--site-announcement-offset, 5rem);
-    z-index: 900; /* below the fixed navbar's own stacking but above normal page content */
+    /* 1100, not the 900 this used to be: Bootstrap's own documented
+       z-index for a fixed navbar (.fixed-top, used by nav.html) is 1030
+       ($zindex-fixed in Bootstrap's official source) -- 900 was well
+       below that, so the navbar was winning the stacking order and
+       covering almost all of the banner wherever they visually
+       overlapped. That overlap only happens once the banner is actually
+       stuck near the navbar while scrolling (before that, it sits below
+       the navbar in normal flow with no overlap at all, which is why
+       this wasn't visible until the sticky-positioning fix made the
+       overlap actually happen). Still safely below the search overlay's
+       9999/10001 (the only other z-index values in this file), which
+       should stay above everything, including this banner, when open. */
+    z-index: 1100;
     /* The navbar is `position: fixed` (nav.html's own fixed-top class),
        which takes it out of normal document flow entirely -- it doesn't
        push following content down, it just floats on top of it. Every
