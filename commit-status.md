@@ -4,13 +4,46 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes once a day at midnight (IST), and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-08 04:45 IST
+Last updated: 2026-10-09 05:01 IST
 
 ------------------------------------------------------------
 
-2 of the last 100 shown below did NOT go live cleanly -- see below.
+1 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
+
+Thursday, 08 October 2026
+-------------------------
+  17:35  Sahyadri-archives: Weekly link check: stop the false alarms; add CLAUDE.md project notes
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37774449201
+  17:23  Sahyadri-archives: Add a handover guide for the next student committee
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37773103094
+  17:15  Sahyadri-archives: Comments: make the signed-in name readable in dark mode, and not bold
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37772157973
+  17:10  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37771646469
+  17:09  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37771457870
+  17:09  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37771453524
+  17:01  Sahyadri-archives: Comments: don't show deleted comments at all
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37770599950
+  16:50  Sahyadri-archives: Comments: only offer Edit while a comment is awaiting approval
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37769439118
+  16:40  Sahyadri-archives: Photo Gallery post: stop showing the "New Arrivals in the Library" photo twice
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37768276376
+  16:23  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37766408632
 
 Tuesday, 06 October 2026
 ------------------------
@@ -299,39 +332,6 @@ Thursday, 01 October 2026
   18:00  Sahyadri-archives: Fix the build I just broke: don't write literal {% %} tag syntax as prose, even inside a comment
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36862170624
-  17:56  Sahyadri-archives: Fix a cross-iteration variable leak in social-networks-links.html; correct two more stale comments
-          Build FAILED -- the site was NOT updated with this change.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36861729183
-  17:49  Sahyadri-archives: Fix broken 404-page redirect; correct two stale comments (found during a line-by-line read)
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36861010590
-  17:32  Sahyadri-archives: Fix site.webmanifest: add layout: null so it's served as JSON, not wrapped in the site layout
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36859207916
-  10:57  Sahyadri-archives: Tidy custom-styles.css: cosmetic-only linter fixes (stylelint)
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36819816585
-  10:51  Sahyadri-archives: Fix a quoted hex color that silently disabled two border rules
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36819351117
-  10:33  Sahyadri-archives: Fix link-preview and search descriptions that showed raw template code
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36817992649
-  10:12  Sahyadri-archives: Restore the comment system to how it was before the recent comment changes
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36816354115
-  10:07  Sahyadri-archives: Automatic comment screening (off by default), school-account publishing, and an edit lock
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36815950568
-
-Wednesday, 30 September 2026
-----------------------------
-  17:45  Sahyadri-archives: Comments: review queue, trusted people, posting limits, and telling commenters
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36713670063
-  10:44  Sahyadri-archives: Remove the five local Photo Gallery photos (now on Google Drive)
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36672474306
 
 ------------------------------------------------------------
 
