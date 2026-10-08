@@ -176,7 +176,7 @@ These use `_includes/pdf.html`, which expects a card wrapper with a `thumbnail_p
 `_includes/comments.html` is a router: it checks `page.comments` (set via the collection defaults in `_config.yml` for posts/activities/profiles) and `site.comments-provider`, then includes one of:
 
 - **`elfsight-comments.html`** (default) — a hosted third-party widget. Configured via `elfsight-app-id`.
-- **`firebase-comments.html`** — a custom-built widget: Google sign-in, threaded replies, likes, emoji reactions, sort by newest/oldest/most-liked, edit/delete your own comment, and a moderation queue.
+- **`firebase-comments.html`** — a custom-built widget: Google sign-in, threaded replies, likes, emoji reactions, sort by newest/oldest/most-liked, edit your own comment while it is still awaiting approval (the text is frozen once approved) and delete it at any time, and a moderation queue.
 
 ### Firebase comments moderation
 

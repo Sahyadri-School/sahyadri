@@ -415,7 +415,8 @@
             </button>
             ${reactionButtons}
             ${!isReply ? `<button class="sc-text-btn" data-action="reply" data-id="${id}">Reply</button>` : ""}
-            ${isOwn ? `<button class="sc-text-btn" data-action="edit" data-id="${id}">Edit</button>` : ""}
+            ${/* Edit is only offered while the comment is still awaiting approval: the Firestore rules freeze a comment's text once the moderator has approved it (otherwise an author could get a harmless comment approved and then change it to anything). Delete is always available. */ ""}
+            ${isOwn && !data.approved ? `<button class="sc-text-btn" data-action="edit" data-id="${id}">Edit</button>` : ""}
             ${isOwn ? `<button class="sc-text-btn" data-action="delete" data-id="${id}">Delete</button>` : ""}
           </div>
         </div>
