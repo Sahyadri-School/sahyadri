@@ -89,4 +89,4 @@ Editing posts and photos in the CMS is routine. Changing CSS, HTML or templates 
 ## 8. Small known issues (as of October 2026)
 
 - On the Geet Gunjan page (`geeth-gunjan.md`) the two cards share one thumbnail image; each needs its own Drive file ID.
-- The weekly link check can report links to the school's main website that are actually fine (the other site answers automated visits with an error).
+- The weekly link check was set (October 2026) to ignore the "415" reply and to go slower, because it kept flagging working links on the school's main website. It can still occasionally report a link that is fine; open it in a browser before worrying.

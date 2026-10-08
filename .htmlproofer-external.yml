@@ -40,3 +40,28 @@ ignore_files:
 # not images/scripts (already covered by the main per-push check).
 checks:
   - Links
+
+# Reducing false alarms. A real check on 5 October flagged 25 "broken" links:
+# 24 were staff pages on www.sahyadrischool.org answered with 415 ("Unsupported
+# Media Type", i.e. the server refusing an automated request), plus one
+# timeout; a manual run the day before had found nothing, so these looked
+# intermittent. Each false alarm reopens the "External Link Check" issue and
+# sends a notification, which teaches people to ignore real ones.
+#
+# ignore_status_codes: a link that is really gone answers 404, which is still
+#   reported; only a 415 reply is not. (Blind spot: a link that genuinely
+#   returns 415 would be missed, which is rare.)
+ignore_status_codes:
+  - 415
+
+# typhoeus: per-request settings. html-proofer's defaults are a 10-second
+#   connection timeout and a 30-second total timeout; some slow sites need more.
+typhoeus:
+  connecttimeout: 30
+  timeout: 60
+
+# hydra: how many links are checked at the same moment. The default is 50,
+#   which can look like an attack to a small site and get refused or time out;
+#   a few at a time is gentler. The weekly check just takes a few minutes longer.
+hydra:
+  max_concurrency: 8

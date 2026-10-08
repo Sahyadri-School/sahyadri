@@ -18,6 +18,11 @@ def to_regexp(str)
   end
 end
 
+# html-proofer's Ruby API wants symbol keys for the HTTP-library settings.
+def symbolize(hash)
+  hash.each_with_object({}) { |(key, value), out| out[key.to_sym] = value }
+end
+
 options = {
   disable_external: config["disable_external"],
   allow_hash_href: config["allow_hash_href"],
@@ -25,5 +30,16 @@ options = {
   ignore_files: (config["ignore_files"] || []).map { |f| to_regexp(f) },
   checks: config["checks"] || ["Links"],
 }
+
+# Only the keys listed above used to be passed on, so adding anything else to
+# .htmlproofer-external.yml was silently ignored. These three are passed on
+# when present (see that file for what they do and why):
+#   ignore_status_codes -- reply codes not to report as failures
+#   typhoeus            -- per-request settings (timeouts) for the HTTP library
+#   hydra               -- how many requests run at once
+# Left out of the YAML, html-proofer's own defaults apply, exactly as before.
+options[:ignore_status_codes] = config["ignore_status_codes"] if config["ignore_status_codes"]
+options[:typhoeus] = symbolize(config["typhoeus"]) if config["typhoeus"]
+options[:hydra] = symbolize(config["hydra"]) if config["hydra"]
 
 HTMLProofer.check_directory("./_site", options).run
