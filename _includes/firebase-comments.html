@@ -328,10 +328,19 @@
   function renderFeed() {
     if (!latestDocs) return;
 
-    const visibleCount = latestDocs.filter((d) => !d.data().deleted && d.data().approved).length;
+    // A deleted comment is not shown at all (no placeholder in its place).
+    // Its replies are not shown either: they were replies to something that
+    // no longer exists, and a reply whose parent is not on the page is never
+    // rendered anyway (threads are only reached through their top-level
+    // comment). The count is taken from exactly what is displayed.
+    const topLevel = latestDocs.filter((d) => !d.data().parentId && !d.data().deleted);
+    const shownIds = new Set(topLevel.map((d) => d.id));
+    const shownReplies = latestDocs.filter((d) => {
+      const x = d.data();
+      return x.parentId && shownIds.has(x.parentId) && !x.deleted;
+    });
+    const visibleCount = [...topLevel, ...shownReplies].filter((d) => d.data().approved).length;
     countEl.textContent = visibleCount > 0 ? ` (${visibleCount})` : "";
-
-    const topLevel = latestDocs.filter((d) => !d.data().parentId);
 
     if (topLevel.length === 0) {
       feedEl.innerHTML = '<p class="sc-empty">No comments yet. Be the first to share your thoughts.</p>';
@@ -343,7 +352,7 @@
 
   function renderThread(docSnap) {
     const replies = latestDocs
-      .filter((d) => d.data().parentId === docSnap.id)
+      .filter((d) => d.data().parentId === docSnap.id && !d.data().deleted)
       .sort((a, b) => (a.data().createdAt?.toMillis() || 0) - (b.data().createdAt?.toMillis() || 0));
 
     return `
@@ -358,17 +367,9 @@
     const data = docSnap.data();
     const id = docSnap.id;
 
-    if (data.deleted) {
-      return `
-        <div class="sc-comment" data-id="${id}">
-          <div class="sc-avatar">–</div>
-          <div class="sc-comment-body">
-            <div class="sc-comment-head"><span class="sc-comment-time">Comment removed</span></div>
-            <p class="sc-comment-text sc-deleted-text">This comment has been deleted.</p>
-          </div>
-        </div>
-      `;
-    }
+    // Deleted comments are filtered out before they get here (renderFeed and
+    // renderThread); this is only a safety net so one can never be drawn.
+    if (data.deleted) return "";
 
     const date = data.createdAt ? formatDate(data.createdAt.toDate()) : "just now";
     const safeName = escapeHtml(data.name || "Anonymous");

@@ -2692,11 +2692,6 @@ html {
     overflow-wrap: break-word;
 }
 
-.sc-comment-text.sc-deleted-text {
-    font-style: italic;
-    color: var(--sc-muted);
-}
-
 /* --- Actions row: like, reactions, reply, edit, delete --- */
 .sc-actions {
     display: flex;
