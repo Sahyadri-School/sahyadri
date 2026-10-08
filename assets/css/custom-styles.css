@@ -2561,7 +2561,16 @@ html {
 
 #comments-user-info strong {
     color: var(--text-col);
-    font-weight: 600;
+    font-weight: 400;
+}
+
+/* --text-col is a dark brown (#3E3830). With no override here the name was
+   dark brown on the near-black dark-mode background (measured in a real
+   browser: 1.56:1, close to invisible). The site's own light sage, #e8f3df
+   (also used for the navbar brand and the active like/reaction buttons in
+   dark mode), reads clearly there. */
+.dark-mode #comments-user-info strong {
+    color: #e8f3df;
 }
 
 /* --- Comment form --- */
