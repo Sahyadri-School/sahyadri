@@ -245,6 +245,7 @@ exclude:
   - CHANGELOG.md
   - CONTENT-GUIDE.md
   - CMS-GUIDE.md
+  - HANDOVER.md
   - cms-activity-log.md
   - commit-status.md
   - Gemfile

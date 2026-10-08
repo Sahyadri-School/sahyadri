@@ -4,6 +4,8 @@ A Jekyll site for Sahyadri School, built on the [Beautiful Jekyll](https://beaut
 
 This README describes what's actually in the repo. If you're looking at an older version of this file, note that a previous draft described features (Giscus comments, a `layout: events` type, a `pages/` and `_data/` directory) that were never actually built — this version reflects the real site.
 
+> **Taking over the site?** Start with [`HANDOVER.md`](HANDOVER.md): where everything lives, what runs automatically, what to do when something breaks, and the yearly checklist.
+
 ## Overview
 
 The site hosts:
