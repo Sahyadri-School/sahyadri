@@ -12,7 +12,7 @@ share-description: "Student-written newsletter articles from Sahyadri School, gr
 {% comment %}
   -----------------------------------------------------------------------------
   STEP 1: Determine Unique Academic Years
-  An Academic Year runs from June 1st of year X to March 31st of year X+1.
+  An Academic Year runs from June 1st of year X to May 31st of year X+1.
   This loop iterates through all posts to extract unique start years (e.g., "2023").
   -----------------------------------------------------------------------------
 {% endcomment %}
@@ -112,7 +112,7 @@ share-description: "Student-written newsletter articles from Sahyadri School, gr
   {% assign ay_end_year         = ay | plus: 1 | append: "" | remove: ".0" %}
   {% assign ay_short_end        = ay_end_year | slice: 2, 2 %}
   {% assign academic_start_date = ay | append: "-06-01" %}
-  {% assign academic_end_date   = ay_end_year | append: "-03-31" %}
+  {% assign academic_end_date   = ay_end_year | append: "-05-31" %}
   {% assign panel_id            = "ay-" | append: ay | append: "-" | append: ay_short_end %}
   {% assign is_active           = false %}
   {% if ay == default_active_year %}

@@ -15,10 +15,14 @@ share-description: "Workshops, events and activities at Sahyadri School, grouped
   animates in the relevant panel and scrolls back to the top anchor.
 
   Data flow:
-    1. year_blocks   — pipe-separated list of academic years to show as tabs
-                       (e.g. "2024-25|2025-26") plus the special token "archive"
+    1. year_blocks   — academic years to show as tabs, computed below from
+                       every activity's own date (e.g. "2024-25|2025-26"),
+                       the same way posts.md builds its Newsletter tabs.
+                       "archive" is added automatically, as a catch-all last
+                       tab, only if some activity is dated before 2024-06-01.
     2. valid_activities — activities with a date set, grouped by category
-    3. For each year, the academic period is June 1 – March 31 of the next year
+    3. For each year, the academic period is June 1 of start_yr – May 31 of
+       the next year
     4. Within each category, pinned posts are hoisted to the top, then remaining
        posts are sorted newest-first
 
@@ -34,14 +38,62 @@ share-description: "Workshops, events and activities at Sahyadri School, grouped
 
 
 <!--
-  year_blocks: pipe-separated list of academic year tokens rendered as tabs.
-  Add years here to show additional tabs, e.g. "2024-25|2025-26|archive".
-  The special token "archive" creates a catch-all tab for older content.
+  year_blocks: academic year tokens rendered as tabs, computed from every
+  activity's own date rather than hand-maintained -- the first activity
+  dated in a new academic year makes its tab appear on the next build with
+  no edit needed here. Mirrors posts.md's STEP 1 below. The special token
+  "archive" is appended last, automatically, only if some activity predates
+  2024-06-01 (the archive catch-all's date range, below, is otherwise
+  unreachable and so never actually shown as a tab).
 -->
-{% assign year_blocks = "2025-26" | split: "|" %}
+{% assign ay_start_years = "" %}
+{% assign has_pre_2024_activity = false %}
 
-<!-- The tab that is open when the page first loads -->
-{% assign default_active_year = "2025-26" %}
+{% for item in site.activities %}
+  {% assign item_date_str = item.date | date: "%Y-%m-%d" %}
+  {% if item_date_str < "2024-06-01" %}
+    {% assign has_pre_2024_activity = true %}
+  {% else %}
+    {% assign item_month = item.date | date: "%m" | plus: 0 %}
+    {% assign item_year  = item.date | date: "%Y" %}
+    {% if item_month >= 6 %}
+      {% assign ay_start = item_year %}
+    {% else %}
+      {% assign ay_start = item_year | minus: 1 | append: "" | remove: ".0" %}
+    {% endif %}
+
+    {% assign padded = "|" | append: ay_start_years | append: "|" %}
+    {% assign needle  = "|" | append: ay_start | append: "|" %}
+    {% unless padded contains needle %}
+      {% if ay_start_years == "" %}
+        {% assign ay_start_years = ay_start %}
+      {% else %}
+        {% assign ay_start_years = ay_start_years | append: "|" | append: ay_start %}
+      {% endif %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+
+{% assign numbered_ay_starts = ay_start_years | split: "|" | sort | reverse %}
+{% assign numbered_year_blocks = "" %}
+{% for y in numbered_ay_starts %}
+  {% assign end_short = y | plus: 1 | append: "" | remove: ".0" | slice: 2, 2 %}
+  {% assign token = y | append: "-" | append: end_short %}
+  {% if numbered_year_blocks == "" %}
+    {% assign numbered_year_blocks = token %}
+  {% else %}
+    {% assign numbered_year_blocks = numbered_year_blocks | append: "|" | append: token %}
+  {% endif %}
+{% endfor %}
+
+{% if has_pre_2024_activity %}
+  {% assign year_blocks = numbered_year_blocks | append: "|archive" | split: "|" %}
+{% else %}
+  {% assign year_blocks = numbered_year_blocks | split: "|" %}
+{% endif %}
+
+<!-- The tab that is open when the page first loads: the most recent academic year -->
+{% assign default_active_year = numbered_year_blocks | split: "|" | first %}
 
 <!-- Scroll target: tab switches smooth-scroll back here via switchAcademicYear() -->
 <div id="top" style="scroll-margin-top: 200px;"></div>
@@ -119,7 +171,7 @@ share-description: "Workshops, events and activities at Sahyadri School, grouped
 
   <!--
     Determine the date range and panel ID for this year.
-    Academic year runs June 1 of start_yr to March 31 of end_yr.
+    Academic year runs June 1 of start_yr to May 31 of end_yr.
     "archive" catches everything before the earliest regular tab.
   -->
   {% if current_year == "archive" %}
@@ -132,7 +184,7 @@ share-description: "Workshops, events and activities at Sahyadri School, grouped
     {% assign short_end_yr = end_yr | slice: 2, 2 %}
 
     {% assign academic_start_date = start_yr | append: "-06-01" %}
-    {% assign academic_end_date   = end_yr   | append: "-03-31" %}
+    {% assign academic_end_date   = end_yr   | append: "-05-31" %}
     {% assign panel_id            = "ay-" | append: start_yr | append: "-" | append: short_end_yr %}
   {% endif %}
 
