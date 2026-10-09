@@ -375,9 +375,10 @@ content:
         order: desc
     fields:
       - name: year
+        label: Year (only for "archive")
         type: string
-        required: true
-        description: "e.g. \"2025\" -- must exactly match one of the year tabs already defined near the top of kfi.html (the year_blocks Liquid variable). Adding a brand-new academic year still needs a one-line manual edit there first -- this is not auto-computed the way Videos/Photos are."
+        required: false
+        description: "Leave this blank for almost every entry -- the year tab it appears under is worked out automatically from the date below (an academic year runs June to May, same as Newsletter/Activities/Videos/Photos). Only set this to the exact word \"archive\" for older material that isn't tied to one specific academic year; that tab always appears last, after every dated year."
       - name: date
         type: date
         required: true

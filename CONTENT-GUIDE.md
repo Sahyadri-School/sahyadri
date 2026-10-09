@@ -142,10 +142,10 @@ links:
 ---
 ```
 
-- `year` is the start year of the academic year this excerpt belongs to (e.g. "2025" for 2025–26), or `"archive"` for older material that doesn't belong to one specific academic year. Its tab on the live page is built automatically from whatever `year` values actually appear across `_kfi/` entries — same as Videos/Photos build their tabs from dates — so adding the first entry for a new year is enough; there's no separate file to edit. Numbered years are shown newest-first, with "archive" always last.
+- `year` can be left out entirely for almost every entry — its academic-year tab (June to May, same rule Newsletter/Activities/Videos/Photos use) is computed automatically from `date` below, so adding the first entry for a new year is enough; there's no separate file to edit. Set it to the literal string `"archive"` only for older material that isn't tied to one specific academic year — that tab is always shown last, after every dated year, regardless of that entry's actual date.
 - `youtube_id` is only for entries with an embedded video. Leave it out entirely for a document-only entry (e.g. a linked PDF transcript with no video).
 - `links` is a list — most entries have just one (the excerpt's own title/link), but some entries link a video's related document or a separate playlist as a second item. `url` is optional on each: omit it to show that entry's `text` as a plain label instead of a clickable link.
-- `date` builds the "Published on" caption automatically and sorts entries newest-first within their year.
+- `date` builds the "Published on" caption automatically, sorts entries newest-first within their year, and (unless `year: "archive"` is set) decides which year tab the entry falls under.
 - The filename doesn't need to be exact — sorted automatically at build time regardless of file naming.
 
 ---

@@ -37,7 +37,7 @@ Other documents: `README.md` (technical), `HANDOVER.md` (where everything lives,
 **Templates and the build**
 - Liquid reads `{%` and `{{` **everywhere in a file, including inside `{% comment %}` blocks and HTML comments.** Prose containing them once broke the production build. Write "a Liquid tag" instead.
 - A file at the repository root without front matter is published as a raw file. Put documents and generated files in `exclude:` in `_config.yml`. Non-HTML files that should be output (`site.webmanifest`, `maintenance-status.json`) need `layout: null` or the page layout wraps them in HTML.
-- Newsletter, Activities, Videos, Photos and the Krishnamurti page all build their year tabs automatically (an academic year runs June to May) — the Krishnamurti page's tabs come from each `_kfi/` entry's own `year` field (see `kfi.html`), not from dates directly, so that field still has to be set correctly on each entry.
+- Newsletter, Activities, Videos, Photos and the Krishnamurti page all build their year tabs automatically from each entry's `date` (an academic year runs June to May). On the Krishnamurti page, an entry's `year` front matter field is otherwise unused — it only matters as an explicit override, set to the literal string `"archive"`, for older material that isn't tied to one specific academic year (see `kfi.html`).
 
 **CSS and behaviour**
 - The theme rule near the top of `custom-styles.css` (`body, p, div { color: #404040; font-weight: 300 !important; ... }`) matches every `<div>` **directly**, so it beats any colour merely inherited from a parent. A new component must set colour and weight on its own elements (this made the banner text and the comment name unreadable in dark mode).

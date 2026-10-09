@@ -11,10 +11,14 @@
 # Photos work, so Pages CMS (see .pages.yml) gives the exact same "Add
 # entry" experience here too.
 # The year tabs themselves (year_blocks/default_active_year just below)
-# are now computed from each entry's own `year` field, so adding the
-# first entry of a new academic year is enough -- its tab appears on the
-# next build with no edit needed here. An entry can also use year:
-# "archive" for older material that doesn't belong to one academic year;
+# are now computed from each entry's own `date`, the same June-to-May
+# academic year used by Newsletter/Activities/Videos/Photos, so adding
+# the first entry of a new academic year is enough -- its tab appears on
+# the next build with no edit needed here. The `year` field in front
+# matter is no longer used to decide which tab an entry falls under
+# (a wrong value there used to silently split an entry into its own
+# tab); it is now only an explicit override, set to "archive", for
+# older material that doesn't belong to one specific academic year --
 # that tab is always sorted last, after every numbered year.
 layout: page
 title: "Weekly Excerpts"
@@ -22,12 +26,33 @@ permalink: /kfi/
 share-description: "Weekly excerpts from the talks and writings of J. Krishnamurti, with videos and documents from Krishnamurti Foundation India, shared with the Sahyadri School community."
 ---
 
-<!-- Jekyll Liquid Logic: build the list of tabs from whatever `year` values
-     actually appear in _kfi/ entries, instead of a hand-maintained list.
-     Numbered years are sorted newest-first; "archive" (if any entry uses
-     it) always sorts last, since a plain string sort would otherwise put
-     it before all four-digit years. -->
-{%- assign kfi_years = site.kfi | map: "year" | uniq -%}
+<!-- Jekyll Liquid Logic: build the list of tabs from each entry's own
+     academic year (June-May, computed from `date` below -- the same
+     rule Newsletter/Activities/Videos/Photos use), instead of a
+     hand-maintained list. "archive" (front matter year: "archive", an
+     explicit override for material that isn't tied to one academic
+     year) always sorts last, since a plain string sort would otherwise
+     put it before every four-digit year. The per-entry computation is
+     repeated below in the main grid loop rather than shared via an
+     include, matching videos.html's documented workaround for a Liquid
+     StackLevelError ("Nesting too deep") this site's Liquid version
+     raises when an include is called repeatedly inside a for loop. -->
+{%- assign kfi_academic_years = "" -%}
+{%- for entry in site.kfi -%}
+  {%- if entry.year == "archive" -%}
+    {%- assign entry_academic_year = "archive" -%}
+  {%- else -%}
+    {%- assign entry_month = entry.date | date: "%-m" | plus: 0 -%}
+    {%- assign entry_cal_year = entry.date | date: "%Y" | plus: 0 -%}
+    {%- if entry_month >= 6 -%}
+      {%- assign entry_academic_year = entry_cal_year | append: "" -%}
+    {%- else -%}
+      {%- assign entry_academic_year = entry_cal_year | minus: 1 | append: "" -%}
+    {%- endif -%}
+  {%- endif -%}
+  {%- assign kfi_academic_years = kfi_academic_years | append: entry_academic_year | append: "," -%}
+{%- endfor -%}
+{%- assign kfi_years = kfi_academic_years | split: "," | uniq -%}
 {%- assign numbered_years = kfi_years | where_exp: "y", "y != 'archive'" | sort | reverse -%}
 {%- assign has_archive = kfi_years | where_exp: "y", "y == 'archive'" -%}
 {%- if has_archive.size > 0 -%}
@@ -76,7 +101,18 @@ share-description: "Weekly excerpts from the talks and writings of J. Krishnamur
   since the thumbnail above already takes visual space. Matches the
   distinction in the original hand-written HTML this replaced.
 {%- endcomment -%}
-    <figure class="video-item" data-year="{{ entry.year }}">
+{%- if entry.year == "archive" -%}
+  {%- assign entry_academic_year = "archive" -%}
+{%- else -%}
+  {%- assign entry_month = entry.date | date: "%-m" | plus: 0 -%}
+  {%- assign entry_cal_year = entry.date | date: "%Y" | plus: 0 -%}
+  {%- if entry_month >= 6 -%}
+    {%- assign entry_academic_year = entry_cal_year | append: "" -%}
+  {%- else -%}
+    {%- assign entry_academic_year = entry_cal_year | minus: 1 | append: "" -%}
+  {%- endif -%}
+{%- endif -%}
+    <figure class="video-item" data-year="{{ entry_academic_year }}">
         {%- if entry.youtube_id -%}
         <div class="video-wrapper" onclick="loadVideo(this)" data-video="{{ entry.youtube_id }}">
             <img src="https://img.youtube.com/vi/{{ entry.youtube_id }}/hqdefault.jpg" class="thumbnail" alt="{{ entry.links.first.text | escape }}">
