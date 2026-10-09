@@ -208,6 +208,14 @@ comments-moderator-email: "archives@sahyadrischool.org"
 
 
 # -----------------------------------------------------------------------------
+# Analytics
+# Google Analytics 4 measurement ID, read by _includes/gtag.html (included
+# from head.html on every page). Leave blank to turn GA4 off entirely.
+# -----------------------------------------------------------------------------
+gtag: "G-NT6PGTJXR2"
+
+
+# -----------------------------------------------------------------------------
 # Default Layouts & Front Matter
 # -----------------------------------------------------------------------------
 defaults:
