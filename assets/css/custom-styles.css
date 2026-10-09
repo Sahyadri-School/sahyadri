@@ -3,6 +3,56 @@
  * Overrides for beautifuljekyll.css (which uses CSS vars and Bootstrap)
  * and beautifuljekyll-minimal.css (which sets container widths to 85% !important).
  * !important is used only where upstream stylesheets require it to be overridden.
+ *
+ * HOW THIS FILE WORKS
+ * - It is loaded after the theme CSS, so anything here wins ties; where the
+ *   theme sets a value with higher specificity, !important is used.
+ * - The rule near the top matching body, p and div sets colour and weight on
+ *   EVERY div directly. A colour merely inherited from a parent loses to it,
+ *   so a new component must set colour and weight on its own elements.
+ * - Dark mode is a "dark-mode" class on the html element (toggled in section
+ *   17); dark overrides are written as ".dark-mode ..." rules.
+ * - The navbar is position: fixed and its height changes (about 109px at the
+ *   top of the page, 69px once scrolled, on wide screens); anything placed
+ *   against it has to follow that change.
+ * - Section numbers have gaps (15, 18 and 23 no longer exist); do not
+ *   renumber, other documents refer to section numbers (for example
+ *   firebase-comments.html names section 35).
+ *
+ * TABLE OF CONTENTS (search for the number plus a dot to jump to a section)
+ *    1. Typography: fonts and fluid sizes
+ *    2. Layout: header, body and footer widths
+ *    3. Navbar
+ *    4. Footer
+ *    5. Search overlay
+ *    6. Post feed: newsletter layout (TOC sidebar and posts list)
+ *    7. Table of contents card
+ *    8. Photos page
+ *    9. Album grid
+ *   10. Video grid
+ *   11. Load more button
+ *   12. Ninad / PDF card grid
+ *   13. Utility classes
+ *   14. Layout-specific styles (moved from inline style blocks)
+ *   16. Search no-results message
+ *   17. Dark mode toggle
+ *   19. Pagination buttons (previous / next post)
+ *   20. Author byline link: dark-mode brightness
+ *   21. Elfsight comments widget: container width
+ *   22. Elfsight comments widget: dark-mode sync
+ *   24. Photo album captions: dark-mode readability
+ *   25. Ninad / PDF card caption banner: dark mode
+ *   26. Newsletter and Activities tabbed listing pages (posts.md, activities.md)
+ *   27. Year-scoped search box (posts.md, activities.md)
+ *   28. Tag index page (tags.html)
+ *   29. Profiles page: dynamic UI
+ *   30. Year / album sub-navigation bar (photos.html, videos.html)
+ *   31. Videos page (videos.html)
+ *   32. Photos page: album grid (photos.html)
+ *   33. Krishnamurti page: video / excerpt filter (kfi.html)
+ *   34. Light / dark default profile photo toggle
+ *   35. Comments widget (Firebase)
+ *   36. Site-wide announcement banner
  */
 
 
@@ -939,7 +989,9 @@ html { scroll-behavior: smooth; }
 
 /* ============================================================
    17. DARK MODE TOGGLE
-   Activated by adding class="dark-mode" to <body> via JS toggle.
+   Activated by adding class="dark-mode" to the <html> element (the nav.html
+   toggle does this, and the early script in head.html restores the saved
+   choice before the page paints, to avoid a light flash).
    ============================================================ */
 
 .dark-mode,

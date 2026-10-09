@@ -1,4 +1,5 @@
-<!-- FILE: _includes/firebase-comments.html — Firebase-backed comments widget
+{% comment %}
+  FILE: _includes/firebase-comments.html — Firebase-backed comments widget
      (Google sign-in, threaded replies, edit/delete, likes, emoji reactions,
      sorting, and a moderation-approval queue — all synced live via
      Firestore). page.comments is already checked by the parent
@@ -19,7 +20,33 @@
      validate for a list query: a rule based on request.auth.uid ==
      resource.data.uid (own-pending) or resource.data.approved == true
      (public) is provably safe, unlike trusting the client to hide
-     unapproved comments from other viewers after a single broad read. -->
+     unapproved comments from other viewers after a single broad read.
+
+     DATA SHAPE: one Firestore document per comment in the "comments"
+     collection, written by postComment() below with exactly these fields:
+       text, pageUrl, uid, name, photoURL, createdAt (server time),
+       editedAt (null until edited), deleted (false), approved (false),
+       parentId (null for a top-level comment, else the parent's id),
+       likes (map of uid to true), likeCount, reactions (map of emoji to
+       a map of uid to true).
+     The Firestore security rules (published in the Firebase console, NOT in
+     this repository) assume this exact field list: a new comment must start
+     unapproved with no likes or reactions and a pageUrl on the live domain;
+     likes and reactions may only change the signed-in person's own entry;
+     authors may edit their text only until it is approved and may delete at
+     any time; only the moderator account may approve. If you change what
+     this widget writes, the rules must change with it (see CLAUDE.md).
+
+     SECURITY: every stored value is untrusted (any signed-in visitor can
+     write to Firestore), so all text goes through escapeHtml() before it is
+     put into markup. Never insert a stored value with innerHTML unescaped.
+
+     PAGE MAP: the HTML below is the static shell (heading and sort menu,
+     sign-in area, compose box, feed). The module script after it does the
+     rest: auth, two live queries, rendering, click handling.
+     (This header is a Liquid comment, so it is removed at build time and
+     adds nothing to the published pages.)
+{% endcomment %}
 {% if site.firebase-api-key and site.firebase-project-id %}
 
 <div id="comments-section">
@@ -102,6 +129,8 @@
   const MODERATOR_EMAIL = "{{ site.comments-moderator-email }}";
   const MODERATION_EMAIL_ENABLED = !!(EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && EMAILJS_PUBLIC_KEY && MODERATOR_EMAIL);
 
+  // Comments are keyed by page: origin + path, with no query string or hash,
+  // so one article has one thread however a visitor arrived at it.
   const pageUrl = window.location.origin + window.location.pathname;
   const MAX_LENGTH = 2000;
   const REACTION_EMOJIS = ["👍", "❤️", "😂", "😮", "😢"];
@@ -120,10 +149,16 @@
   const countEl = document.getElementById("comments-count");
   const sortSelect = document.getElementById("comments-sort");
 
+  // --- State ---
+  // currentUser: the signed-in Firebase user, or null when signed out.
   let currentUser = null;
   let latestDocs = null; // merged cache used by rendering -- combination of the two sources below
+  // Results of the two live queries (public approved comments; the viewer's own
+  // pending ones). recomputeAndRender() merges them whenever either changes.
   let latestApprovedDocs = [];
   let latestOwnPendingDocs = [];
+  // Handles that stop a live query; called before re-subscribing (sort change,
+  // sign-in or sign-out) so old listeners do not pile up.
   let unsubscribeFeed = null;
   let unsubscribeOwnPending = null;
 
@@ -137,6 +172,8 @@
 
   logoutBtn.addEventListener("click", () => signOut(auth));
 
+  // Runs on page load and on every sign-in / sign-out: shows the right controls,
+  // then redraws (own-pending comments appear or disappear) and re-subscribes.
   onAuthStateChanged(auth, (user) => {
     currentUser = user;
     if (user) {
@@ -156,6 +193,7 @@
   // --- Character counter on the main compose box ---
   textarea.addEventListener("input", () => updateCharCount(textarea, charCountEl));
 
+  // Updates the "n / 2000" label for a textarea and warns past 90% of the limit.
   function updateCharCount(el, countEl) {
     const len = el.value.length;
     countEl.textContent = `${len} / ${MAX_LENGTH}`;
@@ -179,6 +217,9 @@
     }
   });
 
+  // Writes a new comment (parentId null) or reply (parentId set) as unapproved.
+  // Throws if signed out; callers show the error. The moderator email is
+  // best-effort and never blocks the save.
   async function postComment(text, parentId) {
     if (!currentUser) throw new Error("not signed in");
     const docRef = await addDoc(collection(db, "comments"), {
@@ -210,6 +251,8 @@
     }
   }
 
+  // Sends the moderator an EmailJS message with a one-click approve.html link
+  // for this comment. Failures are only logged: the comment is already saved.
   async function notifyModerator({ docId, authorName, authorEmail, text, isReply }) {
     const consoleLink = `${window.location.origin}/approve.html?id=${docId}`;
     try {
@@ -252,6 +295,8 @@
     );
   }
 
+  // (Re)starts the live public query for the chosen sort order and shows a
+  // loading line until the first snapshot arrives or the query fails.
   function subscribeFeed(mode) {
     if (unsubscribeFeed) unsubscribeFeed();
     loadingEl.style.display = "block";
@@ -307,6 +352,8 @@
     );
   }
 
+  // Merges approved comments with the viewer's own pending ones (skipping any
+  // id already present) into latestDocs, then redraws the feed.
   function recomputeAndRender() {
     const seen = new Set();
     const merged = [];
@@ -325,6 +372,9 @@
   subscribeFeed("newest");
 
   // --- Rendering ---
+  // Redraws the whole feed from latestDocs: updates the count, shows the empty
+  // state, or renders each top-level comment with its replies. Does nothing
+  // until the first data has arrived.
   function renderFeed() {
     if (!latestDocs) return;
 
@@ -350,6 +400,7 @@
     feedEl.innerHTML = topLevel.map(renderThread).join("");
   }
 
+  // One top-level comment plus its replies, oldest reply first.
   function renderThread(docSnap) {
     const replies = latestDocs
       .filter((d) => d.data().parentId === docSnap.id && !d.data().deleted)
@@ -363,6 +414,9 @@
     `;
   }
 
+  // Builds the HTML for one comment or reply: avatar, name, date, text, like and
+  // emoji buttons, and Reply / Edit / Delete where the viewer may use them.
+  // Buttons carry data-action / data-id attributes read by the click handler below.
   function renderComment(docSnap, isReply) {
     const data = docSnap.data();
     const id = docSnap.id;
@@ -494,6 +548,7 @@
     }
   });
 
+  // Opens an inline reply box under a comment (closing any other open one).
   function openReplyForm(parentId, containerEl) {
     document.querySelectorAll(".sc-reply-compose").forEach((el) => el.remove());
 
@@ -527,15 +582,19 @@
     });
   }
 
+  // Looks a comment up in the currently displayed set by document id.
   function findDoc(id) {
     return latestDocs ? latestDocs.find((d) => d.id === id) : null;
   }
 
+  // Date and time in the visitor's own locale, e.g. "12 Oct 2026 at 3:05 PM".
   function formatDate(date) {
     return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) +
       " at " + date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
   }
 
+  // Makes untrusted text safe to put inside HTML (the browser does the escaping:
+  // text goes in as textContent, the escaped markup comes out of innerHTML).
   function escapeHtml(str) {
     const div = document.createElement("div");
     div.textContent = str;

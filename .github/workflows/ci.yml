@@ -1,6 +1,17 @@
 # GitHub Actions: Build & deploy Jekyll site to GitHub Pages
+#
+# Runs on every push to master (including the "via Pages CMS" content commits
+# that editors make all day) and can be started by hand from the Actions tab.
+# Two jobs: "build" makes and checks the site; "deploy" publishes it, and only
+# runs if every build step passed. A failed build or link check therefore
+# leaves the previous site live. A change that builds but LOOKS wrong still
+# goes live, so check pages in a browser before merging to master.
+#
+# Related: external-links.yml (weekly check of links to other websites; never
+# blocks anything), check_links.rb / .htmlproofer.yml (the internal link rules).
 name: Sahyadri Connect
 
+# Triggers: a push to master, or a manual run.
 on:
   push:
     branches: ["master"]
@@ -12,6 +23,8 @@ concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
 
+# Least privilege: read the code, and the two permissions GitHub Pages
+# needs to publish (pages: write, id-token: write for the deploy handshake).
 permissions:
   contents: read
   pages: write
@@ -21,17 +34,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Fetch the code (only the latest commit; history is not needed to build).
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
+      # Ruby 3.2 plus the gems in Gemfile, cached between runs to save time.
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2'
           bundler-cache: true
 
+      # Tells Jekyll the site's real address and path settings on GitHub Pages.
       - uses: actions/configure-pages@v5
 
+      # Builds the site into _site/ in production mode (analytics etc. switched
+      # on). Output is also echoed as ::error:: lines on failure so the reason
+      # shows in the run summary, not just deep in the log.
       - name: Build with Jekyll
         run: |
           set +e
@@ -46,6 +65,8 @@ jobs:
         env:
           JEKYLL_ENV: production
 
+      # Checks internal links, images and scripts in _site/ (rules in
+      # .htmlproofer.yml, run by check_links.rb). Failing here blocks deploy.
       - name: Check for broken links (html-proofer)
         run: |
           set +e
@@ -58,8 +79,11 @@ jobs:
           fi
           exit $status
 
+      # Packages _site/ so the deploy job can publish exactly what was checked.
       - uses: actions/upload-pages-artifact@v4
 
+  # Publishes the artifact made above to GitHub Pages (usually live within
+  # about two minutes of the push).
   deploy:
     runs-on: ubuntu-latest
     needs: build
