@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "INFORMATION LITERACY WITH CLASS 7-8"
-date: 2026-09-04
+date: 2026-09-22
 subtitle: "SAYANTAN SEN (Teacher)"
 category: September 2026
 tags: [workshop, academic]
