@@ -4,13 +4,19 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes once a day at midnight (IST), and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-09 05:01 IST
+Last updated: 2026-10-09 17:23 IST
 
 ------------------------------------------------------------
 
 1 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
+
+Friday, 09 October 2026
+-----------------------
+  17:20  Claude: Document comments widget, CI workflow and CSS structure
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37926231945
 
 Thursday, 08 October 2026
 -------------------------
@@ -329,9 +335,6 @@ Thursday, 01 October 2026
   18:06  Sahyadri-archives: Fix the profile "Articles by" reverse-lookup for every name with 3+ words; correct a stale nav comment
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36862916703
-  18:00  Sahyadri-archives: Fix the build I just broke: don't write literal {% %} tag syntax as prose, even inside a comment
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36862170624
 
 ------------------------------------------------------------
 
