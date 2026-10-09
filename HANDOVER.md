@@ -71,7 +71,7 @@ If you are stuck, do not guess-edit files. Ask the person who manages the reposi
 
 ## 6. Each school year (do this in June)
 
-- [ ] **Krishnamurti / Weekly Excerpts page:** add the new year's tab *before* adding that year's entries. It is a one-line edit in `kfi.html`; follow "Adding a new academic year tab" in `CONTENT-GUIDE.md`. (Newsletter, Activities, Videos and Photos build their year tabs from the dates by themselves; just check the new year's first entry appears.)
+- [ ] **Krishnamurti / Weekly Excerpts page:** no manual tab edit needed any more — its tab appears automatically from the new entry's own `year` field, the same way Newsletter, Activities, Videos and Photos build their tabs from dates. Just check the new year's first entry appears and set `year` correctly on it.
 - [ ] **Profiles:** each profile carries an `academic-year` and a class label of the exact form `Student (Class N)`. Decide how the new year's profiles will be handled (see "Adding a Profile" in `CMS-GUIDE.md`) so the Profiles page groups people correctly.
 - [ ] **Access review:** remove people who have left; add the new committee; confirm two admins everywhere (section 3).
 - [ ] **Renewal dates:** check the domain and any paid plan in the private checklist.

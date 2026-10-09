@@ -27,7 +27,7 @@ Other documents: `README.md` (technical), `HANDOVER.md` (where everything lives,
 ## Map of the repository
 
 - Content collections: `_posts/` (newsletter), `_activities/`, `_profiles/` (each has its own page); `_videos/`, `_photos/`, `_kfi/` have `output: false` (they only feed the list pages `videos.html`, `photos.html`, `kfi.html`).
-- Hand-edited pages that are **not** in the CMS: `geeth-gunjan.md`, `ninad.md`, `index.md`, `kfi.html`'s year list, and the templates.
+- Hand-edited pages that are **not** in the CMS: `geeth-gunjan.md`, `ninad.md`, `index.md`, and the templates.
 - `_layouts/` (`base`, `page`, `post`, `profile`, `default`), `_includes/` (nav, header, footer, `firebase-comments.html`, `announcement.html`, `analytics.html`, ...), `assets/css/custom-styles.css` (all site CSS, numbered sections), `_data/` (maintenance and announcement switches).
 - `.pages.yml` defines what the CMS shows (collections, the Site status and Announcement entries, the Actions buttons). `.github/workflows/` holds the build, the weekly link check, and two generators (`cms-activity-log.md`, `commit-status.md`; written by workflows, never hand-edit them).
 - Images and PDFs are **Google Drive files shown by ID** (`lh3.googleusercontent.com/d/<id>`, `drive.google.com/thumbnail?id=<id>`); they must be shared "Anyone with the link can view".
@@ -37,7 +37,7 @@ Other documents: `README.md` (technical), `HANDOVER.md` (where everything lives,
 **Templates and the build**
 - Liquid reads `{%` and `{{` **everywhere in a file, including inside `{% comment %}` blocks and HTML comments.** Prose containing them once broke the production build. Write "a Liquid tag" instead.
 - A file at the repository root without front matter is published as a raw file. Put documents and generated files in `exclude:` in `_config.yml`. Non-HTML files that should be output (`site.webmanifest`, `maintenance-status.json`) need `layout: null` or the page layout wraps them in HTML.
-- A new year does not appear on the Krishnamurti page until its tab is added by hand in `kfi.html` (`year_blocks`). Newsletter, Activities, Videos and Photos build their year tabs from dates (an academic year runs June to May).
+- Newsletter, Activities, Videos, Photos and the Krishnamurti page all build their year tabs automatically (an academic year runs June to May) — the Krishnamurti page's tabs come from each `_kfi/` entry's own `year` field (see `kfi.html`), not from dates directly, so that field still has to be set correctly on each entry.
 
 **CSS and behaviour**
 - The theme rule near the top of `custom-styles.css` (`body, p, div { color: #404040; font-weight: 300 !important; ... }`) matches every `<div>` **directly**, so it beats any colour merely inherited from a parent. A new component must set colour and weight on its own elements (this made the banner text and the comment name unreadable in dark mode).

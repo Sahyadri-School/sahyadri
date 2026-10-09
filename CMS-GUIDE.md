@@ -79,7 +79,7 @@ Click **Videos** or **Photos** in the sidebar → **Add entry**, same as above.
 
 Click **Krishnamurti / Weekly Excerpts** in the sidebar → **Add entry**.
 
-- **Year** must exactly match one of the year tabs already shown on the live page (e.g. "2025") — if you're adding the very first entry for a brand-new academic year, ask whoever manages the GitHub side to add that year's tab first, since that one step still needs a manual edit.
+- **Year** is the start year of the academic year this excerpt belongs to, e.g. "2025" for the 2025–26 year. Its tab appears on the live page automatically — the very first entry for a new academic year creates that year's tab by itself, no separate step needed. Use "archive" instead for older material that doesn't belong to one specific academic year; that tab always appears last.
 - **YouTube video ID** — leave blank for a document-only entry (e.g. just a linked PDF), no video needed.
 - **Links** — usually just one (the excerpt's own title and link), but you can add a second if this excerpt has, say, both a video and a separate related document or playlist. Leave a link's URL blank if you just want to show its text as a plain label with nothing clickable.
 - **Date** builds the "Published on" text automatically and sorts the entry into the right place.

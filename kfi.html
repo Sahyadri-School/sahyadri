@@ -11,18 +11,31 @@
 # Photos work, so Pages CMS (see .pages.yml) gives the exact same "Add
 # entry" experience here too.
 # The year tabs themselves (year_blocks/default_active_year just below)
-# are NOT auto-computed from the data -- unlike Videos/Photos, adding a
-# new academic year's worth of content still needs a one-line manual
-# addition there.
+# are now computed from each entry's own `year` field, so adding the
+# first entry of a new academic year is enough -- its tab appears on the
+# next build with no edit needed here. An entry can also use year:
+# "archive" for older material that doesn't belong to one academic year;
+# that tab is always sorted last, after every numbered year.
 layout: page
 title: "Weekly Excerpts"
 permalink: /kfi/
 share-description: "Weekly excerpts from the talks and writings of J. Krishnamurti, with videos and documents from Krishnamurti Foundation India, shared with the Sahyadri School community."
 ---
 
-<!-- Jekyll Liquid Logic: Defines available years and initial active tab -->
-{% assign year_blocks = "2025" | split: "|" %}
-{% assign default_active_year = "2025" %}
+<!-- Jekyll Liquid Logic: build the list of tabs from whatever `year` values
+     actually appear in _kfi/ entries, instead of a hand-maintained list.
+     Numbered years are sorted newest-first; "archive" (if any entry uses
+     it) always sorts last, since a plain string sort would otherwise put
+     it before all four-digit years. -->
+{%- assign kfi_years = site.kfi | map: "year" | uniq -%}
+{%- assign numbered_years = kfi_years | where_exp: "y", "y != 'archive'" | sort | reverse -%}
+{%- assign has_archive = kfi_years | where_exp: "y", "y == 'archive'" -%}
+{%- if has_archive.size > 0 -%}
+  {%- assign year_blocks = numbered_years | push: "archive" -%}
+{%- else -%}
+  {%- assign year_blocks = numbered_years -%}
+{%- endif -%}
+{%- assign default_active_year = year_blocks | first -%}
 
 
 <!-- Anchor element target for automatic smooth scrolling on tab change -->
