@@ -4,7 +4,7 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes once a day at midnight (IST), and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-09 17:23 IST
+Last updated: 2026-10-10 04:18 IST
 
 ------------------------------------------------------------
 
@@ -14,6 +14,33 @@ Last updated: 2026-10-09 17:23 IST
 
 Friday, 09 October 2026
 -----------------------
+  18:26  Claude: Turn off maintenance mode
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37933322897
+  18:23  Claude: Homepage: link to the Newsletter page instead of the latest issue
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37933086501
+  18:19  Claude: Homepage: link to the latest newsletter issue and the main sections
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37932561911
+  18:17  Claude: Turn on maintenance mode
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37932369119
+  18:09  Claude: Clean up kfi year field; fix a real bug found while auditing Videos/Photos/Newsletter/Activities
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37931441524
+  18:01  Claude: Fix kfi.html tabs to compute the academic year from date, not year
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37930648355
+  17:55  Claude: Build the Krishnamurti page's year tabs automatically
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37929978288
+  17:43  Claude: Move GA4 tracking ID into _config.yml and fix two post dates
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37928617258
+  17:30  Sahyadri-archives: Merge pull request #3 from Sahyadri-School/claude/optimistic-davinci-67ouiy
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37927283641
   17:20  Claude: Document comments widget, CI workflow and CSS structure
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37926231945
@@ -305,36 +332,6 @@ Friday, 02 October 2026
   15:25  Sahyadri-archives: Update posts entry via Pages CMS: _posts/2025-07-12-fresher's-eve.md
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36992522012
-  14:40  Sahyadri-archives: Add posts entry via Pages CMS: _posts/2026-08-01-10.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36988283256
-  14:37  Sahyadri-archives: Update posts entry via Pages CMS: _posts/2026-08-01-freshers-hike.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36988000234
-  14:37  Sahyadri-archives: Update posts entry via Pages CMS: _posts/2026-08-22-freshers-eve.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36987927836
-  14:35  Sahyadri-archives: Add posts entry via Pages CMS: _posts/2026-08-01-freshers-hike.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36987808864
-  13:50  Sahyadri-archives: Document a brittleness in the navbar's text colors; confirm section 35 has no dead/missing rules
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36983485005
-  13:44  Sahyadri-archives: Fix two gaps between the CMS form and what the site can actually display
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36982958788
-
-Thursday, 01 October 2026
--------------------------
-  18:21  Sahyadri-archives: Fix a stored-XSS-via-link risk in the comment moderation page
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36864617372
-  18:15  Sahyadri-archives: Fix an HTML-injection gap in the Profiles directory card builder
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36863962358
-  18:06  Sahyadri-archives: Fix the profile "Articles by" reverse-lookup for every name with 3+ words; correct a stale nav comment
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36862916703
 
 ------------------------------------------------------------
 
