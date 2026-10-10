@@ -115,7 +115,7 @@ share-description: "Weekly excerpts from the talks and writings of J. Krishnamur
     <figure class="video-item" data-year="{{ entry_academic_year }}">
         {%- if entry.youtube_id -%}
         <div class="video-wrapper" onclick="loadVideo(this)" data-video="{{ entry.youtube_id }}">
-            <img src="https://img.youtube.com/vi/{{ entry.youtube_id }}/hqdefault.jpg" class="thumbnail" alt="{{ entry.links.first.text | escape }}">
+            <img src="https://img.youtube.com/vi/{{ entry.youtube_id }}/hqdefault.jpg" class="thumbnail" alt="{{ entry.links.first.text | escape }}" {% if forloop.index0 > 0 %}loading="lazy"{% endif %}>
         </div>
         {%- endif -%}
         <figcaption class="video-caption">

@@ -81,7 +81,7 @@ share-description: "Videos from life at Sahyadri School, grouped by year."
         {%- endcase -%}
         <figure class="videos-page-item">
             <div class="videos-page-wrapper" onclick="loadVideo(this)" data-video="{{ video.youtube_id }}">
-                <img src="https://img.youtube.com/vi/{{ video.youtube_id }}/hqdefault.jpg" alt="{{ video.title | escape }}">
+                <img src="https://img.youtube.com/vi/{{ video.youtube_id }}/hqdefault.jpg" alt="{{ video.title | escape }}" {% if forloop.index0 > 0 %}loading="lazy"{% endif %}>
             </div>
             <figcaption>{{ video.title }}, {{ vday }}{{ vsuffix }} {{ video.date | date: "%B %Y" }}</figcaption>
         </figure>
