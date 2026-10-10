@@ -3,12 +3,14 @@
 # PURPOSE: Fallback page shown when an author byline links to a profile that
 # doesn't exist yet. post.html, posts.md, and activities.md all check
 # site.profiles at build time and route here (permalink /not_done_yet)
-# instead of generating a link that would 404.
+# instead of generating a link that would 404. noindex: true (see
+# _includes/head.html) keeps this thin placeholder out of search results.
 # Jekyll Front Matter Configuration
 layout: default
 title: Profile not made yet
 permalink: /not_done_yet
 share-description: "This person doesn't have a profile on Sahyadri Connect yet."
+noindex: true
 ---
 
 <!-- Top Back Navigation Container -->

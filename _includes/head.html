@@ -124,6 +124,13 @@
 
   <meta name="description" content="{{ description }}">
 
+  <!-- A page sets noindex: true in its own front matter to ask search
+       engines not to index or follow it (e.g. an error page or a thin
+       placeholder stub with no content worth ranking). -->
+  {% if page.noindex -%}
+  <meta name="robots" content="noindex, nofollow">
+  {% endif %}
+
   <!-- Mobile Browser Theme Color -->
   {% if site.mobile-theme-col -%}
   <meta name="theme-color" content="{{ site.mobile-theme-col }}">

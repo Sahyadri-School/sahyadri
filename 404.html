@@ -1,10 +1,12 @@
 ---
 # FILE: 404.html
-# PURPOSE: Custom 404 error page shown for any unmatched URL.
+# PURPOSE: Custom 404 error page shown for any unmatched URL. noindex: true
+# (see _includes/head.html) keeps it out of search results.
 layout: default
 title: 404 - Page not found
 permalink: /404.html
 share-description: "This page doesn't exist on Sahyadri Connect."
+noindex: true
 ---
 
 {%- comment -%}
