@@ -458,7 +458,7 @@
       : "";
 
     return `
-      <div class="sc-comment" data-id="${id}">
+      <div class="sc-comment" data-id="${safeId}">
         <div class="sc-avatar">${avatar}</div>
         <div class="sc-comment-body">
           <div class="sc-comment-head">
@@ -469,14 +469,14 @@
           </div>
           <p class="sc-comment-text">${safeText}</p>
           <div class="sc-actions">
-            <button class="sc-like-btn${userLiked ? " sc-active" : ""}" data-action="like" data-id="${id}" data-active="${userLiked}" aria-label="Like this comment">
+            <button class="sc-like-btn${userLiked ? " sc-active" : ""}" data-action="like" data-id="${safeId}" data-active="${userLiked}" aria-label="Like this comment">
               <span>${userLiked ? "❤️" : "🤍"}</span>${likeCount > 0 ? `<span class="sc-like-count">${likeCount}</span>` : ""}
             </button>
             ${reactionButtons}
-            ${!isReply ? `<button class="sc-text-btn" data-action="reply" data-id="${id}">Reply</button>` : ""}
+            ${!isReply ? `<button class="sc-text-btn" data-action="reply" data-id="${safeId}">Reply</button>` : ""}
             ${/* Edit is only offered while the comment is still awaiting approval: the Firestore rules freeze a comment's text once the moderator has approved it (otherwise an author could get a harmless comment approved and then change it to anything). Delete is always available. */ ""}
-            ${isOwn && !data.approved ? `<button class="sc-text-btn" data-action="edit" data-id="${id}">Edit</button>` : ""}
-            ${isOwn ? `<button class="sc-text-btn" data-action="delete" data-id="${id}">Delete</button>` : ""}
+            ${isOwn && !data.approved ? `<button class="sc-text-btn" data-action="edit" data-id="${safeId}">Edit</button>` : ""}
+            ${isOwn ? `<button class="sc-text-btn" data-action="delete" data-id="${safeId}">Delete</button>` : ""}
           </div>
         </div>
       </div>
