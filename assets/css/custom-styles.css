@@ -53,6 +53,7 @@
  *   34. Light / dark default profile photo toggle
  *   35. Comments widget (Firebase)
  *   36. Site-wide announcement banner
+ *   37. Article share button (WhatsApp)
  */
 
 
@@ -3215,4 +3216,20 @@ html {
         right: 0.75rem;
         font-size: 1.1rem;
     }
+}
+
+
+/* ============================================================
+   37. ARTICLE SHARE BUTTON (WhatsApp) — _layouts/post.html
+   Layout only; colour/contrast comes from .sc-btn itself (section 35),
+   reused here rather than WhatsApp's own brand green.
+   ============================================================ */
+.post-share {
+    margin: 10px 0 20px;
+}
+
+.post-share .sc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }

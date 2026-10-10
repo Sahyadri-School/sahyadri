@@ -109,6 +109,23 @@ layout: base
         {% endif %}
 
         <hr class="small">
+
+        {% comment %}
+          Share on WhatsApp: a one-tap pre-filled share link, no API or
+          phone number needed (api.whatsapp.com/send?text= works on both
+          the WhatsApp app and WhatsApp Web; the person picks who to send
+          it to). Reuses .sc-btn (the comments widget's button style,
+          section 35/37 in custom-styles.css) instead of WhatsApp's own
+          brand green, which fails WCAG AA contrast with white text at
+          this size -- see that section's comment for the verified ratio.
+        {% endcomment %}
+        {% capture whatsapp_share_text %}{{ page.title }} — {{ page.url | absolute_url }}{% endcapture %}
+        <div class="post-share">
+          <a href="https://api.whatsapp.com/send?text={{ whatsapp_share_text | url_encode }}"
+             target="_blank" rel="noopener noreferrer" class="sc-btn">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i> Share on WhatsApp
+          </a>
+        </div>
       </div>
 
       {% assign primary_image = page.image | default: page.image_id %}
