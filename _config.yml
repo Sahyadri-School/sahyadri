@@ -71,7 +71,7 @@ navbar-links:
 # -----------------------------------------------------------------------------
 
 # Provide a value to enable the RSS feed at /feed.xml
-rss-description:
+rss-description: "A window into life at Sahyadri School — newsletters, activities, and reflections from students, teachers, and the wider Krishnamurti Foundation India community."
 
 excerpt_length: 50       # Number of words shown in post excerpts
 feed_show_excerpt: true  # Show excerpts in the RSS feed
