@@ -1,0 +1,93 @@
+{% comment %}
+  FILE: _includes/newsletter-signup.html
+  PURPOSE: "Notify me about new issues" form. A visitor gives their name
+  and email; on submit this sends ONE email (via EmailJS, the same
+  provider already used for comment-moderation notifications) to
+  comments-moderator-email in _config.yml, with the visitor's name and a
+  Reply-To of their email address. There is no subscriber list and no
+  automatic sending to anyone when a new issue is published -- the
+  moderator adds the person to whatever mailing tool they use by hand.
+  If a real subscriber database / automated send is ever wanted instead,
+  this whole include should be replaced, not extended.
+
+  Renders nothing unless newsletter-signup-emailjs-template-id (and the
+  existing emailjs-service-id / emailjs-public-key, shared with the
+  comment-moderation emails) are all set in _config.yml, same gating
+  pattern as firebase-comments.html's moderation email.
+{% endcomment %}
+{% comment %}
+  Liquid treats an empty string as truthy, so a plain if tag on these
+  wouldn't actually hide the form while newsletter-signup-emailjs-template-id
+  is left blank ("") in _config.yml. Comparing to the "blank" literal
+  turned out NOT to match an empty string in this Jekyll/Liquid install
+  (confirmed directly: != "" correctly excludes "", != blank did not) --
+  use != "" instead.
+{% endcomment %}
+{% assign nl_service_id = site.emailjs-service-id %}
+{% assign nl_public_key = site.emailjs-public-key %}
+{% assign nl_template_id = site.newsletter-signup-emailjs-template-id %}
+{% if nl_service_id != "" and nl_public_key != "" and nl_template_id != "" %}
+<div id="newsletter-signup" class="nl-signup">
+  <form id="newsletter-signup-form" class="nl-signup-form">
+    <label for="newsletter-signup-name" class="sr-only">Your name</label>
+    <input type="text" id="newsletter-signup-name" placeholder="Your name" required class="nl-signup-input">
+
+    <label for="newsletter-signup-email" class="sr-only">Your email</label>
+    <input type="email" id="newsletter-signup-email" placeholder="Your email" required class="nl-signup-input">
+
+    <button type="submit" id="newsletter-signup-submit" class="sc-btn">Notify me of new issues</button>
+  </form>
+  <p id="newsletter-signup-status" class="nl-signup-status" role="status"></p>
+</div>
+
+<script>
+  (function () {
+    var form = document.getElementById("newsletter-signup-form");
+    var statusEl = document.getElementById("newsletter-signup-status");
+    var submitBtn = document.getElementById("newsletter-signup-submit");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = document.getElementById("newsletter-signup-name").value.trim();
+      var email = document.getElementById("newsletter-signup-email").value.trim();
+      if (!name || !email) return;
+
+      submitBtn.disabled = true;
+      statusEl.textContent = "";
+
+      // Sends straight to EmailJS; no Firestore or subscriber list
+      // involved. Template fields (name/email/message/title) must match
+      // whatever the newsletter-signup-emailjs-template-id template
+      // defines in the EmailJS dashboard.
+      fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          service_id: "{{ nl_service_id }}",
+          template_id: "{{ nl_template_id }}",
+          user_id: "{{ nl_public_key }}",
+          template_params: {
+            name: name,
+            email: email,
+            title: "Newsletter Signup",
+            message: "Please add me to the Sahyadri Connect newsletter notification list.",
+            time: new Date().toLocaleString()
+          }
+        })
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("EmailJS request failed: " + res.status);
+          statusEl.textContent = "Thanks! We'll add you to the list.";
+          form.reset();
+        })
+        .catch(function (err) {
+          console.error("Newsletter signup failed:", err);
+          statusEl.textContent = "Something went wrong. Please try again later.";
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+        });
+    });
+  })();
+</script>
+{% endif %}

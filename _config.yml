@@ -208,6 +208,20 @@ comments-moderator-email: "archives@sahyadrischool.org"
 
 
 # -----------------------------------------------------------------------------
+# Newsletter signup ("notify me about new issues" form)
+# A separate EmailJS template from the one above: a visitor's name/email
+# submitted here is emailed once to comments-moderator-email (with
+# Reply-To set to their address), for the moderator to add by hand to
+# whatever mailing list they use -- there is no subscriber database and
+# nothing is sent automatically when a new issue is published. Reuses
+# emailjs-service-id / emailjs-public-key above (same EmailJS account).
+# See _includes/newsletter-signup.html. Leave blank to hide the form
+# entirely.
+# -----------------------------------------------------------------------------
+newsletter-signup-emailjs-template-id: ""
+
+
+# -----------------------------------------------------------------------------
 # Analytics
 # Google Analytics 4 measurement ID, read by _includes/gtag.html (included
 # from head.html on every page). Leave blank to turn GA4 off entirely.

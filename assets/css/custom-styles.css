@@ -54,6 +54,7 @@
  *   35. Comments widget (Firebase)
  *   36. Site-wide announcement banner
  *   37. Article share button (WhatsApp)
+ *   38. Newsletter signup form
  */
 
 
@@ -3232,4 +3233,56 @@ html {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+}
+
+
+/* ============================================================
+   38. NEWSLETTER SIGNUP FORM (_includes/newsletter-signup.html)
+   Name/email inputs styled plainly (unlike .year-search-input, section
+   27, which reserves padding for an icon and clear button this form
+   doesn't have). .sc-btn (section 35) supplies the submit button's
+   already-verified colour/contrast.
+   ============================================================ */
+.nl-signup {
+    margin: 10px 0 20px;
+}
+
+.nl-signup-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.nl-signup-input {
+    font-family: 'Poiret One', system-ui, sans-serif;
+    font-size: 0.95rem;
+    color: #404040;
+    background-color: #f7faf8;
+    border: 1px solid #d0d8d0;
+    border-radius: 20px;
+    padding: 8px 16px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nl-signup-input:focus {
+    border-color: #5f745f;
+    box-shadow: 0 0 0 3px rgba(95, 116, 95, 0.15);
+}
+
+.nl-signup-status {
+    margin-top: 8px;
+    font-size: 0.9rem;
+    color: #404040;
+}
+
+html.dark-mode .nl-signup-input {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+html.dark-mode .nl-signup-status {
+    color: #e0e0e0;
 }
