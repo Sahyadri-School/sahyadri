@@ -6,8 +6,8 @@ date: 2026-07-15
 academic-year: "2026-27"
 ---
 
-I joined Sahyadri School since 5th grade.
+I have been at Sahyadri School since Grade 5.
 
-I have joined the Cards Club and Lettuce Cook Club. I am also a member of the Culture Committee.
+I have joined the Cards Club and the Lettuce Cook Club. I am also a member of the Culture Committee.
 
-I joined Sahyadri School because I really like the environment and how the teachers are so friendly. I also like the nature at Astachal.
+I joined Sahyadri School because I really like the environment and how friendly the teachers are. I also like the natural surroundings at Astachal.
