@@ -3,7 +3,7 @@
 # PURPOSE: Ninad (school magazine/PDF archive) listing page — card grid of downloadable PDFs.
 layout: page
 title: Ninad
-subtitle: Click thumbnail to download Ninad
+subtitle: Click on a thumbnail to download an issue of Ninad
 share-description: "Ninad, the Sahyadri School magazine: past editions to read or download as PDFs."
 ---
 
