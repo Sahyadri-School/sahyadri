@@ -6,28 +6,27 @@ date: 2026-02-21
 category: Digital Safety Workshop
 ---
 
-## The Situation:
+## The situation
 
-We have seen that students of Grade 6 & 7 are highly influenced by peers as they seek acceptance and belonging, making them vulnerable to peer pressures.
+We have observed that students in Grades 6 and 7 can be strongly influenced by their peers as they seek acceptance and belonging, making them vulnerable to peer pressure.
 
-When tech enters the equation, peer pressure takes on new dimensions. Things are often different in online spaces: body language is missing, boundaries can be blurry, and online community norms are constantly changing and evolving.
+When technology enters the equation, peer pressure takes on new dimensions. Online spaces are often different: body language is missing, boundaries can be blurry, and community norms are constantly changing.
 
-Through a case study and reflective discussions, students explored how the desire to fit in can shape their decisions—for better or worse—and they collaborated to identify 3 strategies to help each other decode the pressures of online & offline life and build a stronger sense of authentic connection.
+Through a case study and reflective discussions, students explored how the desire to fit in can shape their decisions—for better or worse. They collaborated to identify three strategies to help one another recognise pressures in online and offline life and build a stronger sense of authentic connection.
 
+### What we did
 
-### What we did:
+We conducted a workshop to help students recognise the physical and emotional signals that may indicate digital peer pressure. Students also developed strategies for responding thoughtfully rather than reactively when they feel pressured through technology. The lesson helped students identify how social media, group chats, and online gaming can amplify peer pressure.
 
-We conducted a workshop for students to learn to recognize both physical and emotional signals that indicate they're experiencing digital peer pressure and develop strategies to respond thoughtfully rather than reactively when feeling pressured through technology. This lesson helps students identify how social media, group chats, and online gaming can amplify peer pressure.
+### Topics covered in the workshop
 
+- Understand belonging and peer pressure, including how technology can intensify it.
+- Identify types of pressure: direct and indirect.
+- Recognise physical and emotional signs of peer pressure.
+- Identify online peer pressure by analysing scenarios.
+- Learn three specific strategies for responding to peer pressure.
+- Identify forms of indirect pressure, such as feeling the need to wear Crocs, Westside kurtis, loose jeans, or play football cards in order to belong.
 
-### In this workshop for Grade 6 & 7 we covered the following.
+We concluded the workshop by listening to and discussing the song “Under Pressure” by Queen and David Bowie.
 
-- Understand belonging, peer pressure, how tech can make peer pressure stronger
-- Identify types of pressure - Direct Vs Indirect
-- Recognize physical and emotional signs of peer pressure
-- Identify peer pressures online by analyzing scenarios
-- Learn 3 specific strategies to apply when we face peer pressure
-- Children identified different forms of indirect pressure like the need to wear crocs, Westside Kurtis, loose jeans, play Football cards - all for the sake of belonging. We concluded the workshop by listening to & discussing the song “Under Pressure” by Queen and David Bowie.
-
-
-For our workshop we used realistic scenarios that reflect students' actual experiences online, inviting them to practice communication strategies, boundary-setting techniques, and community-building approaches in contexts that feel authentic and relevant.  This approach acknowledges that healthy digital relationships require active care and commitment to flourish.
+We used realistic scenarios reflecting students' online experiences and invited them to practise communication strategies, set boundaries, and build community in authentic, relevant contexts. This approach acknowledges that healthy digital relationships require active care and commitment.
