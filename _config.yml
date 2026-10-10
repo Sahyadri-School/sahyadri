@@ -219,6 +219,9 @@ comments-moderator-email: "archives@sahyadrischool.org"
 # entirely.
 # -----------------------------------------------------------------------------
 newsletter-signup-emailjs-template-id: "template_z85boy9"
+# Safety switch: keep false until the EmailJS template is verified and the
+# owner has chosen how subscribers will be stored and notified.
+newsletter-signup-enabled: false
 
 
 # -----------------------------------------------------------------------------
