@@ -79,6 +79,17 @@ jobs:
           fi
           exit $status
 
+      # Check JavaScript syntax for repository JS files.
+      - name: Check JavaScript syntax
+        run: |
+          if [ -d assets/js ]; then
+            find assets/js -type f -name '*.js' -print0 | xargs -0 -r -n1 node --check
+          fi
+
+      # Advisory audit: flags malformed/repeated media IDs without blocking deploy.
+      - name: Audit content media metadata
+        run: bundle exec ruby check_content_metadata.rb
+
       # Packages _site/ so the deploy job can publish exactly what was checked.
       - uses: actions/upload-pages-artifact@v4
 
