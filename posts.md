@@ -2,10 +2,11 @@
 # FILE: posts.md
 # PURPOSE: Newsletter listing page. Custom tabbed-by-year template (inline <style> block)
 # with TOC sidebar. Pulls from _posts collection, grouped by 'category' front matter.
-# Also includes the "notify me about new issues" signup form
-# (_includes/newsletter-signup.html), shown once at the bottom of the
-# page, after all the year panels -- outside the per-year academic-panel
-# loop so it isn't duplicated once per year tab.
+# The "notify me about new issues" signup form (_includes/newsletter-signup.html)
+# is temporarily removed from this page (commented out below, not deleted)
+# while the automated "email everyone when a new issue is published" side
+# of it is still being worked out. See CLAUDE.md's "Newsletter signup
+# (EmailJS)" section.
 # Jekyll Front Matter Configuration
 layout: page
 title: "Newsletter"
@@ -261,8 +262,6 @@ share-description: "Student-written newsletter articles from Sahyadri School, gr
     </div>
   </div>
 {% endfor %}
-
-{% include newsletter-signup.html %}
 
 <!-- JavaScript Tab Switcher -->
 <script>
