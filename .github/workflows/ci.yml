@@ -91,7 +91,7 @@ jobs:
         run: bundle exec ruby check_content_metadata.rb
 
       # Packages _site/ so the deploy job can publish exactly what was checked.
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
 
   # Publishes the artifact made above to GitHub Pages (usually live within
   # about two minutes of the push).
