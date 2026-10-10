@@ -1,7 +1,7 @@
 # GitHub Actions: Build & deploy Jekyll site to GitHub Pages
 #
-# Runs on every push to master (including the "via Pages CMS" content commits
-# that editors make all day) and can be started by hand from the Actions tab.
+# Runs on pushes to master, pull requests targeting master, and manual dispatch.
+# Pull requests run the same build/link checks but are never deployed.
 # Two jobs: "build" makes and checks the site; "deploy" publishes it, and only
 # runs if every build step passed. A failed build or link check therefore
 # leaves the previous site live. A change that builds but LOOKS wrong still
@@ -15,6 +15,8 @@ name: Sahyadri Connect
 on:
   push:
     branches: ["master"]
+  pull_request:
+    branches: ["master"]
   workflow_dispatch:
 
 # Cancel any in-progress run for the same branch so rapid pushes
@@ -27,8 +29,6 @@ concurrency:
 # needs to publish (pages: write, id-token: write for the deploy handshake).
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   build:
@@ -85,7 +85,13 @@ jobs:
   # Publishes the artifact made above to GitHub Pages (usually live within
   # about two minutes of the push).
   deploy:
+    # Never publish an unmerged pull-request build to the live Pages site.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     needs: build
     environment:
       name: github-pages

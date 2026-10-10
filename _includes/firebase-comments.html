@@ -429,7 +429,11 @@
     const safeName = escapeHtml(data.name || "Anonymous");
     const safeText = escapeHtml(data.text || "");
     const initial = safeName.trim().charAt(0).toUpperCase() || "?";
-    const avatar = data.photoURL ? `<img src="${escapeHtml(data.photoURL)}" alt="">` : initial;
+    // Only load profile images over HTTPS from Google's profile-image hosts.
+    // Firestore values are user-controlled unless the deployed rules say otherwise.
+    const safePhotoURL = getSafePhotoURL(data.photoURL);
+    const avatar = safePhotoURL ? `<img src="${escapeHtml(safePhotoURL)}" alt="" referrerpolicy="no-referrer">` : initial;
+    const safeId = escapeHtml(id);
 
     const likes = data.likes || {};
     const likeCount = Object.keys(likes).length;
@@ -441,7 +445,7 @@
       const count = Object.keys(reactors).length;
       const active = !!(currentUser && reactors[currentUser.uid]);
       return `
-        <button class="sc-emoji-btn${active ? " sc-active" : ""}" data-action="reaction" data-id="${id}" data-emoji="${emoji}" data-active="${active}" aria-label="React with ${emoji}">
+        <button class="sc-emoji-btn${active ? " sc-active" : ""}" data-action="reaction" data-id="${safeId}" data-emoji="${emoji}" data-active="${active}" aria-label="React with ${emoji}">
           <span>${emoji}</span>${count > 0 ? `<span class="sc-emoji-count">${count}</span>` : ""}
         </button>
       `;
@@ -454,7 +458,7 @@
       : "";
 
     return `
-      <div class="sc-comment" data-id="${id}">
+      <div class="sc-comment" data-id="${safeId}">
         <div class="sc-avatar">${avatar}</div>
         <div class="sc-comment-body">
           <div class="sc-comment-head">
@@ -465,14 +469,14 @@
           </div>
           <p class="sc-comment-text">${safeText}</p>
           <div class="sc-actions">
-            <button class="sc-like-btn${userLiked ? " sc-active" : ""}" data-action="like" data-id="${id}" data-active="${userLiked}" aria-label="Like this comment">
+            <button class="sc-like-btn${userLiked ? " sc-active" : ""}" data-action="like" data-id="${safeId}" data-active="${userLiked}" aria-label="Like this comment">
               <span>${userLiked ? "❤️" : "🤍"}</span>${likeCount > 0 ? `<span class="sc-like-count">${likeCount}</span>` : ""}
             </button>
             ${reactionButtons}
-            ${!isReply ? `<button class="sc-text-btn" data-action="reply" data-id="${id}">Reply</button>` : ""}
+            ${!isReply ? `<button class="sc-text-btn" data-action="reply" data-id="${safeId}">Reply</button>` : ""}
             ${/* Edit is only offered while the comment is still awaiting approval: the Firestore rules freeze a comment's text once the moderator has approved it (otherwise an author could get a harmless comment approved and then change it to anything). Delete is always available. */ ""}
-            ${isOwn && !data.approved ? `<button class="sc-text-btn" data-action="edit" data-id="${id}">Edit</button>` : ""}
-            ${isOwn ? `<button class="sc-text-btn" data-action="delete" data-id="${id}">Delete</button>` : ""}
+            ${isOwn && !data.approved ? `<button class="sc-text-btn" data-action="edit" data-id="${safeId}">Edit</button>` : ""}
+            ${isOwn ? `<button class="sc-text-btn" data-action="delete" data-id="${safeId}">Delete</button>` : ""}
           </div>
         </div>
       </div>
@@ -591,6 +595,21 @@
   function formatDate(date) {
     return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) +
       " at " + date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  }
+
+  // Accept only Google-hosted HTTPS profile images. Never render arbitrary
+  // stored URLs as image sources; Firestore documents are not trusted input.
+  function getSafePhotoURL(raw) {
+    if (typeof raw !== "string" || !raw) return null;
+    try {
+      const url = new URL(raw);
+      if (url.protocol !== "https:") return null;
+      if (url.hostname !== "lh3.googleusercontent.com" &&
+          !url.hostname.endsWith(".googleusercontent.com")) return null;
+      return url.href;
+    } catch (err) {
+      return null;
+    }
   }
 
   // Makes untrusted text safe to put inside HTML (the browser does the escaping:
