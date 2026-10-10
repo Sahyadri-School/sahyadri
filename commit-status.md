@@ -4,13 +4,232 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes once a day at midnight (IST), and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-10-10 04:18 IST
+Last updated: 2026-10-11 03:26 IST
 
 ------------------------------------------------------------
 
-1 of the last 100 shown below did NOT go live cleanly -- see below.
+18 of the last 100 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
+
+Saturday, 10 October 2026
+-------------------------
+  17:43  Claude: Proofread non-newsletter site text
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38051194046
+  16:00  Claude: Bump GitHub Action versions in ci.yml (actions/checkout, configure-pages, upload-pages-artifact)
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38045153063
+  15:27  Sahyadri-archives: Correct grammar in student profile
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043246179
+  15:27  Sahyadri-archives: Clarify profile placeholder wording
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043240964
+  15:27  Sahyadri-archives: Correct homepage sentence structure
+          Build unknown -- the site was NOT updated with this change.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043238527
+  15:27  Sahyadri-archives: Correct gallery title wording
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043222190
+  15:27  Sahyadri-archives: Correct event title punctuation
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043218229
+  15:26  Sahyadri-archives: Correct event title punctuation
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043192483
+  15:26  Sahyadri-archives: Correct event title capitalisation
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043187995
+  15:26  Sahyadri-archives: Correct event title capitalisation
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043186080
+  15:26  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043156100
+  15:26  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043152537
+  15:26  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043148119
+  15:26  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043144615
+  15:26  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043140022
+  15:26  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043135896
+  15:25  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043131705
+  15:25  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043127279
+  15:25  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043124146
+  15:25  Sahyadri-archives: Correct gallery caption grammar and date formatting
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043118640
+  15:25  Sahyadri-archives: Correct video title grammar
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043084994
+  15:25  Sahyadri-archives: Correct event title punctuation
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043080533
+  15:24  Sahyadri-archives: Correct grammar in student profile
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043052617
+  15:24  Sahyadri-archives: Correct grammar and consistency in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043032377
+  15:24  Sahyadri-archives: Correct grammar and sentence structure in student profile
+          Build unknown -- the site was NOT updated with this change.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043028797
+  15:23  Sahyadri-archives: Correct archive page subtitle
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043004285
+  15:23  Sahyadri-archives: Correct archive page subtitle
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38043000796
+  15:23  Sahyadri-archives: Correct gallery page subtitle
+          Build unknown -- the site was NOT updated with this change.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042999194
+  15:23  Sahyadri-archives: Correct gallery page subtitle
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042994910
+  15:23  Sahyadri-archives: Correct grammar in decision-making activity
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042957119
+  15:23  Sahyadri-archives: Correct grammar in information literacy activity
+          Build unknown -- the site was NOT updated with this change.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042955323
+  15:22  Sahyadri-archives: Correct grammar and formatting in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042931992
+  15:22  Sahyadri-archives: Correct grammar and consistency in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042928783
+  15:22  Sahyadri-archives: Correct grammar in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042925378
+  15:22  Sahyadri-archives: Correct grammar in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042922059
+  15:22  Sahyadri-archives: Correct grammar in student profile
+          Build unknown -- the site was NOT updated with this change.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042918196
+  15:21  Sahyadri-archives: Correct grammar in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042887637
+  15:21  Sahyadri-archives: Correct grammar and reduce repetition in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042884944
+  15:21  Sahyadri-archives: Correct grammar and consistency in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042881512
+  15:21  Sahyadri-archives: Correct grammar and consistency in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042878829
+  15:21  Sahyadri-archives: Correct grammar in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042875029
+  15:21  Sahyadri-archives: Correct grammar in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042870606
+  15:20  Sahyadri-archives: Correct grammar and parallel structure in student profile
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042837273
+  15:20  Sahyadri-archives: Correct grammar in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042833265
+  15:20  Sahyadri-archives: Correct grammar in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042828429
+  15:20  Sahyadri-archives: Correct grammar and consistency in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042827113
+  15:20  Sahyadri-archives: Correct grammar in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042823321
+  15:20  Sahyadri-archives: Correct grammar and consistency in student profile
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042818973
+  15:18  Sahyadri-archives: Correct grammar in student profile
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38042683000
+  13:39  dependabot[bot]: Bump actions/checkout from 4 to 7
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38036881341
+  13:38  dependabot[bot]: Bump actions/upload-pages-artifact from 4 to 5
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38036876049
+  13:38  dependabot[bot]: Bump actions/configure-pages from 5 to 6
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38036873831
+  13:38  Sahyadri-archives: Improve accessibility and site maintenance safeguards
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38036820713
+  13:37  Sahyadri-archives: Clarify maintenance bypass safety in handover
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38036781079
+  13:28  Sahyadri-archives: Harden comment rendering and fix thumbnail mapping
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38036272961
+  13:23  Sahyadri-archives: Avoid adding an unused newsletter feature flag
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38035989018
+  13:22  Sahyadri-archives: Clarify pull request workflow behavior
+          Build OK, but deploy skipped -- this change may not be live yet.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38035929655
+  13:22  Sahyadri-archives: Use original PDF ID for its thumbnail
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38035921876
+  13:22  Sahyadri-archives: Run checks on pull requests without granting build deployment permissions
+          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38035912505
+  11:26  Claude: CLAUDE.md: bring the Newsletter signup section up to date
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38029215764
+  11:24  Claude: Temporarily remove the newsletter signup form from the site
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38029120947
+  10:42  Claude: Move the newsletter signup form to the bottom of the Newsletter page
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38026717319
+  09:28  Claude: Turn on the newsletter signup form with the real EmailJS template ID
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38022401563
+  09:22  Claude: Document the newsletter signup flow in CLAUDE.md
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38022060812
+  09:16  Claude: Move the newsletter signup form from the homepage to the Newsletter page
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38021717260
+  09:14  Claude: Add a 'notify me about new issues' newsletter signup form
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38021620459
+  09:01  Claude: Add a Share on WhatsApp button to every newsletter and activity article
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38020891056
+  08:54  Claude: Lazy-load gallery thumbnails on Photos, Videos and Krishnamurti pages
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38020417434
+  08:50  Claude: Spread the six remaining bulk-imported September posts to earlier dates
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38020207329
+  08:46  Claude: Keep the 404 and profile-placeholder pages out of search results
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38019980508
+  08:41  Claude: Enable RSS feed discovery
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38019707744
+  08:37  Claude: CLAUDE.md: remove a Known-open-items line that's already fixed
+          Build OK, deployed -- this change is live.
+          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38019477463
 
 Friday, 09 October 2026
 -----------------------
@@ -104,234 +323,6 @@ Tuesday, 06 October 2026
   17:40  Sahyadri-archives: Announcement banner: show it again on every page load
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37461346189
-  17:36  Sahyadri-archives: Keep the announcement banner flush against the navbar while it changes height
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37460913249
-  17:27  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37459864993
-  17:27  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build unknown -- the site was NOT updated with this change.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37459858126
-  17:27  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37459847987
-  17:24  Sahyadri-archives: Fix the announcement banner for real: it never stuck, and its text was dark grey
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37459510623
-  17:10  Sahyadri-archives: Add videos entry via Pages CMS: _videos/2026-10-06-musical-eve.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37457949483
-  12:50  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37428995771
-  11:32  Sahyadri-archives: Fix the actual, confirmed bug: sticky's stuck position never picked up the corrected offset
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37421587414
-  11:15  Sahyadri-archives: Fix the actual root cause: the navbar genuinely shrinks on scroll, with no single height
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37420115020
-  11:08  Sahyadri-archives: Fix the sticky banner rendering almost hidden behind the navbar
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37419521500
-  11:03  Sahyadri-archives: Fix the actual reason the sticky banner (and likely .toc-sidebar) wasn't sticking
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37419143571
-  10:57  Sahyadri-archives: Keep the announcement banner right below the navbar while scrolling
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37418632905
-  10:49  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37417947374
-  10:46  Sahyadri-archives: Fix a real contrast failure on the announcement banner's close button
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37417700482
-  10:36  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37416876974
-  10:36  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37416868559
-  10:32  Sahyadri-archives: Make the announcement banner's top offset dynamic, measured from the real navbar
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37416564718
-
-Monday, 05 October 2026
------------------------
-  18:55  Sahyadri-archives: Fix the announcement banner being hidden under the fixed navbar
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37316665313
-  18:43  Sahyadri-archives: Fix a real push failure: two builds close together could make this workflow fail silently
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37315126221
-  18:33  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37313884088
-  18:28  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37313309733
-  18:24  Sahyadri-archives: Add a site-wide announcement banner, controlled from the CMS
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37312745478
-  12:23  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-08-19-stocks.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37274709521
-  11:16  Sahyadri-archives: Refresh the commit status page automatically after every build, not just daily
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37269297544
-  11:13  Sahyadri-archives: Update posts entry via Pages CMS: _posts/2026-07-17-cubing-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37269041134
-  11:08  Sahyadri-archives: Add a Commit Status entry to the Pages CMS sidebar
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37268661161
-  11:05  Sahyadri-archives: Update posts entry via Pages CMS: _posts/2026-07-17-cubing-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37268492032
-  11:03  Sahyadri-archives: Update posts entry via Pages CMS: _posts/2026-07-17-cubing-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37268285590
-  10:59  Sahyadri-archives: Update posts entry via Pages CMS: _posts/2026-07-17-card-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37267997203
-  10:55  Sahyadri-archives: Thumbnail cropping: a gentler default, plus a per-post override for the rest
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37267687921
-  10:46  Sahyadri-archives: Fix newsletter/activity thumbnails cropping out faces on portrait photos
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37267069697
-
-Sunday, 04 October 2026
------------------------
-  15:01  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-veeraraghav-sir.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37192432986
-  15:00  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-08-22-tradition.md
-          Build OK; deploy was stopped early because a newer change was saved right after it.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37192398119
-  14:58  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-poetry-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37192289948
-  14:58  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-poetry-club.md
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37192261966
-  14:56  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-peanut-butter-and-jam.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37192176547
-  14:55  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-lettuce-cook.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37192123585
-  14:13  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-cubing-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37189840886
-  14:13  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-cubing-club.md
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37189831497
-  14:12  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-chess-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37189785947
-  14:11  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-card-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37189715581
-  14:10  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-medical-outreach.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37189665353
-  14:09  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-ioqm-prep.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37189631590
-  14:07  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-gym.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37189515787
-  14:06  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-cpr.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37189479165
-  11:46  Sahyadri-archives: Show times in IST instead of UTC in the CMS activity log
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37182317641
-  11:28  Sahyadri-archives: Make the CMS activity log readable as plain text, not a Markdown table
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37181432814
-  11:18  Sahyadri-archives: Fix the activity log never actually getting committed
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37180938376
-  11:13  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-ioqm-prep.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37180710415
-  11:10  Sahyadri-archives: Add the missing "Update CMS activity log" button
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37180562699
-  11:09  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-ioqm-prep.md
-          Build OK; deploy was stopped early because a newer change was saved right after it.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37180537257
-  11:05  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-medical-outreach.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37180320604
-  11:03  Sahyadri-archives: Add a CMS Activity Log entry to the Pages CMS sidebar
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37180255904
-  10:59  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-cpr.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37180019126
-  10:56  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-gym.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179909904
-  10:55  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-09-04-veeraraghav-sir.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179829239
-  10:54  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-08-22-tradition.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179774868
-  10:50  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-peanut-butter-and-jam.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179599183
-  10:50  Sahyadri-archives: Add a "Run link check now" button to the Pages CMS Actions page
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179583036
-  10:48  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-lettuce-cook.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179519925
-  10:47  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-cubing-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179479246
-  10:44  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-poetry-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179319210
-  10:43  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-poetry-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179281006
-  10:39  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-chess-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37179078668
-  10:34  sahyadri-techteam: Update posts entry via Pages CMS: _posts/2026-07-17-card-club.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37178829712
-  10:10  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37177677368
-  10:08  Sahyadri-archives: Update site-status entry via Pages CMS: _data/maintenance.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37177584423
-
-Saturday, 03 October 2026
--------------------------
-  11:38  Sahyadri-archives: Add videos entry via Pages CMS: _videos/2026-10-03-musical-morning.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37102069038
-  10:11  Sahyadri-archives: Update videos entry via Pages CMS: _videos/2026-09-26-sitar-recital-by-nandita-acharya-26th-sept-2026.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37097404569
-  10:11  Sahyadri-archives: Add videos entry via Pages CMS: _videos/2026-09-26-sitar-recital-by-nandita-acharya-26th-sept-2026.md
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37097396941
-
-Friday, 02 October 2026
------------------------
-  15:45  Sahyadri-archives: Add files via upload
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36994432907
-  15:25  Sahyadri-archives: Update posts entry via Pages CMS: _posts/2025-07-12-fresher's-eve.md
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/36992522012
 
 ------------------------------------------------------------
 
