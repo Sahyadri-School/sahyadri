@@ -31,7 +31,7 @@ Article text in Markdown goes here.
 
 - **`subtitle`** is the byline. It's split into first/last word and checked against `_profiles/` filenames to auto-link to that person's profile page — if there's no match, it links to a generic "profile not set up yet" page instead of breaking. This mostly comes up with teacher bylines: a middle name, initial, or honorific will usually not match automatically; add `profile-link: "https://..."` to point it at the right page directly.
 - **`category`** groups the post under a month heading on the Newsletter page (`/posts/`) — use `"Month YYYY"`, matching the existing convention.
-- **`image`** (optional) is a Google Drive file ID for the post's thumbnail. There's also `image2`–`image5` for a small gallery, and `pinned: true` to pin the post above others in its category.
+- **`image`** (optional) is a Google Drive file ID for the post's thumbnail. There's also `image2`–`image5` for a small gallery. Add `image_alt`, `image2_alt` … `image5_alt` to describe each meaningful photo for visitors using screen readers; if omitted, the article title is used as a fallback. Write what is visible (for example, “Students planting saplings in the school garden”), not “image of”. `pinned: true` pins the post above others in its category.
 - Two authors: add `subtitle2` (and `profile-link2` if needed) the same way.
 - **`tags`** (optional) is a list, e.g. `tags: [sports, workshop]`. It shows as a "Tags:" line on the article and appears grouped on the Tag index page (`/tags/`) — only for Newsletter posts, though; this is a Jekyll limitation (`site.tags` only reads `_posts`), so adding `tags` to an Activity write-up won't show up there. There's no fixed list of allowed tags — reuse an existing one where it fits (check `/tags/` for what's already in use) rather than inventing near-duplicates.
 
@@ -54,7 +54,7 @@ image: ""
 ---
 ```
 
-Same rules as a Newsletter post (byline auto-linking, `image`, `pinned`) — activities and posts share the same layout and page logic, just live in a separate collection and separate listing page (`/activities/`).
+Same rules as a Newsletter post (byline auto-linking, `image`, `image_alt` through `image5_alt`, `pinned`) — activities and posts share the same layout and page logic, just live in a separate collection and separate listing page (`/activities/`).
 
 ---
 
