@@ -218,7 +218,7 @@ comments-moderator-email: "archives@sahyadrischool.org"
 # See _includes/newsletter-signup.html. Leave blank to hide the form
 # entirely.
 # -----------------------------------------------------------------------------
-newsletter-signup-emailjs-template-id: ""
+newsletter-signup-emailjs-template-id: "template_z85boy9"
 
 
 # -----------------------------------------------------------------------------
