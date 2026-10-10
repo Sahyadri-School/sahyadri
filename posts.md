@@ -2,6 +2,9 @@
 # FILE: posts.md
 # PURPOSE: Newsletter listing page. Custom tabbed-by-year template (inline <style> block)
 # with TOC sidebar. Pulls from _posts collection, grouped by 'category' front matter.
+# Also includes the "notify me about new issues" signup form
+# (_includes/newsletter-signup.html), shown above the year tabs regardless
+# of which year is active.
 # Jekyll Front Matter Configuration
 layout: page
 title: "Newsletter"
@@ -49,6 +52,8 @@ share-description: "Student-written newsletter articles from Sahyadri School, gr
 
 <!-- Scroll anchor for back-to-top links -->
 <div id="top" style="scroll-margin-top: 200px;"></div>
+
+{% include newsletter-signup.html %}
 
 <!-- Academic Year Tabs Header -->
 <div class="tabs-container">
