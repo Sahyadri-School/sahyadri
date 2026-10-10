@@ -85,7 +85,7 @@ jobs:
       # generate_commit_status.py reads GitHub's Actions run history over
       # the API, not local git log, so this only needs a working copy of
       # the repo to write the output file into and commit from.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
