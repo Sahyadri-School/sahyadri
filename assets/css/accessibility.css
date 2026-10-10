@@ -1,0 +1,56 @@
+/*
+ * Accessibility baseline for Sahyadri Connect.
+ * Kept separate from the theme overrides so it can be audited independently.
+ */
+
+/* Keyboard users can jump over the repeated navigation. */
+.skip-link {
+  position: absolute;
+  z-index: 10000;
+  top: 8px;
+  left: 8px;
+  padding: 12px 16px;
+  color: #fff !important;
+  background: #263f30 !important;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  text-decoration: underline;
+  transform: translateY(-160%);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 3px solid #e3b341;
+  outline-offset: 3px;
+}
+
+/* Never rely on browser-default focus styling being visible against custom CSS. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid #8a5b00 !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px #fff !important;
+}
+.dark-mode :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline-color: #f2d98a !important;
+  box-shadow: 0 0 0 2px #1a1a1a !important;
+}
+
+/* Keep sticky/fixed navigation from obscuring in-page targets. */
+:target,
+[id="main-content"] {
+  scroll-margin-top: 7rem;
+}
+
+/* Honor the visitor's operating-system motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

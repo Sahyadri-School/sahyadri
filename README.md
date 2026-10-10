@@ -88,6 +88,12 @@ The site hosts:
 └── 404.html                    # Custom not-found page
 ```
 
+## Automated checks
+
+Pull requests and pushes run the Jekyll build and internal HTMLProofer checks. CI also checks syntax for JavaScript files under `assets/js/` and runs `check_content_metadata.rb`, an advisory scan for suspicious or repeated Google Drive media IDs. The media scan is intentionally non-blocking because repeated photos can be legitimate; verify sharing permissions and image crops in a browser. External URLs are checked separately by the weekly workflow.
+
+Before a visual or template change is merged, use [`ACCESSIBILITY-CHECKLIST.md`](ACCESSIBILITY-CHECKLIST.md) for keyboard, mobile, zoom, contrast and light/dark-mode checks. These require a real browser and cannot be fully automated by the build.
+
 ## Content authoring
 
 ### Newsletter post
@@ -192,13 +198,7 @@ To review and approve a pending comment: **`approve.html`** (at the repo root, `
 
 Maintenance mode is a single on/off value, `enabled`, in `_data/maintenance.yml`. When it's `true`, every page redirects to `/maintenance/`. Staff can flip it from the CMS (the **Site status** entry), or you can edit that file directly. Either way it takes effect after the site rebuilds, usually 1–2 minutes after saving. It lives in its own file rather than in `_config.yml` because a CMS save rewrites the whole file it edits, which would have stripped `_config.yml`'s explanatory comments. If that file is ever missing or empty the site simply stays open.
 
-To preview the site while maintenance mode is on, visit:
-
-```
-https://connect.sahyadrischool.org/?bypass=<maintenance-bypass-key>
-```
-
-This unlocks browsing for the rest of that browser tab's session (via `sessionStorage`) — it resets when the tab closes. The key itself, `maintenance-bypass-key`, stays in `_config.yml`. Change it any time to invalidate old bypass links. Note this repo is public, so the key isn't a real secret; it just keeps casual visitors from stumbling onto the bypass.
+A bypass is **disabled by default**: `maintenance-bypass-key` in `_config.yml` is blank. If an owner deliberately sets a non-empty value, it can be used as `?bypass=<configured-key>` and is remembered for that browser tab session. Because this repository and the generated page source are public, the key is not secret and is not access control; prefer a local or PR build for previews. Do not treat maintenance mode as a way to protect confidential or unpublished content.
 
 `maintenance.html` itself also reverse-redirects to the homepage if someone lands on it while maintenance mode is actually off (e.g. from a stale cached page) — see its own comments for details.
 
@@ -215,7 +215,7 @@ Rendered by `_includes/announcement.html`, included once from `_layouts/base.htm
 | Key | Purpose |
 |---|---|
 | `url`, `baseurl`, `title`, `author`, `description` | Basic site identity |
-| `maintenance-bypass-key` | See above. (The on/off switch itself is `enabled` in `_data/maintenance.yml`, not in this file.) |
+| `maintenance-bypass-key` | Optional preview convenience; blank by default and never a security boundary. The maintenance switch itself is `enabled` in `_data/maintenance.yml`. |
 | `navbar-links` | Nav bar structure — top-level and dropdown items |
 | `post_search` | Enables the year-scoped search box on the Newsletter/Activities pages |
 | `page-col`, `text-col`, `link-col`, `hover-col`, `navbar-*`, `footer-*` | Color palette, consumed as CSS custom properties |

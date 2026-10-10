@@ -2,11 +2,10 @@
 # FILE: posts.md
 # PURPOSE: Newsletter listing page. Custom tabbed-by-year template (inline <style> block)
 # with TOC sidebar. Pulls from _posts collection, grouped by 'category' front matter.
-# The "notify me about new issues" signup form (_includes/newsletter-signup.html)
-# is temporarily removed from this page (commented out below, not deleted)
-# while the automated "email everyone when a new issue is published" side
-# of it is still being worked out. See CLAUDE.md's "Newsletter signup
-# (EmailJS)" section.
+# The "notify me about new issues" signup form is intentionally disabled:
+# _includes/newsletter-signup.html is retained for possible future reuse, but
+# there is no include call on this page until the subscription workflow is
+# properly implemented and tested. See CLAUDE.md, "Newsletter signup (EmailJS)."
 # Jekyll Front Matter Configuration
 layout: page
 title: "Newsletter"

@@ -36,7 +36,7 @@ The CMS only covers *content*. Changes to how the site looks or works (CSS, HTML
 - Have **at least two people with admin access** to GitHub, Firebase, the domain/DNS and the moderator mailbox. One person leaving must never lock the school out.
 - Turn on **two-factor sign-in** on every account in the table above, especially any account that several people share. Write down (in the private checklist) where its recovery codes or recovery email are.
 - **This repository is public.** Never put a password, token or private information in any file, commit message or issue. (Firebase's and EmailJS's "public" keys in `_config.yml` are meant to be public; the rules in Firebase are what protect the data.)
-- The maintenance **bypass key** in `_config.yml` is visible to anyone who reads the file. It only lets someone preview the site while maintenance mode is on, but do not reuse it anywhere else.
+- The maintenance bypass in `_config.yml` is **disabled by default** (blank key). If someone deliberately enables it for a preview, the key is visible in the public repository and generated page source, so it is not security. Never use maintenance mode to protect confidential or unpublished content.
 - A **personal access token** (given to a script or an AI assistant so it can change the repository) is as powerful as a password. Make it short-lived and **delete it the moment the job is done**: GitHub → Settings → Developer settings → Personal access tokens.
 - Once a year, remove anyone who has left from GitHub, Firebase, the Drive folders and any other service.
 

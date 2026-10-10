@@ -13,8 +13,8 @@
        query string, so no cache layer, browser or GitHub's CDN, can
        serve a stale copy of THIS small file) and redirects only if that
        live check says maintenance is still genuinely on right now.
-       Skips the redirect if a valid ?bypass= key is present in the URL or was previously
-       remembered for this browser tab session (see maintenance-bypass-key in _config.yml). -->
+       Skips the redirect if an optional ?bypass= key is configured and matches, or was previously
+       remembered for this browser tab session. The key is public in a static site and is not access control. -->
   <script>
     (function() {
       var BYPASS_STORAGE_KEY = 'sahyadri-maintenance-bypass';

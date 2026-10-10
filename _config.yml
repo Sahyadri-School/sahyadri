@@ -23,16 +23,13 @@ description: "A window into life at Sahyadri School — newsletters, activities,
 # When on, every page immediately redirects to /maintenance/ (see
 # maintenance.html at the repo root).
 #
-# To preview the live site while maintenance mode is on, visit:
-#   https://connect.sahyadrischool.org/?bypass=<maintenance-bypass-key below>
-# Visiting that link once unlocks normal browsing for the rest of that
-# browser tab's session (uses sessionStorage -- closes when the tab closes).
-# Change the key below any time to invalidate old bypass links.
-# NOTE: this repo is public, so this key is not a real secret -- it only
-# prevents casual visitors from stumbling onto the bypass, not a
-# determined person reading the source.
+# A bypass is disabled by default (empty key). If you deliberately set a
+# non-empty key, it is embedded in public page source because this is a
+# public static site. It is only a convenience for previews, NEVER access
+# control; anyone who can read the repository can discover it. Prefer testing
+# changes on a PR preview or locally rather than relying on a bypass.
 # -----------------------------------------------------------------------------
-maintenance-bypass-key: "timepass"
+maintenance-bypass-key: ""
 
 # -----------------------------------------------------------------------------
 # Navigation Bar
@@ -141,6 +138,7 @@ footer-hover-col: "#3e5144"
 # -----------------------------------------------------------------------------
 site-css:
   - "/assets/css/custom-styles.css"
+  - "/assets/css/accessibility.css"
 
 
 # -----------------------------------------------------------------------------

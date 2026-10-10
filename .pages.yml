@@ -109,6 +109,26 @@ content:
         label: Gallery image 5 (Google Drive file ID, optional)
         type: string
         description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
+      - name: image_alt
+        label: Thumbnail alt text (describe the photo)
+        type: string
+        description: "Optional but recommended: describe the meaningful content of the thumbnail in a short phrase. Leave blank only if the image is purely decorative; the article title is used as a fallback."
+      - name: image2_alt
+        label: Gallery image 2 alt text (optional)
+        type: string
+        description: "Describe what is shown in gallery image 2, if it adds information beyond the article title."
+      - name: image3_alt
+        label: Gallery image 3 alt text (optional)
+        type: string
+        description: "Describe what is shown in gallery image 3, if it adds information beyond the article title."
+      - name: image4_alt
+        label: Gallery image 4 alt text (optional)
+        type: string
+        description: "Describe what is shown in gallery image 4, if it adds information beyond the article title."
+      - name: image5_alt
+        label: Gallery image 5 alt text (optional)
+        type: string
+        description: "Describe what is shown in gallery image 5, if it adds information beyond the article title."
 
       - name: tags
         type: select
@@ -207,6 +227,26 @@ content:
         type: string
         label: Gallery image 5 (Google Drive file ID, optional)
         description: "Same as the thumbnail field above — an additional gallery image, e.g. \"1j2nUEqjoW5XM_AtTaKuq_6v11D8DGyak\", same Drive file ID format and sharing requirement."
+      - name: image_alt
+        label: Thumbnail alt text (describe the photo)
+        type: string
+        description: "Optional but recommended: describe the meaningful content of the thumbnail in a short phrase. Leave blank only if the image is purely decorative; the article title is used as a fallback."
+      - name: image2_alt
+        label: Gallery image 2 alt text (optional)
+        type: string
+        description: "Describe what is shown in gallery image 2, if it adds information beyond the article title."
+      - name: image3_alt
+        label: Gallery image 3 alt text (optional)
+        type: string
+        description: "Describe what is shown in gallery image 3, if it adds information beyond the article title."
+      - name: image4_alt
+        label: Gallery image 4 alt text (optional)
+        type: string
+        description: "Describe what is shown in gallery image 4, if it adds information beyond the article title."
+      - name: image5_alt
+        label: Gallery image 5 alt text (optional)
+        type: string
+        description: "Describe what is shown in gallery image 5, if it adds information beyond the article title."
       - name: pinned
         type: boolean
         default: false
