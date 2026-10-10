@@ -88,6 +88,12 @@ The site hosts:
 └── 404.html                    # Custom not-found page
 ```
 
+## Automated checks
+
+Pull requests and pushes run the Jekyll build and internal HTMLProofer checks. CI also checks syntax for JavaScript files under `assets/js/` and runs `check_content_metadata.rb`, an advisory scan for suspicious or repeated Google Drive media IDs. The media scan is intentionally non-blocking because repeated photos can be legitimate; verify sharing permissions and image crops in a browser. External URLs are checked separately by the weekly workflow.
+
+Before a visual or template change is merged, use [`ACCESSIBILITY-CHECKLIST.md`](ACCESSIBILITY-CHECKLIST.md) for keyboard, mobile, zoom, contrast and light/dark-mode checks. These require a real browser and cannot be fully automated by the build.
+
 ## Content authoring
 
 ### Newsletter post
