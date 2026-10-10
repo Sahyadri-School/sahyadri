@@ -55,6 +55,14 @@ Other documents: `README.md` (technical), `HANDOVER.md` (where everything lives,
 
 The widget is `_includes/firebase-comments.html`; moderation is `approve.html`, opened from an email link. The **Firestore security rules are not in this repository**; they are published in the Firebase console (project `comments-for-connect`). What the rules assume of the widget: a new comment has exactly the fields the widget writes, starts unapproved with no likes or reactions, and its `pageUrl` is on `connect.sahyadrischool.org`; likes and reactions only change the signed-in person's own entry; authors can edit their text only until it is approved, and can delete at any time; only the moderator account approves. **If you change what the widget writes, the rules must change with it, and only the user can publish them:** write the new rules out in full and explain how to test them.
 
+## Newsletter signup (EmailJS)
+
+A "notify me about new issues" form on the Newsletter page (`_includes/newsletter-signup.html`, included from `posts.md`). There is **no subscriber database and nothing is sent automatically when a new issue is published.** A signup only triggers two EmailJS sends off a single template (`newsletter-signup-emailjs-template-id` in `_config.yml`, left blank until configured — the form renders nothing while it's blank):
+1. A notification to `comments-moderator-email`, with the signer's email as Reply-To.
+2. An EmailJS **Auto-Reply** (configured in the EmailJS dashboard, not in this repo) back to the signer, confirming they're signed up.
+
+To actually notify everyone when a new issue goes out, the moderator keeps the growing list by hand (an inbox label/folder, or a spreadsheet, built from those notification emails) and Bcc's them — there is no automated bulk send. If a real subscriber list / automatic send is ever wanted, this whole feature should be replaced with a proper mailing-list tool (Mailchimp, Buttondown, etc.), not extended.
+
 ## Known open items (as of October 2026)
 
 - `geeth-gunjan.md`: the two cards share one thumbnail; each needs its own Drive file ID.
