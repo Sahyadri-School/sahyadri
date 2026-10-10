@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Fetch the code (only the latest commit; history is not needed to build).
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -46,7 +46,7 @@ jobs:
           bundler-cache: true
 
       # Tells Jekyll the site's real address and path settings on GitHub Pages.
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
       # Builds the site into _site/ in production mode (analytics etc. switched
       # on). Output is also echoed as ::error:: lines on failure so the reason
@@ -91,7 +91,7 @@ jobs:
         run: bundle exec ruby check_content_metadata.rb
 
       # Packages _site/ so the deploy job can publish exactly what was checked.
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
 
   # Publishes the artifact made above to GitHub Pages (usually live within
   # about two minutes of the push).
