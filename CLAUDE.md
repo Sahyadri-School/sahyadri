@@ -59,4 +59,3 @@ The widget is `_includes/firebase-comments.html`; moderation is `approve.html`, 
 
 - `geeth-gunjan.md`: the two cards share one thumbnail; each needs its own Drive file ID.
 - The maintenance bypass key in `_config.yml` is public; it only lets someone preview the site during maintenance.
-- Analytics: the GA4 ID is hard-coded in `_includes/analytics.html`.
