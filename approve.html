@@ -211,7 +211,11 @@ layout: null
         // origin into a real-looking link to an arbitrary, possibly
         // nonexistent path.
         const u = new URL(raw);
-        return (u.protocol === "http:" || u.protocol === "https:") ? u.href : null;
+        // Only link back to the public Connect site. A signed-in moderator
+        // must not be sent to an arbitrary host from an untrusted comment.
+        return (u.protocol === "https:" && u.hostname === "connect.sahyadrischool.org")
+          ? u.href
+          : null;
       } catch (err) {
         return null;
       }
