@@ -7,10 +7,10 @@ academic-year: "2026-27"
 profile-image: "1qn-Pi4-GisNQattpvXKNJsXavZL4Qb36"
 ---
 
-I joined Sahyadri School in 11th grade.
+I joined Sahyadri School in Grade 11.
 
-I'm interested in nearly all aspects of school life and have taken part in most things. My favorites include the sports camps and workshops. I take a keen interest in talks given by faculty or visiting guests.
+I'm interested in nearly all aspects of school life and have taken part in many activities. My favourites include sports camps and workshops. I also take a keen interest in talks given by faculty members and visiting guests.
 
-For the events I've hosted, such as Freshers' Eve as a part of the culture committee, and Musical Eve for both terms of eleventh grade, I've enjoyed anchoring events that are part of the school's culture the most. I've anchored for some of the visiting guests who have performed.
+I have enjoyed anchoring events, including Freshers' Eve as a member of the Culture Committee and Musical Eve in both terms of Grade 11. I have also anchored performances by visiting guests.
 
-I joined Sahyadri because I needed a change. A change in every sense - cultural, visual, and mental. I appreciate Sahyadri a great deal, although I've only been here since eleventh grade.
+I joined Sahyadri because I needed a change—a change in every sense: cultural, visual, and mental. I appreciate Sahyadri a great deal, although I have been here only since Grade 11.
