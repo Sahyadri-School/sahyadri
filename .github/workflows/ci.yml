@@ -1,7 +1,7 @@
 # GitHub Actions: Build & deploy Jekyll site to GitHub Pages
 #
-# Runs on every push to master (including the "via Pages CMS" content commits
-# that editors make all day) and can be started by hand from the Actions tab.
+# Runs on pushes to master, pull requests targeting master, and manual dispatch.
+# Pull requests run the same build/link checks but are never deployed.
 # Two jobs: "build" makes and checks the site; "deploy" publishes it, and only
 # runs if every build step passed. A failed build or link check therefore
 # leaves the previous site live. A change that builds but LOOKS wrong still
