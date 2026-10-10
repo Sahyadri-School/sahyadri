@@ -7,6 +7,6 @@ academic-year: "2026-27"
 profile-image: "1PAVDD5Ukngjzp0kEQpeURFgMVKghL1ju"
 ---
 
-I joined Sahyadri School this year, 2026.
+I joined Sahyadri School in 2026.
 
-I am an aspiring artist. I am deeply interested in paleontology and paleoartistry, I have been sketching and creating art for the last 14 years and will continue to do so.
+I am an aspiring artist with a deep interest in palaeontology and paleoart. I have been sketching and creating art for the past 14 years, and I intend to continue doing so.

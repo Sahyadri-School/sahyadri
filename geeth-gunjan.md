@@ -4,7 +4,7 @@
 # Google Drive thumbnail ID; needs the correct second document ID from the site owner.
 layout: page
 title: Geet Gunjan
-subtitle: Click thumbnail to download Geet Gunjan
+subtitle: Click on a thumbnail to download Geet Gunjan
 permalink: /geeth
 share-description: "Geet Gunjan from Sahyadri School, to read as a PDF in the original script or in English transliteration."
 ---

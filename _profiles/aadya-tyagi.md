@@ -7,9 +7,9 @@ academic-year: "2026-27"
 profile-image: "1HosWiBeptSZKHMamHo-bpysTXA67bQwT"
 ---
 
-I joined Sahyadri School in 7th Grade.
+I joined Sahyadri School in Grade 7.
 
-Events: I was the Head of the farewell gifts committee in 2025-26. I also participated in Sailing Assembly with Kaeya and Swiftonomics Assembly with Anaya Arora. Additionally, I helped organize Art and Lit Fest 2025. I joined the Phoenix Club in 9th Grade and have been running it with Naina since the beginning of 11th grade. Furthermore, I am a core member and editor of the Newsletter committee, a member of the Ninad Editing Team in 2025-26, and a part of the Land-care committee. I have also been involved in student council and dorm visits. Moreover, I participated in the ESD programme for about three years. I am currently working on joining some new clubs and helping with another club. Lastly, I am helping to organize the school's first alumni meet.
+Events: I was the Head of the Farewell Gifts Committee in 2025–26. I also participated in the Sailing Assembly with Kaeya and the Swiftonomics Assembly with Anaya Arora. Additionally, I helped organise Art and Lit Fest 2025. I joined the Phoenix Club in Grade 9 and have been running it with Naina since the beginning of Grade 11. Furthermore, I am a core member and editor of the Newsletter Committee, a member of the Ninad Editing Team in 2025–26, and part of the Land-care Committee. I have also been involved in the Student Council and dorm visits. Moreover, I participated in the ESD programme for about three years. I am currently working on joining some new clubs and helping with another club. Lastly, I am helping to organise the school's first alumni meet.
 
 I joined Sahyadri because I wanted an education that was different from the conventional path. The school's emphasis on independent thinking, community living, and learning beyond the classroom appealed to me.
 

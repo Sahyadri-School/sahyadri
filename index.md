@@ -19,6 +19,6 @@ subtitle:
 
 
 
-A window into life at Sahyadri School, a space to keep parents and friends connected with the rhythms, reflections, and relationships that shape our everyday experience here. You will find monthly newsletters, glimpses of life on campus, upcoming events, and selected talks and videos from Krishnamurti. We hope this helps foster a deeper understanding of the values that guide the school and invites a shared inquiry into learning, living, and growing together.
+A window into life at Sahyadri School, a space to keep parents and friends connected with the rhythms, reflections, and relationships that shape our everyday experience here. You will find monthly newsletters, glimpses of life on campus, upcoming events, and selected talks and videos from Krishnamurti. We hope it fosters a deeper understanding of the values that guide the school and invites shared inquiry into learning, living, and growing together.
 
 Start with the [Newsletter]({{ 'posts' | relative_url }}), or browse [Activities]({{ 'activities' | relative_url }}), [Photos]({{ 'photos' | relative_url }}), [Videos]({{ 'videos' | relative_url }}), and talks from [Krishnamurti]({{ 'kfi' | relative_url }}).

@@ -7,8 +7,8 @@ academic-year: "2026-27"
 profile-image: "1ChzoCpenz2fHayNSIBWf-Fz5EWNqRN-F"
 ---
 
-I joined Sahyadri School in 5th Grade.
+I joined Sahyadri School in Grade 5.
 
-I have been actively involved in various extracurricular activities, including participating in most of the school's sports events. Additionally, I have been a part of the crochet club, art club, and Phoenix Club. Furthermore, I have taken on the responsibility of hosting camps for football and volleyball, which has helped me develop leadership skills and a sense of teamwork.
+I have been actively involved in various extracurricular activities, including most of the school's sports events. I have also been a member of the Crochet Club, Art Club, and Phoenix Club. In addition, I have taken responsibility for hosting football and volleyball camps, which has helped me develop leadership skills and a sense of teamwork.
 
-I joined Sahyadri because it gave me an outlook on life that is very uncommon nowadays. This unique perspective has been a valuable asset in my personal growth and development. I appreciate the school's efforts to foster a sense of community and encourage students to explore their interests.
+I joined Sahyadri because it gave me an outlook on life that is uncommon nowadays. This unique perspective has been valuable to my personal growth and development. I appreciate the school's efforts to foster a sense of community and encourage students to explore their interests.
