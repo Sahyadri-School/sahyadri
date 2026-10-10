@@ -46,7 +46,7 @@ jobs:
           bundler-cache: true
 
       # Tells Jekyll the site's real address and path settings on GitHub Pages.
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
       # Builds the site into _site/ in production mode (analytics etc. switched
       # on). Output is also echoed as ::error:: lines on failure so the reason
