@@ -786,12 +786,9 @@ html { scroll-behavior: smooth; }
 }
 /* Accessibility: outline: none above removed the default focus
    indicator with no replacement -- a keyboard user tabbing to this
-   button previously got no visible indication of focus at all. Only
-   shows for real keyboard focus (:focus-visible), not mouse clicks. */
-.btn-load-more:focus-visible {
-    outline: 3px solid #8FA186;
-    outline-offset: 2px;
-}
+   button previously got no visible indication of focus at all. The
+   visible ring itself comes from the sitewide amber :focus-visible
+   rule in accessibility.css; no override needed here. */
 .btn-load-more:hover {
     background-color: #4a5748;
     box-shadow: 0 6px 12px rgba(0,0,0,0.15);
@@ -1353,11 +1350,9 @@ html { scroll-behavior: smooth; }
 
 /* Accessibility: outline: none above removed the default focus
    indicator with no replacement -- a keyboard user tabbing through
-   the year tabs previously got no visible indication of focus. */
-.tab-link:focus-visible {
-    outline: 3px solid #8FA186;
-    outline-offset: 2px;
-}
+   the year tabs previously got no visible indication of focus. The
+   visible ring itself comes from the sitewide amber :focus-visible
+   rule in accessibility.css; no override needed here. */
 
 /* --- Year panels --- */
 .academic-panel {
@@ -1858,13 +1853,9 @@ mark.year-search-highlight {
     }
 
     /* Accessibility: these are now keyboard-focusable (role="button"
-       tabindex="0" added in profiles.html) -- gives them the same
-       custom focus ring as the other interactive controls on this
-       page, instead of relying on each browser's own default outline. */
-    .profile-sub-nav-list li:focus-visible {
-      outline: 3px solid #8FA186;
-      outline-offset: 2px;
-    }
+       tabindex="0" added in profiles.html) -- the sitewide amber
+       :focus-visible rule in accessibility.css already covers any
+       [tabindex] element, so no override is needed here. */
 
 
     /* ============================================================
@@ -1969,11 +1960,8 @@ mark.year-search-highlight {
        this category sidebar previously got no visible indication of
        focus at all (the hover/active styles above only apply on mouse
        hover or after a category is already selected, not while
-       simply tabbing through). */
-    .profile-toc-list button:focus-visible {
-      outline: 3px solid #8FA186;
-      outline-offset: 2px;
-    }
+       simply tabbing through). The visible ring itself comes from the
+       sitewide amber :focus-visible rule in accessibility.css. */
 
     /* The right-hand content area grows to fill remaining space */
     .profiles-content {
