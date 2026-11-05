@@ -4,11 +4,11 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes once a day at midnight (IST), and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-11-05 05:21 IST
+Last updated: 2026-11-06 05:16 IST
 
 ------------------------------------------------------------
 
-18 of the last 100 shown below did NOT go live cleanly -- see below.
+18 of the last 93 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
@@ -303,30 +303,6 @@ Thursday, 08 October 2026
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37766408632
 
-Tuesday, 06 October 2026
-------------------------
-  18:05  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37464384911
-  18:00  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37463689335
-  17:57  Sahyadri-archives: Restyle the announcement banner to match the rest of the site
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37463414099
-  17:46  Sahyadri-archives: Run "Update commit status" once a day at midnight (IST) instead of after every build
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37462143652
-  17:46  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK; deploy was stopped early because a newer change was saved right after it.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37462073770
-  17:44  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37461797431
-  17:42  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37461610944
-
 ------------------------------------------------------------
 
-100 build(s) shown (capped at 100).
+93 build(s) shown.
