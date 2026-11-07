@@ -4,11 +4,11 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes once a day at midnight (IST), and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-11-07 04:52 IST
+Last updated: 2026-11-08 03:40 IST
 
 ------------------------------------------------------------
 
-18 of the last 93 shown below did NOT go live cleanly -- see below.
+18 of the last 83 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
@@ -270,39 +270,6 @@ Friday, 09 October 2026
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37926231945
 
-Thursday, 08 October 2026
--------------------------
-  17:35  Sahyadri-archives: Weekly link check: stop the false alarms; add CLAUDE.md project notes
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37774449201
-  17:23  Sahyadri-archives: Add a handover guide for the next student committee
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37773103094
-  17:15  Sahyadri-archives: Comments: make the signed-in name readable in dark mode, and not bold
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37772157973
-  17:10  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37771646469
-  17:09  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37771457870
-  17:09  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build was stopped early because a newer change was saved right after it; that newer change has its own, separate result below.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37771453524
-  17:01  Sahyadri-archives: Comments: don't show deleted comments at all
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37770599950
-  16:50  Sahyadri-archives: Comments: only offer Edit while a comment is awaiting approval
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37769439118
-  16:40  Sahyadri-archives: Photo Gallery post: stop showing the "New Arrivals in the Library" photo twice
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37768276376
-  16:23  Sahyadri-archives: Update announcement entry via Pages CMS: _data/announcement.yml
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37766408632
-
 ------------------------------------------------------------
 
-93 build(s) shown.
+83 build(s) shown.
