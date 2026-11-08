@@ -4,11 +4,11 @@ This page is generated automatically. Typing here does not save anything -- it i
 
 Shows whether each change in the last 30 days actually built and went live on the site -- not just what was saved through the CMS (see CMS Activity Log for that), but every change, from any source. Refreshes once a day at midnight (IST), and any time someone clicks "Update commit status" on the Actions page.
 
-Last updated: 2026-11-08 03:40 IST
+Last updated: 2026-11-09 03:50 IST
 
 ------------------------------------------------------------
 
-18 of the last 83 shown below did NOT go live cleanly -- see below.
+18 of the last 73 shown below did NOT go live cleanly -- see below.
 
 ------------------------------------------------------------
 
@@ -237,39 +237,6 @@ Saturday, 10 October 2026
           Build OK, deployed -- this change is live.
           Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/38019477463
 
-Friday, 09 October 2026
------------------------
-  18:26  Claude: Turn off maintenance mode
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37933322897
-  18:23  Claude: Homepage: link to the Newsletter page instead of the latest issue
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37933086501
-  18:19  Claude: Homepage: link to the latest newsletter issue and the main sections
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37932561911
-  18:17  Claude: Turn on maintenance mode
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37932369119
-  18:09  Claude: Clean up kfi year field; fix a real bug found while auditing Videos/Photos/Newsletter/Activities
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37931441524
-  18:01  Claude: Fix kfi.html tabs to compute the academic year from date, not year
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37930648355
-  17:55  Claude: Build the Krishnamurti page's year tabs automatically
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37929978288
-  17:43  Claude: Move GA4 tracking ID into _config.yml and fix two post dates
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37928617258
-  17:30  Sahyadri-archives: Merge pull request #3 from Sahyadri-School/claude/optimistic-davinci-67ouiy
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37927283641
-  17:20  Claude: Document comments widget, CI workflow and CSS structure
-          Build OK, deployed -- this change is live.
-          Details: https://github.com/Sahyadri-School/sahyadri/actions/runs/37926231945
-
 ------------------------------------------------------------
 
-83 build(s) shown.
+73 build(s) shown.
